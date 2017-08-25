@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
 const Public = ({ loggingIn, authenticated, component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => (
-      !authenticated ?
-      (React.createElement(component, { ...props, loggingIn, authenticated })) :
-      (<Redirect to="/documents" />)
-    )}
-  />
+  <div className="public">
+    <Route
+      {...rest}
+      render={props => (
+        !authenticated ?
+        (React.createElement(component, { ...props, loggingIn, authenticated })) :
+        (<Redirect to="/documents" />)
+      )}
+    />
+  </div>
 );
 
 Public.propTypes = {

@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
+import AppBar from 'material-ui/AppBar'
 
 const NewDocument = ({ history }) => (
   <div className="NewDocument">
-    <h4 className="page-header">New Document</h4>
+    <AppBar
+      className="page-top-bar"
+      style={{backgroundColor: '#0277BD', zIndex: '900'}}
+      title="Create New Document"
+      showMenuIconButton={false}
+    />
     <DocumentEditor history={history} />
   </div>
 );

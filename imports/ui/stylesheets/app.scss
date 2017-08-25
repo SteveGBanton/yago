@@ -1,3 +1,46 @@
 @import './colors';
 @import './forms';
 @import './bootstrap-overrides';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.dashboard {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.all-access {
+  margin-top: 55px;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 50px;
+}
+
+.public {
+  justify-content: center;
+  margin-top: 55px;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.Signup {
+  align-items: center;
+  width: 70%;
+  padding: 40px;
+  margin-top: 40px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+}
+
+#inner-route {
+  width: calc(100% - 250px);
+  padding: 40px;
+}
+
+.dashboard-menu {
+  width: 250px;
+}
+
+.page-top-bar {
+  width: calc(100% + 80px) !important;
+  background-color: '#0277BD';
+  margin: -40px -40px 40px -40px;
+}

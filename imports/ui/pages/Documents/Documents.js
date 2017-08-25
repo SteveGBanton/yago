@@ -9,6 +9,8 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import DocumentsCollection from '../../../api/Documents/Documents';
 import Loading from '../../components/Loading/Loading';
 
+import AppBar from 'material-ui/AppBar'
+
 import './Documents.scss';
 
 const handleRemove = (documentId) => {
@@ -25,9 +27,15 @@ const handleRemove = (documentId) => {
 
 const Documents = ({ loading, documents, match, history }) => (!loading ? (
   <div className="Documents">
+    <AppBar
+      className="page-top-bar"
+      style={{backgroundColor: '#0277BD', zIndex: '900'}}
+      title="Documents"
+      showMenuIconButton={false}
+    />
     <div className="page-header clearfix">
-      <h4 className="pull-left">Documents</h4>
-      <Link className="btn btn-success pull-right" to={`${match.url}/new`}>Add Document</Link>
+
+      <Link className="btn btn-success pull-right" to={`${match.url}/new`}>+ Add Document</Link>
     </div>
     {documents.length ? <Table responsive>
       <thead>
@@ -77,6 +85,6 @@ export default createContainer(() => {
   const subscription = Meteor.subscribe('documents');
   return {
     loading: !subscription.ready(),
-    documents: DocumentsCollection.find().fetch(),
+    documents: DocumentsCollection.find({owner: Meteor.userId()}).fetch(),
   };
 }, Documents);

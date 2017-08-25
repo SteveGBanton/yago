@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
+import Navigation from '../../components/Navigation/Navigation';
+
 import './Index.scss';
 
-const Index = () => (
+const Index = (props) => (
   <div className="Index">
     <img
       src="https://s3-us-west-2.amazonaws.com/cleverbeagle-assets/graphics/email-icon.png"
