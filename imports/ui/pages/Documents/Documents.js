@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Table, Alert, Button } from 'react-bootstrap';
+// import { Table, Alert, Button } from 'react-bootstrap';
 import { timeago, monthDayYearAtTime } from '@cleverbeagle/dates';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
 import DocumentsCollection from '../../../api/Documents/Documents';
 import Loading from '../../components/Loading/Loading';
+
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 import AppBar from 'material-ui/AppBar'
 
@@ -27,17 +29,81 @@ const handleRemove = (documentId) => {
 
 const Documents = ({ loading, documents, match, history }) => (!loading ? (
   <div className="Documents">
-    <AppBar
-      className="page-top-bar"
-      style={{backgroundColor: '#0277BD', zIndex: '900'}}
-      title="Documents"
-      showMenuIconButton={false}
-    />
-    <div className="page-header clearfix">
 
+    <h1>Documents</h1>
+
+    <Tabs
+        style={{width: '100%'}}
+        inkBarStyle={{backgroundColor: 'black'}}
+        tabItemContainerStyle={{
+          backgroundColor: 'white',
+          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+        }}
+      >
+
+        <Tab
+          label="Item One"
+          style={{color: 'black'}}
+        >
+      <div>
+        <h2>Tab One</h2>
+        <p>
+          This is an example tab.
+        </p>
+        <p>
+          You can put any sort of HTML or react component in here. It even keeps the component state!
+        </p>
+      </div>
+    </Tab>
+    <Tab
+      label="Item Two"
+      style={{color: 'black'}}
+      >
+      <div>
+        <h2>Tab Two</h2>
+        <p>
+          This is another example tab.
+        </p>
+      </div>
+    </Tab>
+    <Tab
+      label="onActive"
+      style={{color: 'black'}}
+    >
+      <div>
+        <h2>Tab Three</h2>
+        <p>
+          This is a third example tab.
+        </p>
+      </div>
+    </Tab>
+
+        <Tab label="Tab A" value="a" style={{color: 'black'}}>
+          <div>
+            <h2>Controllable Tab A</h2>
+            <p>
+              Tabs are also controllable if you want to programmatically pass them their values.
+              This allows for more functionality in Tabs such as not
+              having any Tab selected or assigning them different values.
+            </p>
+          </div>
+        </Tab>
+        <Tab label="Tab B" value="b" style={{color: 'black'}}>
+          <div>
+            <h2>Controllable Tab B</h2>
+            <p>
+              This is another example of a controllable tab. Remember, if you
+              use controllable Tabs, you need to give all of your tabs values or else
+              you wont be able to select them.
+            </p>
+          </div>
+        </Tab>
+      </Tabs>
+
+    <div className="page-header clearfix">
       <Link className="btn btn-success pull-right" to={`${match.url}/new`}>+ Add Document</Link>
     </div>
-    {documents.length ? <Table responsive>
+    {documents.length ? <table>
       <thead>
         <tr>
           <th>Title</th>
@@ -70,7 +136,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
           </tr>
         ))}
       </tbody>
-    </Table> : <Alert bsStyle="warning">No documents yet!</Alert>}
+    </table> : <p>ALERT No documents yet!</p>}
   </div>
 ) : <Loading />);
 

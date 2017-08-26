@@ -5,12 +5,7 @@ import AppBar from 'material-ui/AppBar'
 
 const NewDocument = ({ history }) => (
   <div className="NewDocument">
-    <AppBar
-      className="page-top-bar"
-      style={{backgroundColor: '#0277BD', zIndex: '900'}}
-      title="Create New Document"
-      showMenuIconButton={false}
-    />
+    <h2>New Doc</h2>
     <DocumentEditor history={history} />
   </div>
 );

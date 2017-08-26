@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+// import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -55,7 +55,7 @@ class Login extends React.Component {
 
   render() {
     return (<div className="Login">
-      <Row>
+      {/* <Row>
         <Col xs={12} sm={6} md={5} lg={4}>
           <h4 className="page-header">Log In</h4>
           <Row>
@@ -97,7 +97,7 @@ class Login extends React.Component {
             </AccountPageFooter>
           </form>
         </Col>
-      </Row>
+      </Row> */}
     </div>);
   }
 }

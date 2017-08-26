@@ -3,13 +3,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Grid, Alert, Button } from 'react-bootstrap';
+
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Navigation from '../../components/Navigation/Navigation';
-
 import AllUserAccess from '../../components/AllUserAccess/AllUserAccess.jsx';
 import Authenticated from '../../components/Authenticated/Authenticated';
 import Public from '../../components/Public/Public';

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Alert, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+// import { Row, Col, Alert, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
@@ -55,7 +55,7 @@ class ResetPassword extends React.Component {
 
   render() {
     return (<div className="ResetPassword">
-      <Row>
+      {/* <Row>
         <Col xs={12} sm={6} md={4}>
           <h4 className="page-header">Reset Password</h4>
           <Alert bsStyle="info">
@@ -86,7 +86,7 @@ with your new password.
             <Button type="submit" bsStyle="success">Reset Password &amp; Login</Button>
           </form>
         </Col>
-      </Row>
+      </Row> */}
     </div>);
   }
 }

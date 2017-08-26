@@ -1,5 +1,4 @@
 import React from 'react';
-import { Row, Col, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -13,12 +12,14 @@ import validate from '../../../modules/validate';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
 
 class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.customValidator = this.customValidator.bind(this);
   }
 
   componentWillMount() {
@@ -37,40 +38,37 @@ class Signup extends React.Component {
 
   }
 
-  customValidator(input, rules1, messages1) {
+  customValidator(input1, rules1, messages1) {
 
-    let validated = false;
-
-    const inputExample = {
-      firstName: 'firstname feagea',
-      lastName: 'lastnamegegeafea',
-      emailAddress: 'email@geafeage.com',
-      orgName: 'orgname geageage',
-      password: 'passwordtesthere',
-    };
+    const input = {
+      emailAddress: this.emailAddress.input.value,
+      password: this.password.input.value,
+      orgName: this.orgName.input.value,
+      firstName: this.firstName.input.value,
+      lastName: this.lastName.input.value,
+    }
 
     const rules = {
       firstName: {
         required: true,
-        maxlength: 20,
+        maxLength: 20,
       },
       lastName: {
         required: true,
-        maxlength: 20,
+        maxLength: 20,
       },
       emailAddress: {
         required: true,
-        maxlength: 40,
+        maxLength: 40,
         email: true,
       },
       orgName: {
         required: true,
-        maxlength: 35,
+        maxLength: 35,
       },
       password: {
         required: true,
-        minlength: 12,
-        maxlength: 30,
+        password: true,
       },
     }
 
@@ -83,17 +81,16 @@ class Signup extends React.Component {
       },
       emailAddress: {
         required: "This field is required",
+        email: "Please enter a valid email",
       },
       orgName: {
         required: "This field is required",
       },
       password: {
         required: "This field is required",
-        minLength: "At least 12 characters required",
+        password: "At least 12 characters required, and at least one uppercase letter and one number",
       },
     }
-
-    console.log(rules.keys())
 
     function valMaxLength(input, length) {
       return input.length <= Number(length);
@@ -103,53 +100,70 @@ class Signup extends React.Component {
       return input.length >= Number(length);
     };
 
-    function valRequired(input) {
-      return input !== ''
-    };
-
-    function validateEmail(email) {
-      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    function valEmail(email) {
+      let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     };
 
-    const formErrors = {};
+    function valPassword(pass) {
+      let re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{9,}$/;
+      return (pass.length >= 12) && re.test(pass)
+    }
 
-    return (validated === true) ? null : formErrors
+    let formErrors = {};
 
-    //Builds a JSON list of all the form errors, then delivered via setState dynamically.
+    Object.keys(rules).forEach((field) => {
+      Object.keys(rules[field]).forEach((subrule) => {
+        switch (subrule) {
+          case 'required':
+            if (!input[field]) {
+              formErrors[field] = messages[field]['required'];
+            }
+            break;
+          case 'minLength':
+            if (input[field]) {
+              (!valMinLength(input[field], rules[field][subrule]))
+              ? formErrors[field] = messages[field]['minLength']
+              : null;
+            }
+            break;
+          case 'maxLength':
+            if (input[field]) {
+              (!valMaxLength(input[field], rules[field][subrule]))
+              ? formErrors[field] = messages[field]['maxlength']
+              : null;
+            }
+            break;
+          case 'email':
+            if (input[field]) {
+              (!valEmail(input[field]))
+              ? formErrors[field] = messages[field]['email']
+              : null;
+            }
+            break;
+          case 'password':
+            if (input[field]) {
+              (!valPassword(input[field]))
+              ? formErrors[field] = messages[field]['password']
+              : null;
+            }
+            break;
+          default:
+            break;
+        }
+      })
+    });
+
+    // Check for empty object. If empty, submit form.
+    (Object.keys(formErrors).length === 0 && formErrors.constructor === Object)
+    ? this.handleSubmit()
+    : this.setState({formErrors})
 
   }
 
   handleSubmit() {
-
-    const formErrors = {
-      firstName: "Test Error1",
-      lastName: "Test Error1",
-      orgName: "Test Error1",
-      password: "Test Error1",
-      emailAddress: "Test Error1",
-    }
-
-    this.setState({formErrors})
-
+    
     const { history } = this.props;
-
-    console.log(this.orgName.input.value)
-    console.log(this.emailAddress.input.value)
-    console.log(this.lastName.input.value)
-    console.log(this.firstName.input.value)
-    console.log(this.password.input.value)
-
-    if (
-      !this.emailAddress.input.value
-      || !this.password.input.value
-      || !this.firstName.input.value
-      || !this.lastName.input.value
-      || !this.orgName.input.value
-    ) {
-      console.log('all values required')
-      return
-    }
 
     Accounts.createUser({
       email: this.emailAddress.input.value,
@@ -167,7 +181,7 @@ class Signup extends React.Component {
       } else {
         Meteor.call('users.sendVerificationEmail');
         Bert.alert('Welcome!', 'success');
-        history.push('/documents');
+        history.push('/dashboard');
       }
     });
   }
@@ -180,7 +194,8 @@ class Signup extends React.Component {
           services={['facebook', 'google']}
         />
 
-        <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
+
+        <form onSubmit={event => event.preventDefault()}>
 
         <TextField
           name="orgName"
@@ -190,9 +205,7 @@ class Signup extends React.Component {
         />
 
         <div className="username-preview">
-          <IconButton tooltip="This will be used as your username" touch tooltipPosition="bottom-right">
-            <FontIcon className="material-icons" >settings</FontIcon>
-          </IconButton>
+
         </div>
 
         <TextField
@@ -226,14 +239,15 @@ class Signup extends React.Component {
           ref={password => (this.password = password)}
           errorText=""
           errorText={this.state.formErrors.password}
-        /><br/>
-        <div>At least 10 characters required</div>
+        />
+
+        <p>Password must be 9 characters or longer,<br/> with at least one number and one uppecase letter.</p>
+
+        <RaisedButton type="submit" onClick={this.customValidator}>Sign Up</RaisedButton>
 
         <p>Already have an account? <Link to="/login">Log In</Link>.</p>
 
-          <Button onClick={this.handleSubmit}>Sign Up</Button>
-
-          </form>
+        </form>
     </div>);
   }
 }
@@ -313,48 +327,49 @@ export default Signup;
 </div>
 
 
+<IconButton tooltip="Your Organization Id" touch tooltipPosition="bottom-right">
+  <FontIcon className="material-icons">settings</FontIcon>
+</IconButton><br/>
 
+
+componentDidMount() {
+  const component = this;
+
+  validate(component.form, {
+    rules: {
+      firstName: {
+        required: true,
+      },
+      lastName: {
+        required: true,
+      },
+      emailAddress: {
+        required: true,
+        email: true,
+      },
+      password: {
+        required: true,
+        minlength: 6,
+      },
+    },
+    messages: {
+      firstName: {
+        required: 'What\'s your first name?',
+      },
+      lastName: {
+        required: 'What\'s your last name?',
+      },
+      emailAddress: {
+        required: 'Need an email address here.',
+        email: 'Is this email address correct?',
+      },
+      password: {
+        required: 'Need a password here.',
+        minlength: 'Please use at least six characters.',
+      },
+    },
+    submitHandler() { component.handleSubmit(); },
+  });
+}
 
 */
-
-
-
-// componentDidMount() {
-//   const component = this;
-//
-//   validate(component.form, {
-//     rules: {
-//       firstName: {
-//         required: true,
-//       },
-//       lastName: {
-//         required: true,
-//       },
-//       emailAddress: {
-//         required: true,
-//         email: true,
-//       },
-//       password: {
-//         required: true,
-//         minlength: 6,
-//       },
-//     },
-//     messages: {
-//       firstName: {
-//         required: 'What\'s your first name?',
-//       },
-//       lastName: {
-//         required: 'What\'s your last name?',
-//       },
-//       emailAddress: {
-//         required: 'Need an email address here.',
-//         email: 'Is this email address correct?',
-//       },
-//       password: {
-//         required: 'Need a password here.',
-//         minlength: 'Please use at least six characters.',
-//       },
-//     },
-//     submitHandler() { component.handleSubmit(); },
-//   });
-// }

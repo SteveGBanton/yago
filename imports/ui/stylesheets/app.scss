@@ -1,11 +1,51 @@
 @import './colors';
 @import './forms';
-@import './bootstrap-overrides';
+@import './reset';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,400');
+
+h1 {
+  font-family: Roboto;
+  font-weight: 100;
+  font-size: 50px;
+  margin: 60px 0 60px 0;
+}
+
+h2 {
+  font-family: Roboto;
+  font-weight: 100;
+  font-size: 35px;
+  margin: 30px 0 30px 0;
+}
+
+p {
+  line-height: 140%;
+}
+
+body {
+  font-family: Roboto;
+  margin: 0;
+  padding: 0;
+}
+
+label {
+  font-weight: lighter;
+}
 
 .dashboard {
   display: flex;
-  flex-flow: row wrap;
+  margin: 55px 0 0 0;
+}
+
+.dashboard-menu {
+  min-width: 250px;
+  height: 100%;
+}
+
+.inner-route {
+  width: calc(100% - 250px);
+  height: 100%;
+  padding: 0 60px 0 60px;
 }
 
 .all-access {
@@ -16,31 +56,22 @@
 }
 
 .public {
-  justify-content: center;
   margin-top: 55px;
+  justify-content: center;
   display: flex;
   flex-flow: row wrap;
 }
 
+
 .Signup {
-  align-items: center;
-  width: 70%;
+  width: 380px;
   padding: 40px;
   margin-top: 40px;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 }
 
-#inner-route {
-  width: calc(100% - 250px);
-  padding: 40px;
-}
-
-.dashboard-menu {
-  width: 250px;
-}
-
 .page-top-bar {
   width: calc(100% + 80px) !important;
   background-color: '#0277BD';
-  margin: -40px -40px 40px -40px;
+  margin: 0px 0px 40px 0px;
 }

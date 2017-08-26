@@ -33,7 +33,7 @@ const style = {
 };
 
 const Authenticated = ({ loggingIn, authenticated, component, ...rest }) => (
-  <div className="dashboard" style={{marginTop: '55px'}}>
+  <div className="dashboard">
     <div className="dashboard-menu">
       <Drawer className="dashboard-drawer" containerStyle={{width: '250px', zIndex: '1000', marginTop: '55px'}} open>
         <Link to="/documents"><MenuItem primaryText="View Documents" leftIcon={<RemoveRedEye />} /></Link>
@@ -46,7 +46,7 @@ const Authenticated = ({ loggingIn, authenticated, component, ...rest }) => (
         <MenuItem primaryText="Remove" leftIcon={<Delete />} />
       </Drawer>
     </div>
-    <div id="inner-route">
+    <div className="inner-route">
         <Route
           {...rest}
           render={props => (

@@ -3,8 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import PublicNavigation from '../PublicNavigation/PublicNavigation';
-import AuthenticatedNavigation from '../AuthenticatedNavigation/AuthenticatedNavigation';
 
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import IconMenu from 'material-ui/IconMenu';
@@ -25,9 +23,6 @@ import Divider from 'material-ui/Divider';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 import Download from 'material-ui/svg-icons/file/file-download';
 import Delete from 'material-ui/svg-icons/action/delete';
-
-// Old
-import { Navbar } from 'react-bootstrap';
 
 import './Navigation.scss';
 
