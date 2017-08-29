@@ -27,25 +27,36 @@ const handleRemove = (documentId) => {
   }
 };
 
+const runTest = (test) => {
+  Meteor.call('utility.testMethod', {test}, (error, val) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log(val)
+    }
+  })
+
+}
+
 const Documents = ({ loading, documents, match, history }) => (!loading ? (
   <div className="Documents">
 
     <h1>Documents</h1>
-
+    
     <Tabs
-        style={{width: '100%'}}
-        inkBarStyle={{backgroundColor: 'black'}}
+        style={{width: '100%', marginBottom: "30px"}}
+        inkBarStyle={{backgroundColor: '#00BCD4'}}
         tabItemContainerStyle={{
           backgroundColor: 'white',
-          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+          boxShadow: '0px 2px 0px 0px #888888',
         }}
       >
 
         <Tab
           label="Item One"
-          style={{color: 'black'}}
+          style={{color: "black"}}
         >
-      <div>
+      <div className="tab-container">
         <h2>Tab One</h2>
         <p>
           This is an example tab.
@@ -59,7 +70,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
       label="Item Two"
       style={{color: 'black'}}
       >
-      <div>
+      <div className="tab-container">
         <h2>Tab Two</h2>
         <p>
           This is another example tab.
@@ -70,7 +81,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
       label="onActive"
       style={{color: 'black'}}
     >
-      <div>
+      <div className="tab-container">
         <h2>Tab Three</h2>
         <p>
           This is a third example tab.
@@ -79,7 +90,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
     </Tab>
 
         <Tab label="Tab A" value="a" style={{color: 'black'}}>
-          <div>
+          <div className="tab-container">
             <h2>Controllable Tab A</h2>
             <p>
               Tabs are also controllable if you want to programmatically pass them their values.
@@ -89,7 +100,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
           </div>
         </Tab>
         <Tab label="Tab B" value="b" style={{color: 'black'}}>
-          <div>
+          <div className="tab-container">
             <h2>Controllable Tab B</h2>
             <p>
               This is another example of a controllable tab. Remember, if you

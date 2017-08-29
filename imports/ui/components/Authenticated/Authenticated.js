@@ -35,15 +35,14 @@ const style = {
 const Authenticated = ({ loggingIn, authenticated, component, ...rest }) => (
   <div className="dashboard">
     <div className="dashboard-menu">
-      <Drawer className="dashboard-drawer" containerStyle={{width: '250px', zIndex: '1000', marginTop: '55px'}} open>
-        <Link to="/documents"><MenuItem primaryText="View Documents" leftIcon={<RemoveRedEye />} /></Link>
-        <Link to="/documents/new"><MenuItem primaryText="New Document" leftIcon={<PersonAdd />} /></Link>
-        <MenuItem primaryText="Get links" leftIcon={<ContentLink />} />
-        <Divider />
-        <MenuItem primaryText="Make a copy" leftIcon={<ContentCopy />} />
-        <MenuItem primaryText="Download" leftIcon={<Download />} />
-        <Divider />
-        <MenuItem primaryText="Remove" leftIcon={<Delete />} />
+      <Drawer className="dashboard-drawer" containerStyle={{width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px"}} style={{color: 'white'}} open>
+        <Link to="/documents"><MenuItem primaryText="View Documents" leftIcon={<RemoveRedEye color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
+        <Link to="/documents/new"><MenuItem primaryText="New Document" leftIcon={<PersonAdd color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
+        <MenuItem primaryText="Get links" leftIcon={<ContentLink color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
+        <Divider style={{backgroundColor: "#0288D1", marginTop: "16px", marginBottom: "16px"}} />
+        <MenuItem primaryText="Make a copy" leftIcon={<ContentCopy color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
+        <MenuItem primaryText="Download" leftIcon={<Download color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
+        <MenuItem primaryText="Remove" leftIcon={<Delete color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
       </Drawer>
     </div>
     <div className="inner-route">

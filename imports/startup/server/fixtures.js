@@ -22,6 +22,7 @@ seeder(Meteor.users, {
   data: [{
     email: 'admin@admin.com',
     password: 'password',
+    username: 'school',
     profile: {
       name: {
         first: 'Andy',

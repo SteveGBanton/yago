@@ -13,6 +13,15 @@ import AllUserAccess from '../../components/AllUserAccess/AllUserAccess.jsx';
 import Authenticated from '../../components/Authenticated/Authenticated';
 import Public from '../../components/Public/Public';
 
+
+// Super Admin
+
+// ClientAdmin
+
+// User
+
+// All Users
+
 import Index from '../../pages/Index/Index';
 import Documents from '../../pages/Documents/Documents';
 import NewDocument from '../../pages/NewDocument/NewDocument';

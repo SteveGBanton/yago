@@ -12,3 +12,12 @@ export const utilityGetPage2 = new ValidatedMethod({
     return parseMarkdown(getPrivateFile(`pages/${page}.md`));
   }
 })
+
+export const testMethod = new ValidatedMethod({
+  name: 'utility.testMethod',
+  validate: null,
+  run(test) {
+    console.log(Meteor.user())
+    return 'returned'
+  }
+})

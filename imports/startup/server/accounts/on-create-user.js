@@ -4,7 +4,16 @@ Accounts.onCreateUser((options, user) => {
   let userToCreate = user;
   if (options.profile) userToCreate.profile = options.profile;
   if (!userToCreate.tenants) userToCreate.tenants = [];
-  if (options.orgName) userToCreate.tenants.push(options.orgName);
+
+  // userName field present gives user admin access to that account - one email address per account.
+  // tenant field present gives user access to other accounts, permissions set in roles package.
+  if (options.userName) {
+    userToCreate.userName = options.userName;
+  } else if (options.newTenant) {
+    userToCreate.tenants.push(options.newTenant);
+  }
+  console.log(JSON.stringify(userToCreate))
+
   return userToCreate;
 });
 

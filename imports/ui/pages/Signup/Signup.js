@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { debounce, kebabCase } from 'lodash'
+
 import OAuthLoginButtons from '../../components/OAuthLoginButtons/OAuthLoginButtons';
 import InputHint from '../../components/InputHint/InputHint';
 import AccountPageFooter from '../../components/AccountPageFooter/AccountPageFooter';
 import validate from '../../../modules/validate';
 
+// material-ui
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
@@ -20,23 +23,61 @@ class Signup extends React.Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.customValidator = this.customValidator.bind(this);
+    this.createUsername = this.createUsername.bind(this);
+
+    this.state = ({
+      formErrors: {
+        firstName: "",
+        lastName: "",
+        orgName: "",
+        password: "",
+        emailAddress: "",
+      },
+      username: "",
+      userNameVerified: false,
+    })
   }
 
-  componentWillMount() {
-    const formErrors = {
-      firstName: "",
-      lastName: "",
-      orgName: "",
-      password: "",
-      emailAddress: "",
+  createUsername = debounce(function() {
+    // put into username format
+    let input = kebabCase(this.orgName.input.value)
+    let number = 0;
+
+    //check if exists already
+    function checkUser(potentialUserName) {
+      Meteor.call('users.checkUsername', {potentialUserName}, (error, count) => {
+        if (error) {
+          Bert.alert(error.reason, 'danger');
+        } else {
+          console.log(count)
+          if (count > 0) {
+            setUsernameFalse(potentialUserName)
+            return false
+          } else {
+            setUsernameTrue(potentialUserName)
+            return true
+          }
+        }
+      });
     }
 
-    this.setState({formErrors})
-  }
+    var setUsernameTrue = (function(potentialUserName) {
+      this.setState({ username: potentialUserName })
+      this.setState({ userNameVerified: true })
+      console.log(`userNameVerified = true`)
+    }).bind(this)
 
-  createUsername() {
+    var setUsernameFalse = (function(potentialUserName) {
+      this.setState({ username: potentialUserName })
+      this.setState({ userNameVerified: false })
+      console.log(`userNameVerified = false`)
+      number += 1
+      checkUser(`${input}-${number}`)
+    }).bind(this)
 
-  }
+    checkUser(input)
+
+  }, 400)
 
   customValidator(input1, rules1, messages1) {
 
@@ -88,7 +129,7 @@ class Signup extends React.Component {
       },
       password: {
         required: "This field is required",
-        password: "At least 12 characters required, and at least one uppercase letter and one number",
+        password: "Keep your account safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
       },
     }
 
@@ -106,8 +147,9 @@ class Signup extends React.Component {
     };
 
     function valPassword(pass) {
-      let re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{9,}$/;
-      return (pass.length >= 12) && re.test(pass)
+      let re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{9,}$/;
+
+      return re.test(pass)
     }
 
     let formErrors = {};
@@ -154,36 +196,60 @@ class Signup extends React.Component {
       })
     });
 
-    // Check for empty object. If empty, submit form.
-    (Object.keys(formErrors).length === 0 && formErrors.constructor === Object)
-    ? this.handleSubmit()
-    : this.setState({formErrors})
+    if (this.state.userNameVerified === false) {
+      formErrors.orgName = 'Sorry, username is taken'
+    }
+
+    // Check for empty object. If empty and username is verified, submit form.
+    if (
+      Object.keys(formErrors).length === 0
+      && formErrors.constructor === Object
+      && this.state.userNameVerified === true
+    ) {
+      this.handleSubmit()
+    } else {
+      this.setState({formErrors})
+    }
 
   }
 
   handleSubmit() {
-    
+
     const { history } = this.props;
 
-    Accounts.createUser({
+    const newAdmin = {
       email: this.emailAddress.input.value,
       password: this.password.input.value,
-      orgName: this.orgName.input.value,
+      username: this.state.username,
       profile: {
         name: {
           first: this.firstName.input.value,
           last: this.lastName.input.value,
         },
       },
-    }, (error) => {
+    }
+
+    Accounts.createUser({
+      email: this.emailAddress.input.value,
+      password: this.password.input.value,
+      username: this.state.username,
+      profile: {
+        name: {
+          first: this.firstName.input.value,
+          last: this.lastName.input.value,
+        },
+      },
+    }, (error, res) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
+        Meteor.call('users.addAdminRole');
         Meteor.call('users.sendVerificationEmail');
         Bert.alert('Welcome!', 'success');
         history.push('/dashboard');
       }
     });
+
   }
 
   render() {
@@ -194,18 +260,20 @@ class Signup extends React.Component {
           services={['facebook', 'google']}
         />
 
-
         <form onSubmit={event => event.preventDefault()}>
 
         <TextField
           name="orgName"
           floatingLabelText="Organization Name"
+          onChange={this.createUsername}
           ref={input => (this.orgName = input)}
           errorText={this.state.formErrors.orgName}
+          maxLength='22'
         />
 
         <div className="username-preview">
-
+          {this.state.username}
+          {(this.state.username === false) ? 'username already taken' : ''}
         </div>
 
         <TextField
@@ -241,9 +309,11 @@ class Signup extends React.Component {
           errorText={this.state.formErrors.password}
         />
 
-        <p>Password must be 9 characters or longer,<br/> with at least one number and one uppecase letter.</p>
+        <div>
 
         <RaisedButton type="submit" onClick={this.customValidator}>Sign Up</RaisedButton>
+
+        </div>
 
         <p>Already have an account? <Link to="/login">Log In</Link>.</p>
 
@@ -257,119 +327,3 @@ Signup.propTypes = {
 };
 
 export default Signup;
-
-
-
-/**
-
-<div className="Signup">
-<Row>
-  <Col xs={12} sm={6} md={5} lg={4}>
-    <h4 className="page-header">Sign Up</h4>
-    <Row>
-      <Col xs={12}>
-        <OAuthLoginButtons
-          services={['facebook', 'google']}
-        />
-      </Col>
-    </Row>
-    <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-      <Row>
-        <Col xs={6}>
-          <FormGroup>
-            <ControlLabel>First Name</ControlLabel>
-            <input
-              type="text"
-              name="firstName"
-              ref={firstName => (this.firstName = firstName)}
-              className="form-control"
-            />
-          </FormGroup>
-        </Col>
-        <Col xs={6}>
-          <FormGroup>
-            <ControlLabel>Last Name</ControlLabel>
-            <input
-              type="text"
-              name="lastName"
-              ref={lastName => (this.lastName = lastName)}
-              className="form-control"
-            />
-          </FormGroup>
-        </Col>
-      </Row>
-      <FormGroup>
-        <ControlLabel>Email Address</ControlLabel>
-        <input
-          type="email"
-          name="emailAddress"
-          ref={emailAddress => (this.emailAddress = emailAddress)}
-          className="form-control"
-        />
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>Password</ControlLabel>
-        <input
-          type="password"
-          name="password"
-          ref={password => (this.password = password)}
-          className="form-control"
-        />
-        <InputHint>Use at least six characters.</InputHint>
-      </FormGroup>
-      <Button type="submit" bsStyle="success">Sign Up</Button>
-      <AccountPageFooter>
-        <p>Already have an account? <Link to="/login">Log In</Link>.</p>
-      </AccountPageFooter>
-    </form>
-  </Col>
-</Row>
-</div>
-
-
-<IconButton tooltip="Your Organization Id" touch tooltipPosition="bottom-right">
-  <FontIcon className="material-icons">settings</FontIcon>
-</IconButton><br/>
-
-
-componentDidMount() {
-  const component = this;
-
-  validate(component.form, {
-    rules: {
-      firstName: {
-        required: true,
-      },
-      lastName: {
-        required: true,
-      },
-      emailAddress: {
-        required: true,
-        email: true,
-      },
-      password: {
-        required: true,
-        minlength: 6,
-      },
-    },
-    messages: {
-      firstName: {
-        required: 'What\'s your first name?',
-      },
-      lastName: {
-        required: 'What\'s your last name?',
-      },
-      emailAddress: {
-        required: 'Need an email address here.',
-        email: 'Is this email address correct?',
-      },
-      password: {
-        required: 'Need a password here.',
-        minlength: 'Please use at least six characters.',
-      },
-    },
-    submitHandler() { component.handleSubmit(); },
-  });
-}
-
-*/

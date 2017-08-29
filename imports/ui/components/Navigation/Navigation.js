@@ -28,13 +28,13 @@ import './Navigation.scss';
 
 const styles = {
   toolbar: {
-    backgroundColor: '#0277BD',
+    backgroundColor: '#37474f',
     width: '100%',
     position: 'fixed',
     top: '0',
     left: '0',
     zIndex: 1200,
-    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px'
+    boxShadow: 'rgba(0, 0, 0, 0.18) 0px 2px 6px, rgba(0, 0, 0, 0.18) 0px 3px 4px'
   },
 }
 
@@ -45,7 +45,7 @@ const Navigation = props => (
     </ToolbarGroup>
     <ToolbarGroup>
       {props.authenticated
-        ? <Link to="/dashboard"><RaisedButton label="Dashboard Home" primary={true} /></Link>
+        ? <Link to="/dashboard"><RaisedButton label="Dashboard Home" backgroundColor="#03A9F4" labelStyle={{color: 'white'}} /></Link>
         : ''
       }
       <IconMenu
