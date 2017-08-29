@@ -8,9 +8,18 @@ export const addAdminRole = new ValidatedMethod({
   name: 'users.addAdminRole',
   validate: null,
   run() {
-
     try {
-      Roles.addUsersToRoles(this.userId, ['client-admin'], Meteor.user().username);
+      let id = this.userId
+      let adminUsername = Meteor.user().username
+      Roles.addUsersToRoles(id, ['client-admin'], adminUsername);
+
+      Meteor.users.update(id, {
+        $set: {
+          currentRole: 'admin',
+          currentOrg: adminUsername
+        }
+      });
+
     } catch (exception) {
       throw new Meteor.Error('accounts.createuser.error',
         `Error adding admin permissions. ${exception}`);
