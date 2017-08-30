@@ -9,7 +9,7 @@ import Documents from '../../../../../api/Documents/Documents';
 import DocumentEditor from '../../../../components/DocumentEditor/DocumentEditor';
 import NotFound from '../../../../components/NotFound/NotFound.jsx';
 
-const EditDocument = ({ doc, history }) => (doc ? (
+const ClientEditDocument = ({ doc, history }) => (doc ? (
   <div className="EditDocument">
     <AppBar
       className="page-top-bar"
@@ -22,11 +22,11 @@ const EditDocument = ({ doc, history }) => (doc ? (
   </div>
 ) : <NotFound />);
 
-EditDocument.defaultProps = {
+ClientEditDocument.defaultProps = {
   doc: null,
 };
 
-EditDocument.propTypes = {
+ClientEditDocument.propTypes = {
   doc: PropTypes.object,
   history: PropTypes.object.isRequired,
 };
@@ -39,4 +39,4 @@ export default createContainer(({ match }) => {
     loading: !subscription.ready(),
     doc: Documents.findOne(documentId),
   };
-}, EditDocument);
+}, ClientEditDocument);

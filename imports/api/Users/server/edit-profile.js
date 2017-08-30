@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor';
 
 let action;
 
-const updateUser = (userId, { emailAddress, profile }) => {
+const updateUser = (userId, { previousEmailAddress, emailAddress, profile }) => {
   try {
     Meteor.users.update(userId, {
       $set: {
@@ -12,6 +12,15 @@ const updateUser = (userId, { emailAddress, profile }) => {
         profile,
       },
     });
+
+    if (emailAddress !== previousEmailAddress) {
+      Meteor.users.update(userId, {
+        $set: {
+          'emails.0.verified': false,
+        },
+      });
+    }
+
   } catch (exception) {
     action.reject(`[editProfile.updateUser] ${exception}`);
   }

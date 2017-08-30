@@ -37,9 +37,9 @@ export const createNewAdminUser = new ValidatedMethod({
     "profile.name": { type: Object },
     "profile.name.first": { type: String },
     "profile.name.last": { type: String },
+    "profile.orgName": { type: String },
   }).validator(),
   run(newAdmin) {
-    console.log(newAdmin)
     try {
       var id = Accounts.createUser(newAdmin);
       Roles.addUsersToRoles(id, ['admin'], newAdmin.username);
@@ -72,8 +72,10 @@ export const usersSendVerificationEmail = new ValidatedMethod({
 export const usersEditProfile = new ValidatedMethod({
   name: 'users.editProfile',
   validate: new SimpleSchema({
+    "previousEmailAddress": { type: String },
     "emailAddress": { type: String },
     "profile": { type: Object },
+    "profile.orgName": { type : String },
     "profile.name": { type: Object },
     "profile.name.first": { type : String },
     "profile.name.last": { type : String },
@@ -99,9 +101,19 @@ export const usersCheckUsername = new ValidatedMethod({
 
 rateLimit({
   methods: [
-    'users.sendVerificationEmail',
     'users.editProfile',
+    'users.changeCurrentOrgRole',
+    'users.createNewAdminUser',
+    'users.checkUsername',
   ],
   limit: 5,
   timeRange: 1000,
+});
+
+rateLimit({
+  methods: [
+    'users.sendVerificationEmail',
+  ],
+  limit: 1,
+  timeRange: 5000,
 });

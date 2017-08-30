@@ -90,3 +90,13 @@ label {
   background-color: '#0277BD';
   margin: 0px 0px 40px 0px;
 }
+
+.profile-edit {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.profile-edit > * {
+  padding: 30px 60px 0 0;
+}

@@ -19,11 +19,12 @@ import UserAdmin from '../layouts/UserAdmin/UserAdmin.jsx';
 // SuperAdmin pages
 
 // ClientAdmin pages
-import Documents from '../layouts/ClientAdmin/Documents/Documents.jsx';
-import NewDocument from '../layouts/ClientAdmin/Documents/NewDocument/NewDocument.jsx';
-import ViewDocument from '../layouts/ClientAdmin/Documents/ViewDocument/ViewDocument.jsx';
-import EditDocument from '../layouts/ClientAdmin/Documents/EditDocument/EditDocument.jsx';
-import Profile from '../layouts/ClientAdmin/Profile/Profile.jsx';
+import ClientDashboard from '../layouts/ClientAdmin/ClientDashboard/ClientDashboard.jsx';
+import ClientDocuments from '../layouts/ClientAdmin/ClientDocuments/ClientDocuments.jsx';
+import ClientNewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientNewDocument/ClientNewDocument.jsx';
+import ClientViewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientViewDocument/ClientViewDocument.jsx';
+import ClientEditDocument from '../layouts/ClientAdmin/ClientDocuments/ClientEditDocument/ClientEditDocument.jsx';
+import ClientProfile from '../layouts/ClientAdmin/ClientProfile/ClientProfile.jsx';
 
 // UserAdmin pages
 import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard.jsx';
@@ -69,13 +70,13 @@ const App = props => (
             <Navigation {...props} />
             <Switch>
               <AllUserAccess exact path="/" component={Index} {...props} />
-              <ClientAdmin exact path="/:username/admin/dashboard" component={Documents} {...props} />
+              <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} />
+              <ClientAdmin exact path="/:username/admin/documents" component={ClientDocuments} {...props} />
+              <ClientAdmin exact path="/:username/admin/documents/new" component={ClientNewDocument} {...props} />
+              <ClientAdmin exact path="/:username/admin/documents/:_id" component={ClientViewDocument} {...props} />
+              <ClientAdmin exact path="/:username/admin/documents/:_id/edit" component={ClientEditDocument} {...props} />
+              <ClientAdmin exact path="/:username/admin/profile" component={ClientProfile} {...props} />
               <UserAdmin exact path="/:username/user/dashboard" component={UserDashboard} {...props} />
-              <ClientAdmin exact path="/documents/new" component={NewDocument} {...props} />
-              <ClientAdmin exact path="/documents/:_id" component={ViewDocument} {...props} />
-              <ClientAdmin exact path="/documents/:_id/edit" component={EditDocument} {...props} />
-              <ClientAdmin exact path="/profile" component={Profile} {...props} />
-
               <Public exact path="/signup" component={Signup} {...props} />
               <Public exact path="/login" component={Login} {...props} />
               <Public exact path="/logout" component={Logout} {...props} />

@@ -39,22 +39,24 @@ const style = {
 */
 
 const validateUser = function validateCurrentUser(role, group) {
-  console.log(group)
   if (Roles.userIsInRole(Meteor.userId(), [role], group)) {
     return true
   }
   return false
 }
 
+const computeLink = function computeLink(link) {
+
+
+}
+
 const ClientAdmin = ({ loggingIn, authenticated, component, ...rest }) => (
-  ("true")
-  ?
-  (
     <div className="dashboard">
+
       <div className="dashboard-menu">
         <Drawer className="dashboard-drawer" containerStyle={{width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px"}} style={{color: 'white'}} open>
-          <Link to="/documents"><MenuItem primaryText="View Documents" leftIcon={<RemoveRedEye color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
-          <Link to="/documents/new"><MenuItem primaryText="New Document" leftIcon={<PersonAdd color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
+          <Link to={`/${rest.computedMatch.params.username}/admin/documents`}><MenuItem primaryText="View Documents" leftIcon={<RemoveRedEye color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
+          <Link to={`/${rest.computedMatch.params.username}/admin/documents/new`}><MenuItem primaryText="New Document" leftIcon={<PersonAdd color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}}/>} /></Link>
           <MenuItem primaryText="Get links" leftIcon={<ContentLink color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
           <Divider style={{backgroundColor: "#0288D1", marginTop: "16px", marginBottom: "16px"}} />
           <MenuItem primaryText="Make a copy" leftIcon={<ContentCopy color="rgba(255,255,255,0.5)" style={{paddingLeft: "10px"}} />} />
@@ -73,9 +75,6 @@ const ClientAdmin = ({ loggingIn, authenticated, component, ...rest }) => (
           />
       </div>
     </div>
-  )
-  : <div>Not Authorized</div>
-
 );
 
 ClientAdmin.propTypes = {

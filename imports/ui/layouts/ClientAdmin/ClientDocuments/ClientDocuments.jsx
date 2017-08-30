@@ -13,7 +13,7 @@ import AppBar from 'material-ui/AppBar'
 import DocumentsCollection from '../../../../api/Documents/Documents';
 import Loading from '../../../components/Loading/Loading.jsx';
 
-import './Documents.scss';
+import './ClientDocuments.scss';
 
 const handleRemove = (documentId) => {
   if (confirm('Are you sure? This is permanent!')) {
@@ -38,11 +38,11 @@ const runTest = (test) => {
 
 }
 
-const Documents = ({ loading, documents, match, history }) => (!loading ? (
+const ClientDocuments = ({ loading, documents, match, history }) => (!loading ? (
   <div className="Documents">
 
     <h1>Documents</h1>
-    
+
     <Tabs
         style={{width: '100%', marginBottom: "30px"}}
         inkBarStyle={{backgroundColor: '#00BCD4'}}
@@ -151,7 +151,7 @@ const Documents = ({ loading, documents, match, history }) => (!loading ? (
   </div>
 ) : <Loading />);
 
-Documents.propTypes = {
+ClientDocuments.propTypes = {
   loading: PropTypes.bool.isRequired,
   documents: PropTypes.arrayOf(PropTypes.object).isRequired,
   match: PropTypes.object.isRequired,
@@ -164,4 +164,4 @@ export default createContainer(() => {
     loading: !subscription.ready(),
     documents: DocumentsCollection.find({owner: Meteor.userId()}).fetch(),
   };
-}, Documents);
+}, ClientDocuments);

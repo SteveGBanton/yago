@@ -4,7 +4,7 @@ import AppBar from 'material-ui/AppBar'
 
 import DocumentEditor from '../../../../components/DocumentEditor/DocumentEditor.jsx';
 
-const NewDocument = ({ history }) => (
+const ClientNewDocument = ({ history }) => (
   <div className="NewDocument">
     <h2>New Doc</h2>
     <DocumentEditor history={history} />
@@ -15,4 +15,4 @@ NewDocument.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default NewDocument;
+export default ClientNewDocument;

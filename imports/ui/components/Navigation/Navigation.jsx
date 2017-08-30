@@ -36,9 +36,8 @@ const styles = {
   },
 }
 
-const rolesMenu = function rolesMenu() {
+const rolesMenu = function rolesMenu(roles) {
   let groupsRoles = [];
-  const roles = Meteor.user().roles
   const groups = Object.keys(roles);
 
   groups.forEach((group) => {
@@ -61,6 +60,7 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
       (err, res) => {
           if (err) {
             // TODO Handle err properly.
+            Bert.alert(err.reason, 'danger');
             console.log(err)
           } else {
             history.push(`/${currentOrg}/${currentRole}/dashboard`)
@@ -69,37 +69,51 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
       }
     )
   }
-  //
+
 }
 
-const Navigation = props => (
-  <Toolbar style={styles.toolbar}>
-    <ToolbarGroup>
-      <ToolbarTitle style={{color: 'white'}} text="Creixent" />
-    </ToolbarGroup>
-    <ToolbarGroup>
-      {props.authenticated
-        ? <Link to="/dashboard"><RaisedButton label="Dashboard Home" backgroundColor="#03A9F4" labelStyle={{color: 'white'}} /></Link>
-        : ''
-      }
-      <IconMenu
-        onItemTouchTap={() => this.open = null}
-        iconButtonElement={
-          <IconButton touch={true}>
-            <NavigationExpandMoreIcon color="white" />
-          </IconButton>
+const Navigation = props => {
+  const { authenticated, history } = props;
+  const user = (authenticated) ? Meteor.user() : '';
+  const current = (authenticated) ? user.current : '';
+  return (
+    <Toolbar style={styles.toolbar}>
+      <ToolbarGroup>
+        <ToolbarTitle style={{color: 'white'}} text={(user) ? user.profile.orgName : 'Academy App' } />
+      </ToolbarGroup>
+      <ToolbarGroup>
+        {authenticated
+          ? <Link to={`/${current.currentOrg}/${current.currentRole}/dashboard`}><RaisedButton label="Dashboard Home" backgroundColor="#03A9F4" labelStyle={{color: 'white'}} /></Link>
+          : ''
         }
-      >
-        {props.authenticated
-          ? rolesMenu().map((role, index) =>
-            <MenuItem key={index} primaryText={`${role.group} - ${role.role}`} onClick={changeCurrent(role.group, role.role, props.history)} />
+
+        <IconMenu
+          onItemTouchTap={() => this.open = null}
+          iconButtonElement={
+            <IconButton touch={true}>
+              <NavigationExpandMoreIcon color="white" />
+            </IconButton>
+          }
+        >
+
+        {authenticated
+          ? rolesMenu(user.roles).map((role, index) =>
+            <MenuItem
+              key={index}
+              primaryText={`${role.group}`}
+              onClick={changeCurrent(role.group, role.role, history)}
+              secondaryText={`${role.role}`}
+
+            />
           )
           : ''
         }
-        {props.authenticated
+
+        {authenticated
           ? <Divider />
           : ''
         }
+
         <MenuItem primaryText="Clear Config" />
         <MenuItem primaryText="New Config" rightIcon={<PersonAdd />} />
         <MenuItem primaryText="Project" rightIcon={<FontIcon className="material-icons">search</FontIcon>} />
@@ -110,23 +124,20 @@ const Navigation = props => (
           }
         />
 
-        {props.authenticated
-          ? <MenuItem primaryText="Edit Profile" onClick={() => props.history.push('/profile')} />
+        {authenticated
+          ? <MenuItem primaryText="Edit Profile" onClick={() => history.push(`/${current.currentOrg}/${current.currentRole}/profile`)} />
           : ''
         }
 
-        {props.authenticated
+        {authenticated
           ? <MenuItem primaryText="Sign out" onClick={() => Meteor.logout()} />
-          : <MenuItem primaryText="Sign in" onClick={() => props.history.push('/login')} />
+          : <MenuItem primaryText="Sign in" onClick={() => history.push('/login')} />
         }
 
-
-
-
-      </IconMenu>
-    </ToolbarGroup>
-  </Toolbar>
-);
+        </IconMenu>
+      </ToolbarGroup>
+    </Toolbar>
+)}
 
 Navigation.defaultProps = {
   name: '',

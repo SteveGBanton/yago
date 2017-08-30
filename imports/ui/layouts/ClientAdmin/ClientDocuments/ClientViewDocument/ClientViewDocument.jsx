@@ -42,11 +42,11 @@ const renderDocument = (doc, match, history) => (
 // ) : <NotFound />
 );
 
-const ViewDocument = ({ loading, doc, match, history }) => (
+const ClientViewDocument = ({ loading, doc, match, history }) => (
   !loading ? renderDocument(doc, match, history) : <Loading />
 );
 
-ViewDocument.propTypes = {
+ClientViewDocument.propTypes = {
   loading: PropTypes.bool.isRequired,
   doc: PropTypes.object,
   match: PropTypes.object.isRequired,
@@ -61,4 +61,4 @@ export default createContainer(({ match }) => {
     loading: !subscription.ready(),
     doc: Documents.findOne(documentId),
   };
-}, ViewDocument);
+}, ClientViewDocument);
