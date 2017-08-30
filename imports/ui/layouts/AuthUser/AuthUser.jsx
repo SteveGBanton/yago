@@ -32,7 +32,7 @@ const style = {
 /**
   Must ensure:
   user is authenticated
-  userIsInRole() client-admin for group :username
+  userIsInRole() admin for group :username
 
 */
 
@@ -47,7 +47,7 @@ const validateUser = function validateCurrentUser(role, group) {
 const multipleGroups = function multipleRoles() {
   let roles = Meteor.user().roles
   let groups = Object.keys(roles)
-  
+
   if (groups.length > 1) {
     return groups
   }

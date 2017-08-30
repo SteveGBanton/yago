@@ -34,7 +34,7 @@ const style = {
 /**
   Must ensure:
   user is authenticated
-  userIsInRole() client-admin for group :username
+  userIsInRole() admin for group :username
 
 */
 
@@ -66,7 +66,7 @@ const ClientAdmin = ({ loggingIn, authenticated, component, ...rest }) => (
           <Route
             {...rest}
             render={props => (
-              authenticated && validateUser('client-admin', rest.computedMatch.params.username)
+              authenticated && validateUser('admin', rest.computedMatch.params.username)
               ? (React.createElement(component, { ...props, loggingIn, authenticated }))
               : (<Redirect to="/logout" />)
             )}

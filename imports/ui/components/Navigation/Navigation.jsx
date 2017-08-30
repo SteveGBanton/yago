@@ -36,6 +36,42 @@ const styles = {
   },
 }
 
+const rolesMenu = function rolesMenu() {
+  let groupsRoles = [];
+  const roles = Meteor.user().roles
+  const groups = Object.keys(roles);
+
+  groups.forEach((group) => {
+    let rolesForEach = roles[group]
+    rolesForEach.forEach((role) => {
+      groupsRoles.push({group, role})
+    })
+
+  });
+
+  return groupsRoles
+}
+
+const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
+
+  return function change() {
+
+    Meteor.call('users.changeCurrentOrgRole',
+      { currentOrg, currentRole },
+      (err, res) => {
+          if (err) {
+            // TODO Handle err properly.
+            console.log(err)
+          } else {
+            history.push(`/${currentOrg}/${currentRole}/dashboard`)
+          }
+
+      }
+    )
+  }
+  //
+}
+
 const Navigation = props => (
   <Toolbar style={styles.toolbar}>
     <ToolbarGroup>
@@ -54,6 +90,13 @@ const Navigation = props => (
           </IconButton>
         }
       >
+        {props.authenticated
+          ? rolesMenu().map((role, index) =>
+            <MenuItem key={index} primaryText={`${role.group} - ${role.role}`} onClick={changeCurrent(role.group, role.role, props.history)} />
+          )
+          : ''
+        }
+        <Divider />
         <MenuItem primaryText="Clear Config" />
         <MenuItem primaryText="New Config" rightIcon={<PersonAdd />} />
         <MenuItem primaryText="Project" rightIcon={<FontIcon className="material-icons">search</FontIcon>} />
@@ -63,6 +106,7 @@ const Navigation = props => (
             <FontIcon className="material-icons" style={{color: '#559'}}>settings</FontIcon>
           }
         />
+
         {props.authenticated
           ? <MenuItem primaryText="Edit Profile" onClick={() => props.history.push('/profile')} />
           : ''
@@ -72,36 +116,13 @@ const Navigation = props => (
           : <MenuItem primaryText="Sign in" onClick={() => props.history.push('/login')} />
         }
 
+
+
+
       </IconMenu>
     </ToolbarGroup>
   </Toolbar>
 );
-
-/**
-
-<AppBar
-  style={{backgroundColor: '#0277BD', position: 'fixed', top: '0', left: '0'}}
-  title="Creixent"
-  iconElementRight={props.authenticated
-    ? <FlatButton label="Dashboard" href="/dashboard" /><FlatButton label="Sign out" onClick={() => Meteor.logout()} />
-    : (<div><FlatButton label="Sign in" href="/login" /><FlatButton label="Sign in" href="/login" /></div>)}
-  showMenuIconButton={false}
-/>
-
-const Navigation = props => (
-  <Navbar>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <Link to="/">Pup</Link>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-      {!props.authenticated ? <PublicNavigation /> : <AuthenticatedNavigation {...props} />}
-    </Navbar.Collapse>
-  </Navbar>
-);
-*/
 
 Navigation.defaultProps = {
   name: '',

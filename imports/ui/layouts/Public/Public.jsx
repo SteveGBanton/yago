@@ -9,7 +9,7 @@ const Public = ({ loggingIn, authenticated, component, ...rest }) => (
       render={props => (
         !authenticated ?
         (React.createElement(component, { ...props, loggingIn, authenticated })) :
-        (<Redirect to={`/${Meteor.user().currentOrg}/${Meteor.user().currentRole}/dashboard`} />)
+        (<Redirect to={`/${Meteor.user().current.currentOrg}/${Meteor.user().current.currentRole}/dashboard`} />)
       )}
     />
   </div>

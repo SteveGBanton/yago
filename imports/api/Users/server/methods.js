@@ -4,6 +4,29 @@ import { Accounts } from 'meteor/accounts-base';
 import editProfile from './edit-profile';
 import rateLimit from '../../../modules/rate-limit';
 
+export const changeCurrentOrgRole = new ValidatedMethod({
+  name: 'users.changeCurrentOrgRole',
+  validate: new SimpleSchema({
+    "currentOrg": { type: String },
+    "currentRole": { type: String },
+  }).validator(),
+  run({currentOrg, currentRole}) {
+    try {
+      Meteor.users.update(this.userId, {
+        $set: {
+          current: {
+            currentRole: currentRole,
+            currentOrg: currentOrg,
+          }
+        }
+      });
+    } catch (exception) {
+      throw new Meteor.Error('accounts.changeorgrole.error',
+        `Error changing current org/role. ${exception}`);
+    }
+  }
+})
+
 export const addAdminRole = new ValidatedMethod({
   name: 'users.addAdminRole',
   validate: null,
@@ -11,12 +34,14 @@ export const addAdminRole = new ValidatedMethod({
     try {
       let id = this.userId
       let adminUsername = Meteor.user().username
-      Roles.addUsersToRoles(id, ['client-admin'], adminUsername);
+      Roles.addUsersToRoles(id, ['admin'], adminUsername);
 
       Meteor.users.update(id, {
         $set: {
-          currentRole: 'admin',
-          currentOrg: adminUsername
+          current: {
+            currentRole: 'admin',
+            currentOrg: adminUsername,
+          }
         }
       });
 
@@ -43,8 +68,7 @@ export const createNewAdminUser = new ValidatedMethod({
     try {
       var id = Accounts.createUser(newAdmin);
       if (id) {
-        Roles.addUsersToRoles(id, ['client-admin'], newAdmin.username);
-        console.log(this.userId)
+        Roles.addUsersToRoles(id, ['admin'], newAdmin.username);
       }
     } catch (exception) {
       Meteor.users.remove(id);
