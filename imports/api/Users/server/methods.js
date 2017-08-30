@@ -27,31 +27,6 @@ export const changeCurrentOrgRole = new ValidatedMethod({
   }
 })
 
-export const addAdminRole = new ValidatedMethod({
-  name: 'users.addAdminRole',
-  validate: null,
-  run() {
-    try {
-      let id = this.userId
-      let adminUsername = Meteor.user().username
-      Roles.addUsersToRoles(id, ['admin'], adminUsername);
-
-      Meteor.users.update(id, {
-        $set: {
-          current: {
-            currentRole: 'admin',
-            currentOrg: adminUsername,
-          }
-        }
-      });
-
-    } catch (exception) {
-      throw new Meteor.Error('accounts.createuser.error',
-        `Error adding admin permissions. ${exception}`);
-    }
-  }
-})
-
 export const createNewAdminUser = new ValidatedMethod({
   name: 'users.createNewAdminUser',
   validate: new SimpleSchema({
@@ -64,19 +39,25 @@ export const createNewAdminUser = new ValidatedMethod({
     "profile.name.last": { type: String },
   }).validator(),
   run(newAdmin) {
-
+    console.log(newAdmin)
     try {
       var id = Accounts.createUser(newAdmin);
-      if (id) {
-        Roles.addUsersToRoles(id, ['admin'], newAdmin.username);
-      }
+      Roles.addUsersToRoles(id, ['admin'], newAdmin.username);
+      Meteor.users.update(id, {
+        $set: {
+          current: {
+            currentRole: 'admin',
+            currentOrg: newAdmin.username,
+          }
+        }
+      });
+      return id
     } catch (exception) {
       Meteor.users.remove(id);
       throw new Meteor.Error('accounts.createuser.error',
         `Error creating new user. ${exception}`);
     }
 
-    return id
   }
 })
 

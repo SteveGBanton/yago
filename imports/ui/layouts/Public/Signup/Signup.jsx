@@ -226,29 +226,19 @@ class Signup extends React.Component {
       },
     }
 
-    Accounts.createUser({
-      email: this.emailAddress.input.value,
-      password: this.password.input.value,
-      username: this.state.username,
-      profile: {
-        name: {
-          first: this.firstName.input.value,
-          last: this.lastName.input.value,
-        },
-      },
-    }, (error, res) => {
+    Meteor.call('users.createNewAdminUser', newAdmin, (error, res) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
+        console.log(error)
       } else {
-        Meteor.call('users.addAdminRole', null, (error) => {
+        Meteor.loginWithPassword(this.emailAddress.input.value, this.password.input.value, (error) => {
           if (error) {
-            console.log(error)
+            Bert.alert('Error Logging In', 'danger');
           } else {
             Meteor.call('users.sendVerificationEmail');
             Bert.alert('Welcome!', 'success');
-            history.push(`/${Meteor.user().currentOrg}/${Meteor.user().currentRole}/dashboard`);
+            history.push(`/${this.state.username}/admin/dashboard`);
           }
-
         });
       }
     });

@@ -96,7 +96,10 @@ const Navigation = props => (
           )
           : ''
         }
-        <Divider />
+        {props.authenticated
+          ? <Divider />
+          : ''
+        }
         <MenuItem primaryText="Clear Config" />
         <MenuItem primaryText="New Config" rightIcon={<PersonAdd />} />
         <MenuItem primaryText="Project" rightIcon={<FontIcon className="material-icons">search</FontIcon>} />
@@ -111,6 +114,7 @@ const Navigation = props => (
           ? <MenuItem primaryText="Edit Profile" onClick={() => props.history.push('/profile')} />
           : ''
         }
+
         {props.authenticated
           ? <MenuItem primaryText="Sign out" onClick={() => Meteor.logout()} />
           : <MenuItem primaryText="Sign in" onClick={() => props.history.push('/login')} />
