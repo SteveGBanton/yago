@@ -70,11 +70,3 @@ UserAdmin.propTypes = {
 };
 
 export default UserAdmin;
-
-
-/**
-<Drawer className="dashboard-drawer" containerStyle={{marginTop: '70px', width: '250px'}} open={false}>
-  <MenuItem>Menu Item</MenuItem>
-  <MenuItem>Menu Item 2</MenuItem>
-</Drawer>
-*/

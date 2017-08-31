@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
-const Public = ({ loggingIn, authenticated, component, ...rest }) => (
+const Public = ({ loggingIn, authenticated, component, user, ...rest }) => (
   <div className="public">
     <Route
       {...rest}
       render={props => (
         !authenticated ?
         (React.createElement(component, { ...props, loggingIn, authenticated })) :
-        (<Redirect to={`/${Meteor.user().current.currentOrg}/${Meteor.user().current.currentRole}/dashboard`} />)
+        (<Redirect to={`/${user.current.currentOrg}/${user.current.currentRole}/dashboard`} />)
       )}
     />
   </div>

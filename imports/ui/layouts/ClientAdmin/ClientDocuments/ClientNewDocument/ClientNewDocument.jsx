@@ -11,7 +11,7 @@ const ClientNewDocument = ({ history }) => (
   </div>
 );
 
-NewDocument.propTypes = {
+ClientNewDocument.propTypes = {
   history: PropTypes.object.isRequired,
 };
 

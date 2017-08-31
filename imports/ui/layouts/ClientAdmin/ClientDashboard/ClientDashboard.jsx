@@ -38,10 +38,12 @@ const runTest = (test) => {
 
 }
 
-const ClientDashboard = ({ loading, documents, match, history }) => (!loading ? (
+const ClientDashboard = ({ loading, documents, match, history, ...rest }) => (!loading ? (
   <div className="Documents">
 
     <h1>Documents</h1>
+
+    {console.log(rest)}
 
     <Tabs
         style={{width: '100%', marginBottom: "30px"}}

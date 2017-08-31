@@ -13,11 +13,10 @@ export const utilityGetPage2 = new ValidatedMethod({
   }
 })
 
-export const testMethod = new ValidatedMethod({
-  name: 'utility.testMethod',
-  validate: null,
-  run(test) {
-    console.log(Meteor.user())
-    return 'returned'
-  }
-})
+// export const testMethod = new ValidatedMethod({
+//   name: 'utility.testMethod',
+//   validate: null,
+//   run(test) {
+//     return 'returned'
+//   }
+// })

@@ -73,9 +73,8 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
 }
 
 const Navigation = props => {
-  const { authenticated, history } = props;
-  const user = (authenticated) ? Meteor.user() : '';
-  const current = (authenticated) ? user.current : '';
+  const { authenticated, history, user } = props;
+  const current = ( authenticated ) ? user.current : '';
   return (
     <Toolbar style={styles.toolbar}>
       <ToolbarGroup>
@@ -88,6 +87,7 @@ const Navigation = props => {
         }
 
         <IconMenu
+          menuStyle={{width: "250px"}}
           onItemTouchTap={() => this.open = null}
           iconButtonElement={
             <IconButton touch={true}>
@@ -99,11 +99,16 @@ const Navigation = props => {
         {authenticated
           ? rolesMenu(user.roles).map((role, index) =>
             <MenuItem
+              style={{fontSize: "14px"}}
               key={index}
               primaryText={`${role.group}`}
               onClick={changeCurrent(role.group, role.role, history)}
-              secondaryText={`${role.role}`}
-
+              secondaryText={`(${role.role})`}
+              leftIcon={
+                (user && current.currentOrg === role.group && current.currentRole === role.role)
+                ? <FontIcon className="material-icons">checkmark</FontIcon>
+                : ''
+              }
             />
           )
           : ''
@@ -132,6 +137,11 @@ const Navigation = props => {
         {authenticated
           ? <MenuItem primaryText="Sign out" onClick={() => Meteor.logout()} />
           : <MenuItem primaryText="Sign in" onClick={() => history.push('/login')} />
+        }
+
+        {authenticated
+          ? ''
+          : <MenuItem primaryText="Create Account" onClick={() => history.push('/signup')} />
         }
 
         </IconMenu>

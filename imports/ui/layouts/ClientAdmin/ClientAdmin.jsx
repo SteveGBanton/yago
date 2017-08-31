@@ -45,12 +45,7 @@ const validateUser = function validateCurrentUser(role, group) {
   return false
 }
 
-const computeLink = function computeLink(link) {
-
-
-}
-
-const ClientAdmin = ({ loggingIn, authenticated, component, ...rest }) => (
+const ClientAdmin = ({ loggingIn, authenticated, component, user, ...rest }) => (
     <div className="dashboard">
 
       <div className="dashboard-menu">
@@ -65,14 +60,14 @@ const ClientAdmin = ({ loggingIn, authenticated, component, ...rest }) => (
         </Drawer>
       </div>
       <div className="inner-route">
-          <Route
-            {...rest}
-            render={props => (
-              authenticated && validateUser('admin', rest.computedMatch.params.username)
-              ? (React.createElement(component, { ...props, loggingIn, authenticated }))
-              : (<Redirect to="/logout" />)
-            )}
-          />
+        <Route
+          {...rest}
+          render={props => (
+            authenticated && validateUser('admin', rest.computedMatch.params.username)
+            ? (React.createElement(component, { ...props, loggingIn, authenticated, user }))
+            : (<Redirect to="/logout" />)
+          )}
+        />
       </div>
     </div>
 );
@@ -84,11 +79,3 @@ ClientAdmin.propTypes = {
 };
 
 export default ClientAdmin;
-
-
-/**
-<Drawer className="dashboard-drawer" containerStyle={{marginTop: '70px', width: '250px'}} open={false}>
-  <MenuItem>Menu Item</MenuItem>
-  <MenuItem>Menu Item 2</MenuItem>
-</Drawer>
-*/

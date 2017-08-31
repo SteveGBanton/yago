@@ -196,7 +196,6 @@ class ClientProfile extends React.Component {
   }
 
   renderPasswordUser(loading, user) {
-    console.log(user)
     return (
         <form className="profile-edit" onSubmit={event => event.preventDefault()}>
           <div className="profile-edit-1">
@@ -304,8 +303,8 @@ class ClientProfile extends React.Component {
   }
 
   render() {
-
     const { loading, user } = this.props;
+    {console.log(this.props)}
     return (<div className="Profile">
         <h1>Edit Profile</h1>
         {this.renderProfileForm(loading, user)}
@@ -323,6 +322,5 @@ export default createContainer(() => {
 
   return {
     loading: !subscription.ready(),
-    user: Meteor.user(),
   };
 }, ClientProfile);

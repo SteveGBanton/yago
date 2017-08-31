@@ -6,8 +6,8 @@ import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { debounce, kebabCase } from 'lodash'
 
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import OAuthLoginButtons from '../../../components/OAuthLoginButtons/OAuthLoginButtons.jsx';
-
 import customFormValidator from '../../../../modules/custom-form-validator';
 
 // material-ui
@@ -16,6 +16,7 @@ import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
+import { orange500 } from 'material-ui/styles/colors';
 
 const signupFormRules = {
   firstName: {
@@ -33,7 +34,11 @@ const signupFormRules = {
   },
   orgName: {
     required: true,
-    maxLength: 35,
+    maxLength: 22,
+  },
+  username: {
+    required: true,
+    maxLength: 22,
   },
   password: {
     required: true,
@@ -55,6 +60,9 @@ const signupErrorMessages = {
   orgName: {
     required: "This field is required",
   },
+  username: {
+    required: "This field is required",
+  },
   password: {
     required: "This field is required",
     password: "Keep your account safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
@@ -67,6 +75,8 @@ class Signup extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.createUsername = this.createUsername.bind(this);
     this.formValidate = this.formValidate.bind(this);
+    this.editUsername = this.editUsername.bind(this);
+    this.editUsernameWithOrgName = this.editUsernameWithOrgName.bind(this)
 
     this.state = ({
       formErrors: {
@@ -77,58 +87,58 @@ class Signup extends React.Component {
         emailAddress: "",
       },
       username: "",
+      usernameClean: "",
       userNameVerified: false,
+      usernameLoading: false,
     })
   }
 
-  createUsername = debounce(function() {
+  createUsername = debounce(function(field) {
 
-    this.setState({
-      formErrors: {
-        firstName: this.state.formErrors.firstName,
-        lastName: this.state.formErrors.lastName,
-        orgName: "",
-        password: this.state.formErrors.password,
-        emailAddress: this.state.formErrors.emailAddress,
-      }
-    });
+      let inputFieldToUse = (field === 'orgName') ? this.orgName.input.value : this.username.input.value;
 
-    // put into username format
-    let input = kebabCase(this.orgName.input.value)
-    let number = 0;
+      // put into username format
+      let input = kebabCase(inputFieldToUse);
+      let number = 0;
 
-    //check if exists already
-    function checkUser(potentialUserName) {
-      Meteor.call('users.checkUsername', {potentialUserName}, (error, count) => {
-        if (error) {
-          Bert.alert(error.reason, 'danger');
-        } else {
-          if (count > 0) {
-            setUsernameFalse(potentialUserName)
-            return false
+      // setting username functions
+      const setUsernameTrue = (function(potentialUserName) {
+        this.setState({ usernameClean: potentialUserName });
+        this.setState({ username: potentialUserName });
+        this.setState({ usernameLoading: false });
+        this.setState({ userNameVerified: true });
+      }).bind(this)
+
+      const setUsernameFalse = (function(potentialUserName) {
+        this.setState({ usernameClean: potentialUserName });
+        this.setState({ username: potentialUserName });
+        this.setState({ usernameLoading: false });
+        this.setState({ userNameVerified: false });
+        number += 1;
+        checkUser(`${input}-${number}`);
+      }).bind(this)
+
+      //check if exists already
+      function checkUser(potentialUserName) {
+        Meteor.call('users.checkUsername', {potentialUserName}, (error, count) => {
+          if (error) {
+            console.log(error.reason)
           } else {
-            setUsernameTrue(potentialUserName)
-            return true
+            if (count > 0) {
+              setUsernameFalse(potentialUserName);
+              return false;
+            } else {
+              setUsernameTrue(potentialUserName);
+              return true;
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    var setUsernameTrue = (function(potentialUserName) {
-      this.setState({ username: potentialUserName })
-      this.setState({ userNameVerified: true })
-    }).bind(this)
+      checkUser(input);
 
-    var setUsernameFalse = (function(potentialUserName) {
-      this.setState({ username: potentialUserName })
-      this.setState({ userNameVerified: false })
-      number += 1
-      checkUser(`${input}-${number}`)
-    }).bind(this)
+    }, 1500)
 
-    checkUser(input)
-
-  }, 400)
 
 
   formValidate() {
@@ -139,26 +149,19 @@ class Signup extends React.Component {
       orgName: this.orgName.input.value,
       firstName: this.firstName.input.value,
       lastName: this.lastName.input.value,
+      username: this.state.username
     }
 
     let formErrors = customFormValidator(input, signupFormRules, signupErrorMessages)
 
-    if (this.state.userNameVerified === false && this.orgName.input.value) {
-      formErrors.orgName = 'Sorry, username is taken'
-    }
-
-    // Check for empty object. If empty and username is verified, submit form.
-    if (
-      Object.keys(formErrors).length === 0
-      && formErrors.constructor === Object
-      && this.state.userNameVerified === true
-    ) {
+    // Check if formErrors is not false, username is verified and not loading. If empty and username is verified, submit form.
+    if (!formErrors && this.state.userNameVerified === true && this.state.usernameLoading === false) {
       this.handleSubmit()
     } else {
       this.setState({formErrors})
     }
-
     return
+
   }
 
   handleSubmit() {
@@ -197,12 +200,26 @@ class Signup extends React.Component {
 
   }
 
+  editUsername() {
+    this.setState({ username: this.username.input.value });
+    this.createUsername('username');
+    this.setState({ usernameLoading: true })
+    this.setState({ "formErrors.username": "" })
+  }
+
+  editUsernameWithOrgName() {
+    this.createUsername('orgName');
+    this.setState({ usernameLoading: true })
+    this.setState({ "formErrors.username": "" })
+  }
+
   render() {
     return (
       <div className="Signup">
 
+        <h2>Create New Account</h2>
         <OAuthLoginButtons
-          services={['facebook', 'google']}
+          services={['']}
         />
 
         <form onSubmit={event => event.preventDefault()}>
@@ -210,16 +227,35 @@ class Signup extends React.Component {
         <TextField
           name="orgName"
           floatingLabelText="Organization Name"
-          onChange={this.createUsername}
+          onChange={this.editUsernameWithOrgName}
           ref={input => (this.orgName = input)}
           errorText={this.state.formErrors.orgName}
           maxLength='22'
+        /><br/>
+
+        <TextField
+          name="orgID"
+          floatingLabelText="Organization ID"
+          errorStyle={(this.state.formErrors.username) ? {} : { color: orange500 }}
+          value={this.state.username}
+          onChange={this.editUsername}
+          ref={input => (this.username = input)}
+          errorText={(this.state.formErrors.username) ? this.state.formErrors.username : 'Used in URL: app.com/orgID/admin/dashboard/. Cannot be changed after account creation'}
+          maxLength='22'
         />
 
-        <div className="username-preview">
-          {this.state.username}
-          {(this.state.username === false) ? 'username already taken' : ''}
-        </div>
+        {
+          (this.state.usernameLoading)
+          ? <RefreshIndicator
+            size={25}
+            left={10}
+            top={-55}
+            status="loading"
+            style={{display: 'inline-block', position: 'relative'}}
+          />
+          : ''
+        }
+
 
         <TextField
           name="firstName"
@@ -237,8 +273,9 @@ class Signup extends React.Component {
           errorText={this.state.formErrors.lastName}
         /><br/>
 
+        {/*called username to help password managers*/}
         <TextField
-          name="emailAddress"
+          name="username"
           floatingLabelText="Email Address"
           ref={input => (this.emailAddress = input)}
           errorText=""
@@ -256,7 +293,14 @@ class Signup extends React.Component {
 
         <div>
 
-        <RaisedButton type="submit" onClick={this.formValidate}>Sign Up</RaisedButton>
+        <RaisedButton
+          type="submit"
+          fullWidth={true}
+          onClick={this.formValidate}
+          style={{margin: "35px 0 35px 0"}}
+        >
+          Sign Up
+        </RaisedButton>
 
         </div>
 
@@ -272,143 +316,3 @@ Signup.propTypes = {
 };
 
 export default Signup;
-
-
-/*
-
-
-  customValidator(input1, rules1, messages1) {
-
-    const input = {
-      emailAddress: this.emailAddress.input.value,
-      password: this.password.input.value,
-      orgName: this.orgName.input.value,
-      firstName: this.firstName.input.value,
-      lastName: this.lastName.input.value,
-    }
-
-    const rules = {
-      firstName: {
-        required: true,
-        maxLength: 20,
-      },
-      lastName: {
-        required: true,
-        maxLength: 20,
-      },
-      emailAddress: {
-        required: true,
-        maxLength: 40,
-        email: true,
-      },
-      orgName: {
-        required: true,
-        maxLength: 35,
-      },
-      password: {
-        required: true,
-        password: true,
-      },
-    }
-
-    const messages = {
-      firstName: {
-        required: "This field is required",
-      },
-      lastName: {
-        required: "This field is required",
-      },
-      emailAddress: {
-        required: "This field is required",
-        email: "Please enter a valid email",
-      },
-      orgName: {
-        required: "This field is required",
-      },
-      password: {
-        required: "This field is required",
-        password: "Keep your account safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
-      },
-    }
-
-    function valMaxLength(input, length) {
-      return input.length <= Number(length);
-    };
-
-    function valMinLength(input, length) {
-      return input.length >= Number(length);
-    };
-
-    function valEmail(email) {
-      let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    };
-
-    function valPassword(pass) {
-      let re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{9,}$/;
-
-      return re.test(pass)
-    }
-
-    let formErrors = {};
-
-    Object.keys(rules).forEach((field) => {
-      Object.keys(rules[field]).forEach((subrule) => {
-        switch (subrule) {
-          case 'required':
-            if (!input[field]) {
-              formErrors[field] = messages[field]['required'];
-            }
-            break;
-          case 'minLength':
-            if (input[field]) {
-              (!valMinLength(input[field], rules[field][subrule]))
-              ? formErrors[field] = messages[field]['minLength']
-              : null;
-            }
-            break;
-          case 'maxLength':
-            if (input[field]) {
-              (!valMaxLength(input[field], rules[field][subrule]))
-              ? formErrors[field] = messages[field]['maxlength']
-              : null;
-            }
-            break;
-          case 'email':
-            if (input[field]) {
-              (!valEmail(input[field]))
-              ? formErrors[field] = messages[field]['email']
-              : null;
-            }
-            break;
-          case 'password':
-            if (input[field]) {
-              (!valPassword(input[field]))
-              ? formErrors[field] = messages[field]['password']
-              : null;
-            }
-            break;
-          default:
-            break;
-        }
-      })
-    });
-
-    if (this.state.userNameVerified === false) {
-      formErrors.orgName = 'Sorry, username is taken'
-    }
-
-    // Check for empty object. If empty and username is verified, submit form.
-    if (
-      Object.keys(formErrors).length === 0
-      && formErrors.constructor === Object
-      && this.state.userNameVerified === true
-    ) {
-      this.handleSubmit()
-    } else {
-      this.setState({formErrors})
-    }
-
-  }
-
-  */
