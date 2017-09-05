@@ -4,10 +4,10 @@ import AppBar from 'material-ui/AppBar'
 
 import DocumentEditor from '../../../../components/DocumentEditor/DocumentEditor.jsx';
 
-const ClientNewDocument = ({ history }) => (
+const ClientNewDocument = ({ history, user }) => (
   <div className="NewDocument">
     <h2>New Doc</h2>
-    <DocumentEditor history={history} />
+    <DocumentEditor history={history} user={user} />
   </div>
 );
 

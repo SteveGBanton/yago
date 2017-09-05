@@ -99,6 +99,10 @@ label {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
 }
 
+.ViewDocument {
+  white-space: pre-wrap;
+}
+
 .page-top-bar {
   width: calc(100% + 80px) !important;
   background-color: '#0277BD';

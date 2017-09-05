@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "quotes": 0,
+    "no-undef": [2],
+  },
+  "globals": {
+    "Meteor": false,
+    "Session": false,
+    "Roles": false,
+    // and so on..
+  },
+}

@@ -132,20 +132,7 @@ const ClientDashboard = ({ loading, documents, match, history, ...rest }) => (!l
             <td>{title}</td>
             <td>{timeago(updatedAt)}</td>
             <td>{monthDayYearAtTime(createdAt)}</td>
-            <td>
-              <Button
-                bsStyle="primary"
-                onClick={() => history.push(`${match.url}/${_id}`)}
-                block
-              >View</Button>
-            </td>
-            <td>
-              <Button
-                bsStyle="danger"
-                onClick={() => handleRemove(_id)}
-                block
-              >Delete</Button>
-            </td>
+            
           </tr>
         ))}
       </tbody>

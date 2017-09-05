@@ -9,16 +9,10 @@ import Documents from '../../../../../api/Documents/Documents';
 import DocumentEditor from '../../../../components/DocumentEditor/DocumentEditor';
 import NotFound from '../../../../components/NotFound/NotFound.jsx';
 
-const ClientEditDocument = ({ doc, history }) => (doc ? (
+const ClientEditDocument = ({ doc, history, user }) => (doc ? (
   <div className="EditDocument">
-    <AppBar
-      className="page-top-bar"
-      style={{backgroundColor: '#0277BD', zIndex: '900'}}
-      title={`Editing "${doc.title}"`}
-      showMenuIconButton={false}
-    />
-    <h4 className="page-header">{`Editing "${doc.title}"`}</h4>
-    <DocumentEditor doc={doc} history={history} />
+    <h1 className="page-header">{`Editing "${doc.title}"`}</h1>
+    <DocumentEditor doc={doc} history={history} user={user} />
   </div>
 ) : <NotFound />);
 

@@ -13,10 +13,15 @@ export const utilityGetPage2 = new ValidatedMethod({
   }
 })
 
-// export const testMethod = new ValidatedMethod({
-//   name: 'utility.testMethod',
-//   validate: null,
-//   run(test) {
-//     return 'returned'
-//   }
-// })
+export const remoteGet = new ValidatedMethod({
+  name: 'utility.remoteGet',
+  validate: null,
+  run(getThis) {
+    try {
+      console.log('getting from ... ' + getThis)
+      return HTTP.get(getThis);
+    } catch (e) {
+      throw new Meteor.Error('500', e);
+    }
+  }
+})

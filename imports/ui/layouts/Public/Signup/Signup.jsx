@@ -256,7 +256,6 @@ class Signup extends React.Component {
           : ''
         }
 
-
         <TextField
           name="firstName"
           floatingLabelText="First Name"

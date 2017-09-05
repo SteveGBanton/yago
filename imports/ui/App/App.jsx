@@ -10,55 +10,44 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 // Dashboard layouts
-import AllUserAccess from '../layouts/AllUserAccess/AllUserAccess.jsx';
-import ClientAdmin from '../layouts/ClientAdmin/ClientAdmin.jsx';
-import Public from '../layouts/Public/Public.jsx';
-import SuperAdmin from '../layouts/SuperAdmin/SuperAdmin.jsx';
-import UserAdmin from '../layouts/UserAdmin/UserAdmin.jsx';
+import AllUserAccess from '../layouts/AllUserAccess/AllUserAccess';
+import ClientAdmin from '../layouts/ClientAdmin/ClientAdmin';
+import Public from '../layouts/Public/Public';
+import SuperAdmin from '../layouts/SuperAdmin/SuperAdmin';
+import UserAdmin from '../layouts/UserAdmin/UserAdmin';
 
 // SuperAdmin pages
 
 // ClientAdmin pages
-import ClientDashboard from '../layouts/ClientAdmin/ClientDashboard/ClientDashboard.jsx';
-import ClientDocuments from '../layouts/ClientAdmin/ClientDocuments/ClientDocuments.jsx';
-import ClientNewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientNewDocument/ClientNewDocument.jsx';
-import ClientViewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientViewDocument/ClientViewDocument.jsx';
-import ClientEditDocument from '../layouts/ClientAdmin/ClientDocuments/ClientEditDocument/ClientEditDocument.jsx';
-import ClientProfile from '../layouts/ClientAdmin/ClientProfile/ClientProfile.jsx';
+import ClientDashboard from '../layouts/ClientAdmin/ClientDashboard/ClientDashboard';
+import ClientDocuments from '../layouts/ClientAdmin/ClientDocuments/ClientDocuments';
+import ClientNewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientNewDocument/ClientNewDocument';
+import ClientViewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientViewDocument/ClientViewDocument';
+import ClientEditDocument from '../layouts/ClientAdmin/ClientDocuments/ClientEditDocument/ClientEditDocument';
+import ClientProfile from '../layouts/ClientAdmin/ClientProfile/ClientProfile';
+import Table from '../layouts/ClientAdmin/Table/Table';
 
 // UserAdmin pages
-import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard.jsx';
+import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard';
 
 // Public Only pages
-import Signup from '../layouts/Public/Signup/Signup.jsx';
-import Login from '../layouts/Public/Login/Login.jsx';
-import Logout from '../layouts/Public/Logout/Logout.jsx';
+import Signup from '../layouts/Public/Signup/Signup';
+import Login from '../layouts/Public/Login/Login';
+import Logout from '../layouts/Public/Logout/Logout';
 
 // All users pages
-import Index from '../layouts/AllUserAccess/Index/Index.jsx';
-import NotFound from '../layouts/AllUserAccess/NotFound/NotFound.jsx';
-import Terms from '../layouts/AllUserAccess/Terms/Terms.jsx';
-import Privacy from '../layouts/AllUserAccess/Privacy/Privacy.jsx';
-import RecoverPassword from '../layouts/AllUserAccess/RecoverPassword/RecoverPassword.jsx';
-import ResetPassword from '../layouts/AllUserAccess/ResetPassword/ResetPassword.jsx';
-import VerifyEmail from '../layouts/AllUserAccess/VerifyEmail/VerifyEmail.jsx';
+import Index from '../layouts/AllUserAccess/Index/Index';
+import NotFound from '../layouts/AllUserAccess/NotFound/NotFound';
+import Terms from '../layouts/AllUserAccess/Terms/Terms';
+import Privacy from '../layouts/AllUserAccess/Privacy/Privacy';
+import RecoverPassword from '../layouts/AllUserAccess/RecoverPassword/RecoverPassword';
+import ResetPassword from '../layouts/AllUserAccess/ResetPassword/ResetPassword';
+import VerifyEmail from '../layouts/AllUserAccess/VerifyEmail/VerifyEmail';
 
 // Components
-import Footer from '../components/Footer/Footer';
-import Navigation from '../components/Navigation/Navigation.jsx';
-
+import Navigation from '../components/Navigation/Navigation';
 
 import './App.scss';
-
-const handleResendVerificationEmail = (emailAddress) => {
-  Meteor.call('users.sendVerificationEmail', (error) => {
-    if (error) {
-      Bert.alert(error.reason, 'danger');
-    } else {
-      Bert.alert(`Check ${emailAddress} for a verification link!`, 'success');
-    }
-  });
-};
 
 const App = props => (
   <Router>
@@ -71,6 +60,8 @@ const App = props => (
             <Switch>
               <AllUserAccess exact path="/" component={Index} {...props} />
               <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} />
+              <ClientAdmin exact path="/:username/admin/table" component={Table} {...props} />
+              {/* <ClientAdmin exact path="/:username/admin/calendar" component={ClientDashboard} {...props} /> */}
               <ClientAdmin exact path="/:username/admin/documents" component={ClientDocuments} {...props} />
               <ClientAdmin exact path="/:username/admin/documents/new" component={ClientNewDocument} {...props} />
               <ClientAdmin exact path="/:username/admin/documents/:_id" component={ClientViewDocument} {...props} />
