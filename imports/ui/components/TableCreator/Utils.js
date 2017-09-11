@@ -1,4 +1,6 @@
-import namor from "namor";
+import namor from 'namor';
+import faker from 'faker';
+import { Random } from 'meteor/random';
 
 const range = len => {
   const arr = [];
@@ -11,6 +13,8 @@ const range = len => {
 const newPerson = () => {
   const statusChance = Math.random();
   return {
+    id: Random.id(),
+    avatar: faker.image.avatar(),
     firstName: namor.generate({ words: 1, numbers: 0 }),
     lastName: namor.generate({ words: 1, numbers: 0 }),
     age: Math.floor(Math.random() * 30),
@@ -30,6 +34,5 @@ const newPerson = () => {
 export function makeData(len = 5553) {
   return range(len).map(() => ({
     ...newPerson(),
-    children: range(10).map(newPerson),
   }));
 }

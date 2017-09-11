@@ -21,92 +21,97 @@ const validateUser = function validateCurrentUser(role, group) {
   return false;
 };
 
-const ClientAdmin = ({ loggingIn, authenticated, component, user, ...rest }) => (
-  <div className="dashboard">
+export default class ClientAdmin extends React.Component {
 
-    <div className="dashboard-menu">
-      <Drawer
-        className="dashboard-drawer"
-        containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px" }}
-        style={{ color: 'white' }}
-        open
-      >
-        <Link to={`/${rest.computedMatch.params.username}/admin/documents`}>
-          <MenuItem
-            primaryText="View Documents"
-            leftIcon={
-              <RemoveRedEye
-                color="rgba(255,255,255,0.5)"
-                style={{ paddingLeft: "10px" }}
-              />}
+  render() {
+    const { loggingIn, authenticated, component, user, ...rest } = this.props;
+    return (
+      <div className="dashboard">
+
+        <div className="dashboard-menu">
+          <Drawer
+            className="dashboard-drawer"
+            containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px" }}
+            style={{ color: 'white' }}
+            open
+          >
+            <Link to={`/${rest.computedMatch.params.username}/admin/documents`}>
+              <MenuItem
+                primaryText="View Documents"
+                leftIcon={
+                  <RemoveRedEye
+                    color="rgba(255,255,255,0.5)"
+                    style={{ paddingLeft: "10px" }}
+                  />}
+              />
+            </Link>
+            <Link to={`/${rest.computedMatch.params.username}/admin/documents/new`}>
+              <MenuItem
+                primaryText="New Document"
+                leftIcon={
+                  <PersonAdd
+                    color="rgba(255,255,255,0.5)"
+                    style={{ paddingLeft: "10px" }}
+                  />}
+              />
+            </Link>
+            <Link to={`/${rest.computedMatch.params.username}/admin/table`}>
+              <MenuItem
+                primaryText="Manage Students"
+                leftIcon={
+                  <Person
+                    color="rgba(255,255,255,0.5)"
+                    style={{ paddingLeft: "10px" }}
+                  />}
+              />
+            </Link>
+            <Divider
+              style={{ backgroundColor: "#0288D1", marginTop: "16px", marginBottom: "16px" }}
+            />
+            <MenuItem
+              primaryText="Make a copy"
+              leftIcon={
+                <ContentCopy
+                  color="rgba(255,255,255,0.5)"
+                  style={{ paddingLeft: "10px" }}
+                />}
+            />
+            <MenuItem
+              primaryText="Download"
+              leftIcon={
+                <Download
+                  color="rgba(255,255,255,0.5)"
+                  style={{ paddingLeft: "10px" }}
+                />}
+            />
+            <MenuItem
+              primaryText="Remove"
+              leftIcon={
+                <Delete
+                  color="rgba(255,255,255,0.5)"
+                  style={{ paddingLeft: "10px" }}
+                />}
+            />
+          </Drawer>
+        </div>
+        <div className="inner-route">
+          <Route
+            {...rest}
+            render={props => (
+              authenticated && validateUser('admin', rest.computedMatch.params.username)
+              ? (React.createElement(component, { ...props, loggingIn, authenticated, user }))
+              : (<Redirect to="/logout" />)
+            )}
           />
-        </Link>
-        <Link to={`/${rest.computedMatch.params.username}/admin/documents/new`}>
-          <MenuItem
-            primaryText="New Document"
-            leftIcon={
-              <PersonAdd
-                color="rgba(255,255,255,0.5)"
-                style={{ paddingLeft: "10px" }}
-              />}
-          />
-        </Link>
-        <Link to={`/${rest.computedMatch.params.username}/admin/table`}>
-          <MenuItem
-            primaryText="Manage Students"
-            leftIcon={
-              <Person
-                color="rgba(255,255,255,0.5)"
-                style={{ paddingLeft: "10px" }}
-              />}
-          />
-        </Link>
-        <Divider
-          style={{ backgroundColor: "#0288D1", marginTop: "16px", marginBottom: "16px" }}
-        />
-        <MenuItem
-          primaryText="Make a copy"
-          leftIcon={
-            <ContentCopy
-              color="rgba(255,255,255,0.5)"
-              style={{ paddingLeft: "10px" }}
-            />}
-        />
-        <MenuItem
-          primaryText="Download"
-          leftIcon={
-            <Download
-              color="rgba(255,255,255,0.5)"
-              style={{ paddingLeft: "10px" }}
-            />}
-        />
-        <MenuItem
-          primaryText="Remove"
-          leftIcon={
-            <Delete
-              color="rgba(255,255,255,0.5)"
-              style={{ paddingLeft: "10px" }}
-            />}
-        />
-      </Drawer>
-    </div>
-    <div className="inner-route">
-      <Route
-        {...rest}
-        render={props => (
-          authenticated && validateUser('admin', rest.computedMatch.params.username)
-          ? (React.createElement(component, { ...props, loggingIn, authenticated, user }))
-          : (<Redirect to="/logout" />)
-        )}
-      />
-    </div>
-  </div>
-);
+        </div>
+      </div>
+    );
+  }
+}
+
 
 ClientAdmin.propTypes = {
   loggingIn: PropTypes.bool.isRequired,
   authenticated: PropTypes.bool.isRequired,
   component: PropTypes.func.isRequired,
 };
-
-export default ClientAdmin;

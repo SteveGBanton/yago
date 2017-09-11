@@ -1,16 +1,16 @@
 import React from "react";
 // import { makeData } from "./Utils";
 import TableCreator from '../../../components/TableCreator/TableCreator';
-import Loading from '../../../components/Loading/Loading';
 import { makeData } from '../../../components/TableCreator/Utils';
+import Loading from '../../../components/Loading/Loading';
 
-
-const customSchema1 = [
+const customSchema = [
   {
     fieldName: 'First Name',
     fieldId: 'firstName',
     type: 'text-field',
     required: 'false',
+    public: true,
   },
   {
     fieldName: 'Progress',
@@ -18,12 +18,14 @@ const customSchema1 = [
     type: 'text-field',
     required: 'false',
     cellType: 'linear-progress',
+    public: true,
   },
   {
     fieldName: 'Relationship Status',
     fieldId: 'status',
     type: 'text-field',
     required: 'false',
+    public: true,
   },
   {
     fieldName: 'Date Created',
@@ -31,16 +33,62 @@ const customSchema1 = [
     type: 'text-field',
     required: 'false',
     cellType: 'date',
+    public: true,
   },
   {
     fieldName: 'Description',
     fieldId: 'text-field-1',
     type: 'text-field',
     required: 'false',
+    public: true,
+  },
+  {
+    fieldName: 'id',
+    fieldId: 'id',
+    type: 'id',
+    required: 'true',
+    public: false,
+  },
+  {
+    fieldName: 'Black Row',
+    fieldId: 'blackRow',
+    type: 'text-field',
+    required: 'false',
+    public: true,
+  },
+  {
+    fieldName: 'New Row',
+    fieldId: 'newRow',
+    type: 'text-field',
+    required: 'false',
+    public: true,
+  },
+  {
+    fieldName: 'Blanks',
+    fieldId: 'blanks',
+    type: 'text-field',
+    required: 'false',
+    public: true,
+  },
+  {
+    fieldName: 'Avatar',
+    fieldId: 'avatar',
+    type: 'image',
+    required: 'false',
+    cellType: 'image',
+    public: true,
   },
 ];
 
-const customSchema = [
+const customSchema2 = [
+  {
+    fieldName: 'Avatar',
+    fieldId: 'avatar',
+    type: 'image-field',
+    required: 'false',
+    cellType: 'image',
+    public: true,
+  },
   {
     fieldName: 'Created',
     fieldId: 'created',
@@ -74,34 +122,54 @@ export default class TableDisplay extends React.Component {
   constructor(props) {
     super(props);
     this.getData = this.getData.bind(this);
+    this.getSelected = this.getSelected.bind(this);
     this.state = ({
       tableData: [],
-      loading: true,
       schema: customSchema,
     });
   }
 
-  componentWillMount() {
-    this.getData();
+  componentDidMount() {
+    setTimeout(this.getData, 1000);
+  }
+
+  getSelected(selected) {
+    // console.log(selected);
   }
 
   getData() {
-    Meteor.call('utility.remoteGet', 'https://f001.backblazeb2.com/file/boldpoint-test/tableData2short.json', (err, res) => {
-      this.setState({
-        tableData: JSON.parse(res.content),
-        loading: false,
-      });
+    this.setState({
+      tableData: makeData(500),
+      loading: false,
+      selected: [],
+      selectedIndexes: {},
     });
+    // Meteor.call('utility.remoteGet', 'https://f001.backblazeb2.com/file/boldpoint-test/tableData2short.json', (err, res) => {
+    //   this.setState({
+    //     tableData: JSON.parse(res.content),
+    //     loading: false,
+    //   });
+    // });
   }
 
   render() {
+    console.log(this.props)
     return (
       <div>
         <h1>Table Display</h1>
-        <TableCreator
-          tableData={this.state.tableData}
-          schema={this.state.schema}
-        />
+        {(this.state.tableData !== undefined || this.state.tableData !== 0)
+          ?
+            <TableCreator
+              history={this.props.history}
+              user={this.props.user}
+              tableName="Default Data"
+              getSelected={this.getSelected}
+              tableData={this.state.tableData}
+              schema={this.state.schema}
+            />
+          : <Loading />
+        }
+
       </div>
     );
   }
