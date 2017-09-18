@@ -19,5 +19,7 @@
         "loginStyle": "popup"
       }
     }
-  }
+  },
+  "AWSAccessKeyId": "<Paste Your Access Key ID Here>",
+  "AWSSecretAccessKey": "<Paste Your Secret Access Key Here>"
 }

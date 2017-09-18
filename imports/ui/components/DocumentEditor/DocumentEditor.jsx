@@ -28,7 +28,7 @@ const messages = {
   },
 }
 
-class DocumentEditor extends React.Component {
+export default class DocumentEditor extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,10 +40,6 @@ class DocumentEditor extends React.Component {
         body: "",
       },
     })
-  }
-
-  componentDidMount() {
-    const component = this;
   }
 
   formValidate() {
@@ -120,7 +116,7 @@ class DocumentEditor extends React.Component {
             onClick={this.formValidate}
             style={{margin: "35px 0 35px 0", padding: "5px 10px 5px 10px"}}
           >
-            Create New Document
+            Submit
           </RaisedButton>
 
         </form>
@@ -137,54 +133,3 @@ DocumentEditor.propTypes = {
   doc: PropTypes.object,
   history: PropTypes.object.isRequired,
 };
-
-export default DocumentEditor;
-
-
-/*
-<FormGroup>
-  <ControlLabel>Title</ControlLabel>
-  <input
-    type="text"
-    className="form-control"
-    name="title"
-    ref={title => (this.title = title)}
-    defaultValue={doc && doc.title}
-    placeholder="Oh, The Places You'll Go!"
-  />
-</FormGroup>
-<FormGroup>
-  <ControlLabel>Body</ControlLabel>
-  <textarea
-    className="form-control"
-    name="body"
-    ref={body => (this.body = body)}
-    defaultValue={doc && doc.body}
-    placeholder="Congratulations! Today is your day. You're off to Great Places! You're off and away!"
-  />
-</FormGroup>
-<Button type="submit" bsStyle="success">
-  {doc && doc._id ? 'Save Changes' : 'Add Document'}
-</Button>
-
-// validate(component.form, {
-//   rules: {
-//     title: {
-//       required: true,
-//     },
-//     body: {
-//       required: true,
-//     },
-//   },
-//   messages: {
-//     title: {
-//       required: 'Need a title in here, Seuss.',
-//     },
-//     body: {
-//       required: 'This thneeds a body, please.',
-//     },
-//   },
-//   submitHandler() { component.handleSubmit(); },
-// });
-
-*/

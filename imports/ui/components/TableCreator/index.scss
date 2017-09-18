@@ -4,14 +4,6 @@ body {
   font-size: 14px;
 }
 
-div.rt-resizable-header-content {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
 .rt-td {
   display: flex;
   flex-direction: column;
@@ -22,6 +14,10 @@ div.rt-resizable-header-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.rt-tr {
+
 }
 
 .centerRow {
@@ -47,7 +43,6 @@ div.rt-resizable-header-content {
   &:hover {
     background: rgba(3, 169, 244, 0.3);
   }
-
 }
 
 .removeCircle {
@@ -62,11 +57,5 @@ div.rt-resizable-header-content {
   border-radius: 5%;
   &:hover {
     background: rgba(255, 0, 0,0.3);
-  }
-}
-
-.pointer {
-  &:hover {
-    cursor: pointer;
   }
 }

@@ -8,6 +8,14 @@ export default function customFormValidator(input, rules, messages) {
     return string.length >= Number(length);
   }
 
+  function valMinValue(number, min) {
+    return Number(number) >= Number(min);
+  }
+
+  function valMaxValue(number, max) {
+    return Number(number) <= Number(max);
+  }
+
   function valEmail(email) {
     if (email !== '') {
       const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -45,6 +53,20 @@ export default function customFormValidator(input, rules, messages) {
           if (input[field]) {
             (!valMaxLength(input[field], rules[field][subrule]))
             ? formErrors[field] = messages[field].maxlength
+            : null;
+          }
+          break;
+        case 'minValue':
+          if (input[field]) {
+            (!valMinValue(input[field], rules[field][subrule]))
+            ? formErrors[field] = messages[field].minValue
+            : null;
+          }
+          break;
+        case 'maxValue':
+          if (input[field]) {
+            (!valMaxValue(input[field], rules[field][subrule]))
+            ? formErrors[field] = messages[field].maxValue
             : null;
           }
           break;

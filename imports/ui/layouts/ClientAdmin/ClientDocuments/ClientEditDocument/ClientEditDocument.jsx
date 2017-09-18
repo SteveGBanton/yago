@@ -7,7 +7,7 @@ import AppBar from 'material-ui/AppBar'
 
 import Documents from '../../../../../api/Documents/Documents';
 import DocumentEditor from '../../../../components/DocumentEditor/DocumentEditor';
-import NotFound from '../../../../components/NotFound/NotFound.jsx';
+import NotFound from '../../../../components/NotFound/NotFound';
 
 const ClientEditDocument = ({ doc, history, user }) => (doc ? (
   <div className="EditDocument">

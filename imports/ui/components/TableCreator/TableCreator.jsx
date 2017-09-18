@@ -11,6 +11,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import Edit from 'material-ui/svg-icons/image/edit';
 import FilterList from 'material-ui/svg-icons/content/filter-list';
 import Visibility from 'material-ui/svg-icons/action/visibility';
+import ViewColumn from 'material-ui/svg-icons/action/view-column';
 import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import Add from 'material-ui/svg-icons/content/add';
@@ -187,7 +188,7 @@ export default class TableCreator extends React.Component {
     columns.forEach((field) => {
       const isFieldActive = (this.state.activeCols.findIndex(item => item.fieldId === field.fieldId) >= 0)
 
-      if (!isFieldActive && field.cellType !== 'checkbox' && field.cellType !== 'editButtons') {
+      if (!isFieldActive && field.cellType !== 'bulkEditSelect' && field.cellType !== 'editButtons') {
         return;
       }
 
@@ -212,7 +213,7 @@ export default class TableCreator extends React.Component {
         newField.Cell = (row =>
           (
             <div className="centerRow">
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/documents/${row.original.id}/edit`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}/edit`}>
                 <Edit
                   onClick={() => history.push()}
                   color="rgba(0, 0, 0, 0.30)"
@@ -220,7 +221,7 @@ export default class TableCreator extends React.Component {
                   hoverColor="rgba(0, 0, 0, 0.60)"
                 />
               </Link>
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/documents/${row.original.id}`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}`}>
                 <Visibility
                   onClick={() => history.push()}
                   color="rgba(0, 0, 0, 0.30)"
@@ -228,7 +229,7 @@ export default class TableCreator extends React.Component {
                   hoverColor="rgba(0, 0, 0, 0.60)"
                 />
               </Link>
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/documents/${row.original.id}/edit`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}/edit`}>
                 <Clear
                   color="rgba(255, 0, 0, 0.30)"
                   className="pointer"
@@ -239,7 +240,7 @@ export default class TableCreator extends React.Component {
           ));
       }
 
-      if (field.cellType === 'checkbox') {
+      if (field.cellType === 'bulkEditSelect') {
         newField.filterable = false;
         newField.sortable = false;
         newField.width = 60;
@@ -298,8 +299,8 @@ export default class TableCreator extends React.Component {
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
             <MenuItem
-              primaryText="Choose Column Rows To Display"
-              leftIcon={<FilterList />}
+              primaryText="Modify Column Rows"
+              leftIcon={<ViewColumn />}
               onClick={this.toggleColumnDrawer}
             />
             <MenuItem
@@ -320,7 +321,7 @@ export default class TableCreator extends React.Component {
           </IconMenu>
         ),
       fieldId: '',
-      cellType: 'checkbox',
+      cellType: 'bulkEditSelect',
     };
 
     const editButtons = {
@@ -351,7 +352,7 @@ export default class TableCreator extends React.Component {
           >
             <MenuItem
               primaryText="Modify Column Rows"
-              leftIcon={<FilterList />}
+              leftIcon={<ViewColumn />}
               onClick={this.toggleColumnDrawer}
             />
             <MenuItem
@@ -380,7 +381,7 @@ export default class TableCreator extends React.Component {
           </IconMenu>
         ),
       fieldId: '',
-      cellType: 'checkbox',
+      cellType: 'bulkEditSelect',
     };
 
     const editButtons = {
@@ -684,4 +685,5 @@ TableCreator.propTypes = {
   tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
   schema: PropTypes.arrayOf(PropTypes.object).isRequired,
   getSelected: PropTypes.func.isRequired,
+  dataType: PropTypes.objectOf(PropTypes.string),
 };

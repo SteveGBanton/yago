@@ -43,13 +43,6 @@ const customSchema = [
     public: true,
   },
   {
-    fieldName: 'id',
-    fieldId: 'id',
-    type: 'id',
-    required: 'true',
-    public: false,
-  },
-  {
     fieldName: 'Black Row',
     fieldId: 'blackRow',
     type: 'text-field',
@@ -140,9 +133,6 @@ export default class TableDisplay extends React.Component {
   getData() {
     this.setState({
       tableData: makeData(500),
-      loading: false,
-      selected: [],
-      selectedIndexes: {},
     });
     // Meteor.call('utility.remoteGet', 'https://f001.backblazeb2.com/file/boldpoint-test/tableData2short.json', (err, res) => {
     //   this.setState({
@@ -153,11 +143,10 @@ export default class TableDisplay extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
-        <h1>Table Display</h1>
-        {(this.state.tableData !== undefined || this.state.tableData !== 0)
+        <h1>Manage Students</h1>
+        {(this.state.tableData !== undefined || this.state.length !== 0)
           ?
             <TableCreator
               history={this.props.history}

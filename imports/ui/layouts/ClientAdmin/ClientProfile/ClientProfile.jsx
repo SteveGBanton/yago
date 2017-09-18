@@ -132,6 +132,7 @@ class ClientProfile extends React.Component {
 
     if (!formErrors && currentPwdRequired === false) {
       this.handleSubmit()
+      this.setState({formErrors})
     } else {
       this.setState({formErrors})
     }

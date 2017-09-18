@@ -25,7 +25,8 @@ import ClientNewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientNewD
 import ClientViewDocument from '../layouts/ClientAdmin/ClientDocuments/ClientViewDocument/ClientViewDocument';
 import ClientEditDocument from '../layouts/ClientAdmin/ClientDocuments/ClientEditDocument/ClientEditDocument';
 import ClientProfile from '../layouts/ClientAdmin/ClientProfile/ClientProfile';
-import Table from '../layouts/ClientAdmin/Table/Table';
+import Students from '../layouts/ClientAdmin/Students/Students';
+import EditStudent from '../layouts/ClientAdmin/Students/EditStudent/EditStudent';
 
 // UserAdmin pages
 import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard';
@@ -49,41 +50,64 @@ import Navigation from '../components/Navigation/Navigation';
 
 import './App.scss';
 
-const App = props => (
-  <Router>
-    {
-      (!props.loading)
-      ?
-        <MuiThemeProvider>
-          <div className="App">
-            <Navigation {...props} />
-            <Switch>
-              <AllUserAccess exact path="/" component={Index} {...props} />
-              <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} />
-              <ClientAdmin exact path="/:username/admin/table" component={Table} {...props} />
-              {/* <ClientAdmin exact path="/:username/admin/calendar" component={ClientDashboard} {...props} /> */}
-              <ClientAdmin exact path="/:username/admin/documents" component={ClientDocuments} {...props} />
-              <ClientAdmin exact path="/:username/admin/documents/new" component={ClientNewDocument} {...props} />
-              <ClientAdmin exact path="/:username/admin/documents/:_id" component={ClientViewDocument} {...props} />
-              <ClientAdmin exact path="/:username/admin/documents/:_id/edit" component={ClientEditDocument} {...props} />
-              <ClientAdmin exact path="/:username/admin/profile" component={ClientProfile} {...props} />
-              <UserAdmin exact path="/:username/user/dashboard" component={UserDashboard} {...props} />
-              <Public exact path="/signup" component={Signup} {...props} />
-              <Public exact path="/login" component={Login} {...props} />
-              <Public exact path="/logout" component={Logout} {...props} />
-              <AllUserAccess name="verify-email" path="/verify-email/:token" component={VerifyEmail} />
-              <AllUserAccess name="recover-password" path="/recover-password" component={RecoverPassword} />
-              <AllUserAccess name="reset-password" path="/reset-password/:token" component={ResetPassword} />
-              <AllUserAccess name="terms" path="/terms" component={Terms} />
-              <AllUserAccess name="privacy" path="/privacy" component={Privacy} />
-              <AllUserAccess component={NotFound} />
-            </Switch>
-          </div>
-        </MuiThemeProvider>
-      : ''
-    }
-  </Router>
-);
+class App extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.state = {
+      menuOpen: true,
+    };
+  }
+
+  toggleMenu() {
+    this.setState({
+      menuOpen: !this.state.menuOpen,
+    })
+  }
+
+  render() {
+    const props = this.props;
+    const toggleMenu = this.toggleMenu;
+    return (
+      <Router>
+        {
+          (!props.loading)
+          ?
+            <MuiThemeProvider>
+              <div className="App">
+                <Navigation {...props} toggleMenu={toggleMenu} />
+                <Switch>
+                  <AllUserAccess exact path="/" component={Index} {...props} menuOpen={this.state.menuOpen}  />
+                  <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} menuOpen={this.state.menuOpen} />
+                  <ClientAdmin exact path="/:username/admin/students" component={Students} {...props} menuOpen={this.state.menuOpen} />
+                  <ClientAdmin exact path="/:username/admin/students/:id/edit" component={EditStudent} {...props} menuOpen={this.state.menuOpen} />
+                  {/* <ClientAdmin exact path="/:username/admin/calendar" component={ClientDashboard} {...props, toggleMenu} /> */}
+                  <ClientAdmin exact path="/:username/admin/documents" component={ClientDocuments} {...props} menuOpen={this.state.menuOpen} />
+                  <ClientAdmin exact path="/:username/admin/documents/new" component={ClientNewDocument} {...props} menuOpen={this.state.menuOpen} />
+                  <ClientAdmin exact path="/:username/admin/documents/:_id" component={ClientViewDocument} {...props} menuOpen={this.state.menuOpen} />
+                  <ClientAdmin exact path="/:username/admin/documents/:_id/edit" component={ClientEditDocument} {...props} menuOpen={this.state.menuOpen}/>
+                  <ClientAdmin exact path="/:username/admin/profile" component={ClientProfile} {...props} menuOpen={this.state.menuOpen} />
+                  <UserAdmin exact path="/:username/user/dashboard" component={UserDashboard} {...props} menuOpen={this.state.menuOpen} />
+                  <Public exact path="/signup" component={Signup} {...props} />
+                  <Public exact path="/login" component={Login} {...props} />
+                  <Public exact path="/logout" component={Logout} {...props} />
+                  <AllUserAccess name="verify-email" path="/verify-email/:token" component={VerifyEmail} />
+                  <AllUserAccess name="recover-password" path="/recover-password" component={RecoverPassword} />
+                  <AllUserAccess name="reset-password" path="/reset-password/:token" component={ResetPassword} />
+                  <AllUserAccess name="terms" path="/terms" component={Terms} />
+                  <AllUserAccess name="privacy" path="/privacy" component={Privacy} />
+                  <AllUserAccess component={NotFound} />
+                </Switch>
+              </div>
+            </MuiThemeProvider>
+          : ''
+        }
+      </Router>
+    );
+  }
+}
+
 
 App.defaultProps = {
   userId: '',

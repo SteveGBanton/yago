@@ -1,26 +1,19 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import AppBar from 'material-ui/AppBar'
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import ContentLink from 'material-ui/svg-icons/content/link';
 import Divider from 'material-ui/Divider';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import Download from 'material-ui/svg-icons/file/file-download';
-import Delete from 'material-ui/svg-icons/action/delete';
 
 import './Navigation.scss';
 
@@ -73,12 +66,19 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
 }
 
 const Navigation = props => {
-  const { authenticated, history, user } = props;
+  const { authenticated, history, user, toggleMenu } = props;
   const current = ( authenticated ) ? user.current : '';
   return (
     <Toolbar style={styles.toolbar}>
       <ToolbarGroup>
-        <ToolbarTitle style={{color: 'white'}} text={(user) ? user.profile.orgName : 'Academy App' } />
+        <MenuIcon
+          color="rgba(255,255,255,0.7)"
+          hoverColor="rgba(255,255,255,0.9)"
+          className="pointer"
+          onClick={toggleMenu}
+        />
+        <ToolbarSeparator />
+        <ToolbarTitle style={{color: 'white', paddingLeft: '20px'}} text={(user) ? user.profile.orgName : 'Academy App' } />
       </ToolbarGroup>
       <ToolbarGroup>
         {authenticated

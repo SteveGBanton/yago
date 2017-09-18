@@ -23,17 +23,23 @@ const validateUser = function validateCurrentUser(role, group) {
 
 export default class ClientAdmin extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuOpen: false,
+    };
+  }
   render() {
-    const { loggingIn, authenticated, component, user, ...rest } = this.props;
+    const { loggingIn, authenticated, component, user, menuOpen, ...rest } = this.props;
     return (
       <div className="dashboard">
 
-        <div className="dashboard-menu">
+        <div className={(menuOpen) ? "dashboard-menu" : "dashboard-menu-closed"}>
           <Drawer
             className="dashboard-drawer"
             containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px" }}
             style={{ color: 'white' }}
-            open
+            open={menuOpen}
           >
             <Link to={`/${rest.computedMatch.params.username}/admin/documents`}>
               <MenuItem
@@ -55,7 +61,7 @@ export default class ClientAdmin extends React.Component {
                   />}
               />
             </Link>
-            <Link to={`/${rest.computedMatch.params.username}/admin/table`}>
+            <Link to={`/${rest.computedMatch.params.username}/admin/students`}>
               <MenuItem
                 primaryText="Manage Students"
                 leftIcon={
@@ -94,7 +100,7 @@ export default class ClientAdmin extends React.Component {
             />
           </Drawer>
         </div>
-        <div className="inner-route">
+        <div className={(menuOpen) ? "inner-route" : "inner-route-full"}>
           <Route
             {...rest}
             render={props => (
@@ -109,9 +115,10 @@ export default class ClientAdmin extends React.Component {
   }
 }
 
-
 ClientAdmin.propTypes = {
   loggingIn: PropTypes.bool.isRequired,
   authenticated: PropTypes.bool.isRequired,
   component: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  menuOpen: PropTypes.bool.isRequired,
 };
