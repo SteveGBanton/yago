@@ -8,6 +8,7 @@
     "Meteor": false,
     "Session": false,
     "Roles": false,
-    // and so on..
+    "Slingshot": false,
+    "SimpleSchema": false,
   },
 }
