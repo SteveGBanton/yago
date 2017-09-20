@@ -92,10 +92,10 @@ export const usersEditProfile = new ValidatedMethod({
 export const usersCheckUsername = new ValidatedMethod({
   name: 'users.checkUsername',
   validate: new SimpleSchema({
-    "potentialUserName": { type: String }
+    potentialUserName: { type: String }
   }).validator(),
-  run({potentialUserName}) {
-    return Meteor.users.find({"username": potentialUserName}).count();
+  run({ potentialUserName }) {
+    return Meteor.users.find({ username: potentialUserName }).count();
   }
 })
 

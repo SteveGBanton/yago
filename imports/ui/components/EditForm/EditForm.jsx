@@ -22,7 +22,18 @@ const styles = {
   },
   elementText: {
     marginTop: '5px',
+    padding: 20,
+    margin: 20,
+    width: 350,
+    display: 'flex',
+    alignItems: 'center',
+    flexFlow: 'column wrap',
   },
+  form: {
+    display: 'flex',
+    alignItems: 'center',
+    flexFlow: 'column wrap'
+  }
 };
 
 export default class EditForm extends React.Component {
@@ -473,7 +484,7 @@ export default class EditForm extends React.Component {
   render() {
     return (
       <div>
-        <form onSubmit={event => event.preventDefault()}>
+        <form style={styles.form} onSubmit={event => event.preventDefault()}>
           {this.buildForm().map(key => key)}
 
           <RaisedButton

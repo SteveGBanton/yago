@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../../../components/Loading/Loading';
 
-import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
+import LinearProgress from 'material-ui/LinearProgress';
 
-import ActionAndroid from 'material-ui/svg-icons/action/android';
 import Clear from 'material-ui/svg-icons/content/clear';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
+import Done from 'material-ui/svg-icons/action/done';
 
 
 import './UploadFile.scss'
@@ -67,7 +67,6 @@ export default class UploadFile extends React.Component {
   }
 
   handleChange(event) {
-
     // delete any new file (both from page and from server) already added
     this.deleteNewFile();
 
@@ -79,18 +78,16 @@ export default class UploadFile extends React.Component {
   }
 
   uploadToS3() {
-
     // Upload File with Slingshot
-    // Add to Files collection on upload
-    // Delete old file
-    // Remove old file from Files collection
-
-
-
+    // Add progress bar
+    // Add to Uploads collection on upload
+    // On success, Delete old file from S3 & files collection - uploadsRemove method.
+    this.setState({
+      uploadProgress: 40,
+    })
   }
 
   deleteFileS3(fileToDeleteFromS3) {
-
     // Method to delete file from S3
 
   }
@@ -104,6 +101,8 @@ export default class UploadFile extends React.Component {
   }
 
   deleteNewFile() {
+    // TODO stop any current uploaded this.uploader.xhr.stop...
+
     // If there is already a file uploaded to S3 for this field on this current form, delete it.
     if (this.newFile) {
       this.deleteFileS3(this.newFile);
@@ -111,6 +110,7 @@ export default class UploadFile extends React.Component {
 
     this.setState({
       newFileName: null,
+      uploadProgress: -1,
     });
 
     this.newFile = null;
@@ -123,6 +123,16 @@ export default class UploadFile extends React.Component {
     this.setState({
       reloadKey: new Date(),
     });
+  }
+
+  stopUpload() {
+
+    // TODO this.uploader Slingshot xhr abort upload.
+
+    this.setState({
+      uploadProgress: -1,
+    });
+
   }
 
   render() {
@@ -149,7 +159,7 @@ export default class UploadFile extends React.Component {
           <p className="text10px">Drop new file here or click here to upload a new file.</p>
         </Paper>
 
-        {(this.state.currentFileName)
+        {(this.state.currentFileName && !this.state.newFileName)
           ?
             <Paper
               style={style.fileBox}
@@ -178,6 +188,17 @@ export default class UploadFile extends React.Component {
           : ''
         }
 
+        {(!this.state.newFileName && !this.state.currentFileName)
+          ?
+            <Paper
+              style={{ ...style.fileBox, background: 'rgba(0,0,0,0.05)' }}
+              zDepth={1}
+            >
+
+            </Paper>
+          : ''
+        }
+
         {(this.state.newFileName)
           ?
             <Paper
@@ -195,19 +216,62 @@ export default class UploadFile extends React.Component {
                     <Clear />
                   </IconButton>
                 </div>
-                <div className="itemBoxButton">
-                  <IconButton
-                    onClick={this.uploadToS3}
-                  >
-                    <FileUpload />
-                  </IconButton>
-                </div>
+                {(this.state.uploadProgress >= 100)
+                  ?
+                    <div className="itemBoxButton">
+                      <IconButton
+                        disabled
+                      >
+                        <Done />
+                      </IconButton>
+                    </div>
+                  :
+                    <div className="itemBoxButton">
+                      <IconButton
+                        onClick={this.uploadToS3}
+                      >
+                        <FileUpload />
+                      </IconButton>
+                    </div>
+                }
+                {(this.state.uploadProgress < 100 && this.state.uploadProgress > 0)
+                  ?
+                    <LinearProgress
+                      style={{ width: '100%', position: 'absolute', bottom: 0, right: 0 }}
+                      mode="determinate"
+                      value={this.state.uploadProgress}
+                    />
+                  : ''
+                }
               </div>
-
 
             </Paper>
           : ''
         }
+
+
+        {/* {(this.state.newFileName && (this.state.uploadProgress < 100 || this.state.uploadProgress > 0))
+          ?
+            <Paper
+              style={style.fileBox}
+              zDepth={1}
+            >
+              <div className="itemBoxContainer">
+                <div className="itemBoxLabel">
+
+                </div>
+                <div className="itemBoxButton">
+                  <IconButton
+                    onClick={this.stopUpload}
+                  >
+                    <Clear />
+                  </IconButton>
+                </div>
+              </div>
+            </Paper>
+          : ''
+        } */}
+
 
 
         <br />
