@@ -48,6 +48,11 @@ export default class EditForm extends React.Component {
 
   handleSubmit() {
     console.log('submitting')
+
+    // TODO If editing, call edit Method with old doc id
+
+    // TODO If adding new, call new insert Method & create new docid on server
+
   }
 
   formValidate() {
@@ -119,6 +124,8 @@ export default class EditForm extends React.Component {
     if (!formErrors) {
       this.handleSubmit()
       this.setState({ formErrors })
+
+      // TODO edit any uploaded files to Files Collection, attach this doc id.
     } else {
       this.setState({ formErrors })
     }
@@ -441,18 +448,17 @@ export default class EditForm extends React.Component {
       if (item.type === 'file-upload') {
         const temp =
           (
-            <div key={item.fieldId} style={styles.elementText}>
+            <div key={item.fieldId} style={styles.elementDiv}>
 
               <UploadFile
                 fileTypesAllowed={item.rules.fileTypes}
                 fileSizeAllowedMax={item.rules.fileSize}
-                defaultValue={(doc[item.fieldId]) ? doc[item.fieldId] : ''}
-                name={(item.fieldId) ? (item.fieldId) : null}
-                floatingLabelText={(item.fieldName) ? (item.fieldName) : ''}
-                refValue={input => (this[item.fieldId] = input)}
-                refValueInvalidURL={input => (this[item.fieldId] = '')}
+                fieldId={(item.fieldId) ? (item.fieldId) : null}
+                fieldName={(item.fieldName) ? (item.fieldName) : ''}
+                //refValueInvalidURL={input => (this[item.fieldId] = '')}
                 errorText={this.state.formErrors[item.fieldId]}
-                maxLength={(item.rules.maxLength) ? item.rules.maxLength : 250}
+                newFile={input => (this[item.fieldId] = input)}
+                currentFile={(doc[item.fieldId]) ? doc[item.fieldId] : ''}
               />
             </div>
           );
