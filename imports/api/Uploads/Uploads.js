@@ -33,13 +33,6 @@ Uploads.schema = new SimpleSchema({
       if (this.isInsert) return (new Date()).toISOString();
     },
   },
-  updatedAt: {
-    type: String,
-    label: 'The date this document was last updated.',
-    autoValue() {
-      if (this.isInsert || this.isUpdate) return (new Date()).toISOString();
-    },
-  },
   name: {
     type: String,
     label: 'The original filename of the upload, without appended ID.',
@@ -48,10 +41,6 @@ Uploads.schema = new SimpleSchema({
     type: String,
     label: 'The S3 path, including new filename with appended ID.',
   },
-  roles: {
-    type: Array,
-    label: 'The user roles allowed to view this file.',
-  }
 });
 
 Uploads.attachSchema(Uploads.schema);

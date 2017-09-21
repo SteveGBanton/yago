@@ -5,17 +5,91 @@ import AWS from 'aws-sdk';
 import Uploads from '../Uploads';
 import rateLimit from '../../../modules/rate-limit';
 
-// export const documentsInsert = new ValidatedMethod({
-//   name: 'documents.insert',
-//   validate: new SimpleSchema({
-//     title: { type: String },
-//     body: { type: String }
-//   }).validator(),
-//   run(doc) {
-//     return Documents.insert({ owner: this.userId, ...doc });
-//   }
-// })
-//
+const userAllowed = function userAllowed(testAllowed) {
+  // const testAllowed = {
+  //   userId: '',
+  //   allowedGroups: '',
+  //   account: '',
+  // }
+  const userRolesForAccount = Roles.getRolesForUser(testAllowed.userId, testAllowed.account);
+  let rolesLength = userRolesForAccount.length;
+
+  while (rolesLength--) {
+    if (testAllowed.allowedGroups[userRolesForAccount[rolesLength]] === true) return true
+  }
+  return false
+};
+
+export const uploadsInsert = new ValidatedMethod({
+  name: 'uploads.insert',
+  validate: new SimpleSchema({
+    dateCreated: { type: Date },
+    name: { type: String },
+    url: { type: String },
+    key: { type: String },
+  }).validator(),
+  run(file) {
+    try {
+      if (!this.userId) throw Meteor.Error('500', 'Must be logged in to upload');
+      const obj = {
+        ...file,
+        accountName: Meteor.user().current.currentOrg,
+        owner: this.userId,
+      };
+      return Uploads.insert(obj);
+    } catch (e) {
+      throw new Meteor.Error('500', e);
+    }
+  },
+});
+
+export const uploadsRemoveOne = new ValidatedMethod({
+  name: 'uploads.remove',
+  validate: new SimpleSchema({
+    uploadId: { type: String },
+  }).validator(),
+  run({ uploadId }) {
+
+    console.log(uploadId)
+    // Only admin or user that uploaded can edit/view this doc.
+    const uploadDoc = Uploads.findOne(uploadId)
+    console.log(uploadDoc)
+    const isAdmin = Roles.userIsInRole(this.userId, 'admin', uploadDoc.accountName);
+    const isOwner = (this.userId === uploadDoc.owner);
+    console.log(isAdmin)
+    console.log(isOwner)
+    try {
+      // TODO re-create this Pseudocode
+
+      if (isAdmin || isOwner) {
+        const params = {
+          Bucket: Meteor.settings.awsBucket,
+          Key: uploadDoc.key,
+        };
+        console.log(params)
+        const s3 = new AWS.S3({
+          secretAccessKey: Meteor.settings.AWSSecretAccessKey,
+          accessKeyId: Meteor.settings.AWSAccessKeyId,
+        });
+        s3.deleteObject(params, (err, data) => {
+          if (err) {
+            console.log('AWS Delete Error:')
+            console.log(err)
+            throw new Meteor.Error('500', err.reason);
+          }
+          console.log('should have been removed...')
+          console.log(data)
+        });
+        Uploads.remove(uploadDoc._id);
+      } else {
+        throw new Meteor.Error('500', 'Unauthorized');
+      }
+    } catch (exception) {
+      throw new Meteor.Error('500', exception);
+    }
+  }
+})
+
 // export const documentsUpdate = new ValidatedMethod({
 //   name: 'documents.update',
 //   validate: new SimpleSchema({
@@ -29,48 +103,7 @@ import rateLimit from '../../../modules/rate-limit';
 //       return documentId; // Return _id so we can redirect to document after update.
 //   }
 // })
-//
-export const uploadsRemoveOne = new ValidatedMethod({
-  name: 'uploads.remove',
-  validate: new SimpleSchema({
-    uploadId: { type: String },
-    key: { type: String },
-  }).validator(),
-  run({uploadId, key}) {
-    // Check if user is owner, admin, or allowed in roles to edit this.
-    // Uploads.findOne(uploadId).editAllowed
-    // Method to find if one element in roles array matches another element in editAllowed array.
-    const isAdmin = 'Roles.isAdmin';
-    const isOwner = 'isOwner';
-    const isInRole = 'isInRole';
 
-    try {
-      // TODO re-create this Pseudocode
-      if (isAdmin || isOwner || isInRole) {
-        const params = {
-          Bucket: Meteor.user().current.currentOrg,
-          Key: key,
-        };
-        const s3 = new AWS.S3({
-          endpoint: '',
-          secretAccessKey: '',
-          accessKeyId: '',
-        });
-        s3.deleteObject(params, function (err, data) {
-          if (err) {
-            return err
-          }
-          console.log(data);
-        });
-        Uploads.remove(uploadId);
-      } else {
-        throw new Meteor.Error('500', 'Unauthorized');
-      }
-    } catch (exception) {
-      throw new Meteor.Error('500', exception);
-    }
-  }
-})
 
 rateLimit({
   methods: [
