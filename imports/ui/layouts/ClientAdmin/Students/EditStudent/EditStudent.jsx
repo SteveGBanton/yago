@@ -15,7 +15,7 @@ const testAllFieldsForm = {
   ownerId: 'owneridggeabeafeav4a3agah4a3t',
   accountName: 'name-test',
   readAllow: ["admin", "teacher", "readgroup"],
-  editAllow: ["admin", "teacher"],
+  editAllow: ["admin"],
   formType: 'student',
   dateUpdated: new Date().toISOString(),
   activityLogSchemaUpdates: [],
@@ -29,8 +29,6 @@ const testAllFieldsForm = {
       fieldName: 'Text Field Name',
       fieldId: 'name',
       type: 'text-field',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         minLength: 3,
         maxLength: 20,
@@ -47,8 +45,6 @@ const testAllFieldsForm = {
       fieldName: 'Text Area Description',
       fieldId: 'description',
       type: 'text-area',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         minLength: 20,
         maxLength: 250,
@@ -65,8 +61,6 @@ const testAllFieldsForm = {
       fieldName: 'Email Address',
       fieldId: 'emailAddress1',
       type: 'text-field',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin"],
       rules: {
         email: true,
         required: true,
@@ -81,8 +75,6 @@ const testAllFieldsForm = {
       fieldName: 'Password',
       fieldId: 'password1',
       type: 'text-field',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin"],
       rules: {
         password: true,
       },
@@ -96,8 +88,6 @@ const testAllFieldsForm = {
       fieldId: 'relationshipStatus',
       type: 'dropdown-single-select',
       dropdownSingleSelectOptions: ['Rather Not Say', 'Married', 'Single', 'It\'s complicated'],
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -111,8 +101,6 @@ const testAllFieldsForm = {
       fieldId: 'multiDateSelect',
       type: 'dropdown-multi-select',
       dropdownMultiSelectOptions: ['Feb 1', 'Feb 5', 'Feb 9', 'Feb 22'],
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -125,8 +113,6 @@ const testAllFieldsForm = {
       fieldId: 'coffeeType',
       type: 'radio',
       radioOptions: ['Black', 'Double Double', 'Cream and Sugar', 'Milk and Sugar', 'Milk Only', 'Sugar Only'],
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -153,8 +139,6 @@ const testAllFieldsForm = {
       multipleChoiceWeight: 3,
       multipleChoiceOptions: ['Here is potential answer number 0', 'potential answer 1!', 'potential answer 2'],
       multipleChoiceAnswerKeyId: 'idofformageaben4w4hwsgsg',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -166,8 +150,6 @@ const testAllFieldsForm = {
       fieldName: 'Toggle On Off',
       fieldId: 'toggle1',
       type: 'toggle',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -182,8 +164,6 @@ const testAllFieldsForm = {
       sliderMax: 10,
       sliderMin: 1,
       sliderStep: 1,
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
         minValue: 4,
@@ -202,8 +182,6 @@ const testAllFieldsForm = {
       sliderMax: 100,
       sliderMin: 1,
       sliderStep: 1,
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {},
       messages: {},
     },
@@ -214,8 +192,6 @@ const testAllFieldsForm = {
       maxDate: (new Date().getDate + 5),
       minDate: (new Date().getDate - 5),
       locale: 'en-US',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -229,8 +205,6 @@ const testAllFieldsForm = {
       type: 'time-picker',
       format: 'ampm',
       locale: 'en-US',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -251,8 +225,6 @@ const testAllFieldsForm = {
         width: 100,
       },
       imageSize: 1000,
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -264,8 +236,6 @@ const testAllFieldsForm = {
       fieldName: 'Add Image URL',
       fieldId: 'imageURL',
       type: 'image-url',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -277,8 +247,6 @@ const testAllFieldsForm = {
       fieldName: 'File Upload',
       fieldId: 'fileUpload',
       type: 'file-upload',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
         fileSize: 1000,
@@ -294,8 +262,6 @@ const testAllFieldsForm = {
       fieldName: 'File URL',
       fieldId: 'fileURL',
       type: 'file-url',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -307,8 +273,6 @@ const testAllFieldsForm = {
       fieldName: 'Video URL',
       fieldId: 'videoURL',
       type: 'video-url',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -320,8 +284,6 @@ const testAllFieldsForm = {
       fieldName: 'Video Upload',
       fieldId: 'videoUpload',
       type: 'video-upload',
-      readAllow: ["admin", "teacher", "readgroup"],
-      editAllow: ["admin", "teacher"],
       rules: {
         required: true,
       },
@@ -357,9 +319,11 @@ const allFieldsDoc = {
   imageUpload1: 'http://test.com/image.png',
   imageURL: 'http://all4desktop.com/data_images/original/4244011-magic.jpg',
   fileUpload: {
+    _id: 'fakeId',
     createdDate: new Date(),
     name: 'Current-File-Name.pdf',
-    key: '/name-test/gea3ga3ah4a4hsh4s/Current-File-Name-id3s4srns454hsh4s4s.pdf',
+    key: 'name-test/gea3ga3ah4a4hsh4s/Current-File-Name-id3s4srns454hsh4s4s.pdf',
+    url: 'https://acad-admin.s3.amazonaws.com/name-test/gea3ga3ah4a4hsh4s/Current-File-Name-id3s4srns454hsh4s4s.pdf'
   },
   fileURL: 'http://test.com/file.pdf',
   videoURL: 'https://www.youtube.com/watch?v=1ZNZY-gd3K0',

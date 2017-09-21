@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Loading from '../../../components/Loading/Loading';
+import { Bert } from 'meteor/themeteorchef:bert';
 
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -11,6 +11,7 @@ import Clear from 'material-ui/svg-icons/content/clear';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import Done from 'material-ui/svg-icons/action/done';
 
+import Loading from '../../../components/Loading/Loading';
 
 import './UploadFile.scss'
 
@@ -44,10 +45,10 @@ export default class UploadFile extends React.Component {
     this.deleteFileS3 = this.deleteFileS3.bind(this);
     this.deleteCurrentFile = this.deleteCurrentFile.bind(this);
     this.deleteNewFile = this.deleteNewFile.bind(this);
-    this.resetInput = this.resetInput.bind(this);
+    this.resetNewFile = this.resetNewFile.bind(this);
 
-    this.currentFile = null;
     this.newFile = null;
+    this.currentFile = null;
 
     this.state = {
       newFileName: '',
@@ -62,71 +63,148 @@ export default class UploadFile extends React.Component {
       this.setState({
         currentFileName: this.props.currentFile.name,
       })
+
+      // Set currentFile as file to submit to form
+      this.props.newFileSubmit(this.props.currentFile);
       this.currentFile = this.props.currentFile;
     }
   }
 
   handleChange(event) {
-    // delete any new file (both from page and from server) already added
-    this.deleteNewFile();
 
+    // delete any new file (both from page and from server) currently added
+    this.resetNewFile();
+
+    // set newFile
     this.newFile = event.target.files[0];
-
     this.setState({
       newFileName: event.target.files[0].name,
     });
   }
 
   uploadToS3() {
-    // Upload File with Slingshot
-    // Add progress bar
-    // Add to Uploads collection on upload
-    // On success, Delete old file from S3 & files collection - uploadsRemove method.
-    this.setState({
-      uploadProgress: 40,
+
+    // create uploader - Slingshot
+    this.uploader = new Slingshot.Upload("uploadToS3");
+
+    // Progress bar of uploader:
+    this.timer = Meteor.setInterval(() => {
+      this.setState({
+        uploadProgress: Math.round(this.uploader.progress() * 100),
+      });
+      console.log(this.state.uploadProgress);
+    }, 300);
+
+    // send file with slingshot
+    this.uploader.send(this.newFile, (error, url) => {
+      if (error) {
+        Meteor.clearInterval(this.timer);
+
+        this.setState({
+          uploadProgress: -1,
+        });
+        // Log detailed response.
+        Bert.alert(error.reason, 'danger');
+      } else {
+        Meteor.clearInterval(this.timer);
+
+        // this.setState({
+        //   uploadProgress: 100,
+        // });
+
+        const getKey = url.substring(url.indexOf('/', url.indexOf('.')) + 1);
+
+        const uploadsCollectionDoc = {
+          dateCreated: new Date(),
+          name: this.newFile.name,
+          url: url,
+          key: getKey,
+        };
+
+        let fileToDelete = '';
+        if (this.currentfile && this.currentFile._id) fileToDelete = this.currentFile._id
+
+        // Add to file collection
+        Meteor.call('uploads.insert', uploadsCollectionDoc, (error, res) => {
+          if (error) {
+            Bert.alert(error.reason, 'danger');
+
+          } else {
+            // Success - replace currentFile with new file.
+            // Append ID:
+            const uploadsCollectionDocWithId = { ...uploadsCollectionDoc };
+            uploadsCollectionDocWithId._id = res;
+
+            // add to new file upload doc with ID
+            this.props.newFileSubmit(uploadsCollectionDocWithId);
+
+            // Try to delete current file, overwrite currentFile, reset newFile.
+            if (fileToDelete) this.deleteFileS3(fileToDelete)
+
+            this.currentFile = uploadsCollectionDocWithId;
+            this.setState({
+              currentFileName: this.currentFile.name,
+            });
+            this.resetNewFile()
+
+          }
+        });
+
+      }
+    });
+
+    // TODO Add active progress bar
+    // TODO Add to Uploads collection on upload
+    // TODO On success, Delete old file from S3 & files collection - uploadsRemove method.
+
+  }
+
+  deleteFileS3(uploadId) {
+    console.log(uploadId)
+    // Method to delete file from S3
+    Meteor.call('uploads.remove', { uploadId }, (error, res) => {
+      if (error) {
+        console.log(error.reason)
+      } else {
+        console.log('file removed');
+      }
     })
   }
 
-  deleteFileS3(fileToDeleteFromS3) {
-    // Method to delete file from S3
-
-  }
-
   deleteCurrentFile() {
-    this.deleteFileS3(this.props.currentFile);
+    this.deleteFileS3(this.currentFile._id);
     this.setState({
-      currentFileName: null,
+      currentFileName: '',
     });
     this.currentFile = null;
   }
 
-  deleteNewFile() {
-    // TODO stop any current uploaded this.uploader.xhr.stop...
+  deleteNewFile(newFile) {
+    // Reset progress and newFile fields.
+    this.resetNewFile();
 
-    // If there is already a file uploaded to S3 for this field on this current form, delete it.
-    if (this.newFile) {
-      this.deleteFileS3(this.newFile);
-    }
+    // stop any current uploaded this.uploader.xhr.stop...
+
+  }
+
+  resetNewFile() {
+    if (this.timer) Meteor.clearInterval(this.timer);
+    if (this.uploader && this.uploader.xhr) this.uploader.xhr.abort();
 
     this.setState({
-      newFileName: null,
+      newFileName: '',
       uploadProgress: -1,
     });
 
     this.newFile = null;
 
-    // Reset input so same file can be added again
-    this.resetInput();
-  }
-
-  resetInput() {
     this.setState({
       reloadKey: new Date(),
     });
   }
 
   stopUpload() {
-
+    if (this.uploader && this.uploader.xhr) this.uploader.xhr.abort();
     // TODO this.uploader Slingshot xhr abort upload.
 
     this.setState({
@@ -211,7 +289,7 @@ export default class UploadFile extends React.Component {
                 </div>
                 <div className="itemBoxButton">
                   <IconButton
-                    onClick={this.deleteNewFile}
+                    onClick={this.resetNewFile}
                   >
                     <Clear />
                   </IconButton>
@@ -234,7 +312,7 @@ export default class UploadFile extends React.Component {
                       </IconButton>
                     </div>
                 }
-                {(this.state.uploadProgress < 100 && this.state.uploadProgress > 0)
+                {(this.state.uploadProgress > 0)
                   ?
                     <LinearProgress
                       style={{ width: '100%', position: 'absolute', bottom: 0, right: 0 }}
