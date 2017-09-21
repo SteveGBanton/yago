@@ -48,10 +48,10 @@ export const createNewAdminUser = new ValidatedMethod({
           current: {
             currentRole: 'admin',
             currentOrg: newAdmin.username,
-          }
-        }
+          },
+        },
       });
-      return id
+      return id;
     } catch (exception) {
       Meteor.users.remove(id);
       throw new Meteor.Error('accounts.createuser.error',

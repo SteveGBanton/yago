@@ -2,7 +2,7 @@ import { Random } from 'meteor/random';
 
 Slingshot.fileRestrictions("uploadToS3", {
   allowedFileTypes: ["image/png", "image/jpeg", "image/gif", "video/mp4", "video/quicktime"],
-  maxSize: 1 * 1024 * 40400,
+  maxSize: 1 * 1024 * 40452500,
 });
 
 Slingshot.createDirective("uploadToS3", Slingshot.S3Storage, {

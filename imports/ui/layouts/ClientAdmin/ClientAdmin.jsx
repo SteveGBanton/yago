@@ -15,10 +15,7 @@ import MenuItem from 'material-ui/MenuItem';
 import './ClientAdmin.scss';
 
 const validateUser = function validateCurrentUser(role, group) {
-  if (Roles.userIsInRole(Meteor.userId(), [role], group)) {
-    return true;
-  }
-  return false;
+  return (Roles.userIsInRole(Meteor.userId(), [role], group));
 };
 
 export default class ClientAdmin extends React.Component {
@@ -30,6 +27,7 @@ export default class ClientAdmin extends React.Component {
     };
   }
   render() {
+    console.log(Meteor.user());
     const { loggingIn, authenticated, component, user, menuOpen, ...rest } = this.props;
     return (
       <div className="dashboard">

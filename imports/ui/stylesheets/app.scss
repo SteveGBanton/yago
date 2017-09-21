@@ -50,7 +50,7 @@ label {
 .inner-route {
   width: calc(100% - 250px);
   height: 100%;
-  padding: 60px 60px 0 60px;
+  padding: 5vw 5vw 0 5vw;
 }
 
 .dashboard-menu-closed {
@@ -61,15 +61,14 @@ label {
 .inner-route-full {
   width: 100%;
   height: 100%;
-  padding: 60px 60px 0 60px;
+  padding: 5vw 5vw 0 5vw;
 }
-
 
 .all-access {
   margin-top: 55px;
   display: flex;
   flex-flow: row wrap;
-  padding: 50px;
+  padding: 5vw;
 }
 
 .public {
