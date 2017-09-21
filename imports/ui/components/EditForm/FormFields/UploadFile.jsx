@@ -92,7 +92,6 @@ export default class UploadFile extends React.Component {
       this.setState({
         uploadProgress: Math.round(this.uploader.progress() * 100),
       });
-      console.log(this.state.uploadProgress);
     }, 300);
 
     // send file with slingshot
@@ -122,7 +121,9 @@ export default class UploadFile extends React.Component {
         };
 
         let fileToDelete = '';
-        if (this.currentfile && this.currentFile._id) fileToDelete = this.currentFile._id
+        if (this.currentFile && this.currentFile._id) fileToDelete = this.currentFile._id
+
+        console.log(fileToDelete)
 
         // Add to file collection
         Meteor.call('uploads.insert', uploadsCollectionDoc, (error, res) => {
