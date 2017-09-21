@@ -161,13 +161,10 @@ export default class UploadFile extends React.Component {
   }
 
   deleteFileS3(uploadId) {
-    console.log(uploadId)
     // Method to delete file from S3
     Meteor.call('uploads.remove', { uploadId }, (error, res) => {
       if (error) {
-        console.log(error.reason)
-      } else {
-        console.log('file removed');
+        console.error(error.reason)
       }
     })
   }
