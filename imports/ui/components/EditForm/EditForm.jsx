@@ -120,6 +120,12 @@ export default class EditForm extends React.Component {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.time) : '';
         buildRules[item.fieldId] = item.rules;
         buildMessages[item.fieldId] = item.messages;
+      } else if (
+        (this[item.fieldId] && item.type === 'file-upload')
+      ) {
+        input[item.fieldId] = (this[item.fieldId]) ? (this[item.fieldId]) : '';
+        buildRules[item.fieldId] = item.rules;
+        buildMessages[item.fieldId] = item.messages;
       } else if (this[item.fieldId] || this[item.fieldId] === '') {
         input[item.fieldId] = (this[item.fieldId].input) ? (this[item.fieldId].input.value) : '';
         buildRules[item.fieldId] = item.rules;
@@ -466,9 +472,8 @@ export default class EditForm extends React.Component {
                 fileSizeAllowedMax={item.rules.fileSize}
                 fieldId={(item.fieldId) ? (item.fieldId) : null}
                 fieldName={(item.fieldName) ? (item.fieldName) : ''}
-                //refValueInvalidURL={input => (this[item.fieldId] = '')}
                 errorText={this.state.formErrors[item.fieldId]}
-                newFile={input => (this[item.fieldId] = input)}
+                newFileSubmit={(input) => { (this[item.fieldId] = input); }}
                 currentFile={(doc[item.fieldId]) ? doc[item.fieldId] : ''}
               />
             </div>
