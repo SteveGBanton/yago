@@ -47,6 +47,8 @@ export default class UploadFile extends React.Component {
     this.deleteNewFile = this.deleteNewFile.bind(this);
     this.resetNewFile = this.resetNewFile.bind(this);
 
+    this.getFile = this.getFile.bind(this);
+
     this.newFile = null;
     this.currentFile = null;
 
@@ -70,8 +72,17 @@ export default class UploadFile extends React.Component {
     }
   }
 
-  handleChange(event) {
+  getFile() {
+    Meteor.call('uploads.download', { uploadId: this.currentFile._id }, (err, res) => {
+      if (err) {
+        Bert.alert('Error downloading file', 'danger');
+      } else {
+        window.location = res;
+      }
+    });
+  }
 
+  handleChange(event) {
     // delete any new file (both from page and from server) currently added
     this.resetNewFile();
 
@@ -212,6 +223,8 @@ export default class UploadFile extends React.Component {
   }
 
   render() {
+
+
     const {
       fieldId,
       fieldName,
@@ -325,42 +338,11 @@ export default class UploadFile extends React.Component {
           : ''
         }
 
-
-        {/* {(this.state.newFileName && (this.state.uploadProgress < 100 || this.state.uploadProgress > 0))
-          ?
-            <Paper
-              style={style.fileBox}
-              zDepth={1}
-            >
-              <div className="itemBoxContainer">
-                <div className="itemBoxLabel">
-
-                </div>
-                <div className="itemBoxButton">
-                  <IconButton
-                    onClick={this.stopUpload}
-                  >
-                    <Clear />
-                  </IconButton>
-                </div>
-              </div>
-            </Paper>
-          : ''
-        } */}
-
-
-
-        <br />
-        {/* <TextField
-          style={{ width: 320 }}
-          name={name}
-          floatingLabelText={floatingLabelText}
-          ref={(this.state.fileValid) ? refValue : refValueInvalidURL}
-          value={this.state.fileURL}
-          errorText={errorText}
-          onChange={this.handleChange}
-          disabled
-        /> */}
+        <RaisedButton
+          onClick={this.getFile}
+        >
+          Get Current File
+        </RaisedButton>
 
       </div>
     )

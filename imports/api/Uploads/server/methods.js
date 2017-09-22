@@ -17,8 +17,33 @@ const userAllowed = function userAllowed(testAllowed) {
   while (rolesLength--) {
     if (testAllowed.allowedGroups[userRolesForAccount[rolesLength]] === true) return true
   }
-  return false
+  return false;
 };
+
+export const uploadsDownload = new ValidatedMethod({
+  name: 'uploads.download',
+  validate: new SimpleSchema({
+    uploadId: { type: String },
+  }).validator(),
+  run({ uploadId }) {
+    // TODO Only Admin, Owner and those in readAllowed can view.
+    try {
+      const file = Uploads.findOne(uploadId);
+      const s3 = new AWS.S3({
+        secretAccessKey: Meteor.settings.AWSSecretAccessKey,
+        accessKeyId: Meteor.settings.AWSAccessKeyId,
+      });
+      const url = s3.getSignedUrl('getObject', {
+        Bucket: Meteor.settings.awsBucket,
+        Key: file.key,
+        Expires: 30, //seconds
+      });
+      return url;
+    } catch (e) {
+      throw new Meteor.Error('500', e);
+    }
+  },
+});
 
 export const uploadsInsert = new ValidatedMethod({
   name: 'uploads.insert',
@@ -49,37 +74,29 @@ export const uploadsRemoveOne = new ValidatedMethod({
     uploadId: { type: String },
   }).validator(),
   run({ uploadId }) {
-
-    console.log(uploadId)
-    // Only admin or user that uploaded can edit/view this doc.
-    const uploadDoc = Uploads.findOne(uploadId)
-    console.log(uploadDoc)
-    const isAdmin = Roles.userIsInRole(this.userId, 'admin', uploadDoc.accountName);
-    const isOwner = (this.userId === uploadDoc.owner);
-    console.log(isAdmin)
-    console.log(isOwner)
+    // Only admin or user that uploaded can edit this doc.
     try {
-      // TODO re-create this Pseudocode
+      const uploadDoc = Uploads.findOne(uploadId);
+      const isAdmin = Roles.userIsInRole(this.userId, 'admin', uploadDoc.accountName);
+      const isOwner = (this.userId === uploadDoc.owner);
 
       if (isAdmin || isOwner) {
         const params = {
           Bucket: Meteor.settings.awsBucket,
           Key: uploadDoc.key,
         };
-        console.log(params)
+
         const s3 = new AWS.S3({
           secretAccessKey: Meteor.settings.AWSSecretAccessKey,
           accessKeyId: Meteor.settings.AWSAccessKeyId,
         });
-        s3.deleteObject(params, (err, data) => {
+
+        s3.deleteObject(params, (err) => {
           if (err) {
-            console.log('AWS Delete Error:')
-            console.log(err)
             throw new Meteor.Error('500', err.reason);
           }
-          console.log('should have been removed...')
-          console.log(data)
         });
+
         Uploads.remove(uploadDoc._id);
       } else {
         throw new Meteor.Error('500', 'Unauthorized');
