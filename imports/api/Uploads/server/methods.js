@@ -26,7 +26,7 @@ export const uploadsDownload = new ValidatedMethod({
     uploadId: { type: String },
   }).validator(),
   run({ uploadId }) {
-    // TODO Only Admin, Owner and those in readAllowed can view.
+    // TODO SET PERMISSIONS Only Admin, Owner and those in readAllowed can view.
     try {
       const file = Uploads.findOne(uploadId);
       const s3 = new AWS.S3({
@@ -127,7 +127,8 @@ rateLimit({
     'uploads.insert',
     'uploads.update',
     'uploads.remove',
+    'uploads.download',
   ],
-  limit: 5,
-  timeRange: 1000,
+  limit: 2,
+  timeRange: 5000,
 });
