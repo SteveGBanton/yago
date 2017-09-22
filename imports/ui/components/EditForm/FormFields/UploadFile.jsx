@@ -134,8 +134,6 @@ export default class UploadFile extends React.Component {
         let fileToDelete = '';
         if (this.currentFile && this.currentFile._id) fileToDelete = this.currentFile._id
 
-        console.log(fileToDelete)
-
         // Add to file collection
         Meteor.call('uploads.insert', uploadsCollectionDoc, (error, res) => {
           if (error) {

@@ -9,6 +9,7 @@ Slingshot.createDirective("uploadToS3", Slingshot.S3Storage, {
   bucket: "acad-admin",
   contentDisposition: "attachment",
   authorize() {
+    // TODO add storage limit for user uploads.
     if (this.userId) return true;
     return false;
   },
