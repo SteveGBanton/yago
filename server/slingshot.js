@@ -2,14 +2,14 @@ import { Random } from 'meteor/random';
 
 Slingshot.fileRestrictions("uploadToS3", {
   allowedFileTypes: ["image/png", "image/jpeg", "image/gif", "video/mp4", "video/quicktime"],
-  maxSize: 1 * 1024 * 40452500,
+  maxSize: 1 * 1024 * 400000,
 });
 
 Slingshot.createDirective("uploadToS3", Slingshot.S3Storage, {
   bucket: "acad-admin",
   contentDisposition: "attachment",
   authorize() {
-    // TODO add storage limit for user uploads.
+    // TODO Log size of each user's uploads and deletes to user obj.
     if (this.userId) return true;
     return false;
   },

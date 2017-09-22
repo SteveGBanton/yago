@@ -52,9 +52,7 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
       { currentOrg, currentRole },
       (err, res) => {
           if (err) {
-            // TODO Handle err properly.
             Bert.alert(err.reason, 'danger');
-            console.log(err)
           } else {
             history.push(`/${currentOrg}/${currentRole}/dashboard`)
           }

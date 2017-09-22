@@ -60,10 +60,7 @@ export default class EditForm extends React.Component {
   handleSubmit() {
     console.log('submitting')
 
-    // TODO If editing, call edit Method with old doc id
-
-    // TODO If adding new, call new insert Method & create new docid on server
-
+    // TODO Create submit / edit method.
   }
 
   formValidate() {
@@ -142,7 +139,7 @@ export default class EditForm extends React.Component {
       this.handleSubmit()
       this.setState({ formErrors })
 
-      // TODO edit any uploaded files to Files Collection, attach this doc id.
+      // TODO Edit any uploaded files in Uploads Collection on submit. Attach this doc id.
     } else {
       this.setState({ formErrors })
     }

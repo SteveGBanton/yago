@@ -26,7 +26,7 @@ export const uploadsDownload = new ValidatedMethod({
     uploadId: { type: String },
   }).validator(),
   run({ uploadId }) {
-    // TODO SET PERMISSIONS Only Admin, Owner and those in readAllowed can view.
+    // TODO SET PERMISSIONS Only Admin, Owner and those in readAllowed can download.
     try {
       const file = Uploads.findOne(uploadId);
       const s3 = new AWS.S3({

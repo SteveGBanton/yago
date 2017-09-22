@@ -118,9 +118,10 @@ export default class UploadFile extends React.Component {
       } else {
         Meteor.clearInterval(this.timer);
 
-        // this.setState({
-        //   uploadProgress: 100,
-        // });
+        // Make sure uploadProgress displays 100 for small uploads
+        this.setState({
+          uploadProgress: 100,
+        });
 
         const getKey = url.substring(url.indexOf('/', url.indexOf('.')) + 1);
 
@@ -140,10 +141,10 @@ export default class UploadFile extends React.Component {
             Bert.alert(error.reason, 'danger');
 
           } else {
-            // Success - replace currentFile with new file.
-            // Append ID:
+            // Success - replace currentFile with new file & append Id
             const uploadsCollectionDocWithId = { ...uploadsCollectionDoc };
             uploadsCollectionDocWithId._id = res;
+            console.log(res)
 
             // add to new file upload doc with ID
             this.props.newFileSubmit(uploadsCollectionDocWithId);
@@ -152,21 +153,20 @@ export default class UploadFile extends React.Component {
             if (fileToDelete) this.deleteFileS3(fileToDelete)
 
             this.currentFile = uploadsCollectionDocWithId;
-            this.setState({
-              currentFileName: this.currentFile.name,
-            });
-            this.resetNewFile()
+
+            Meteor.setTimeout(() => {
+              this.setState({
+                currentFileName: this.currentFile.name,
+              });
+              this.resetNewFile()
+            }, 1200)
+
 
           }
         });
 
       }
     });
-
-    // TODO Add active progress bar
-    // TODO Add to Uploads collection on upload
-    // TODO On success, Delete old file from S3 & files collection - uploadsRemove method.
-
   }
 
   deleteFileS3(uploadId) {
@@ -212,7 +212,6 @@ export default class UploadFile extends React.Component {
 
   stopUpload() {
     if (this.uploader && this.uploader.xhr) this.uploader.xhr.abort();
-    // TODO this.uploader Slingshot xhr abort upload.
 
     this.setState({
       uploadProgress: -1,

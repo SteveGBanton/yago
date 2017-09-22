@@ -66,23 +66,17 @@ export default class TableCreator extends React.Component {
     };
   }
 
-  // TODO Organize these functions or put them in different files. 600 Lines may be too long.
-
   // on mount, get columns that will be displayed and those that will be active from props.schema
   componentWillMount() {
-
-    // Set initial allCols and activeCols in the table using the first 5 rows of the schema.
-
     const allColumns = [];
-    const allActiveColumns = [];
 
     this.props.schema.forEach((item) => {
       if (!item.public) {
-        return
-      };
+        return;
+      }
 
       allColumns.push(item);
-    })
+    });
 
     this.allCols = [...allColumns];
 
@@ -119,8 +113,7 @@ export default class TableCreator extends React.Component {
   // Create MenuItems for non-active columns.
   getNonActiveFilterColumnMenu() {
     const nonActiveCols = this.allCols.filter((column) => {
-      // TODO implement best find pattern here:
-      return this.state.activeCols.findIndex(item => item.fieldId === column.fieldId) === -1
+      return (this.state.activeCols.findIndex(item => item.fieldId === column.fieldId)) === -1;
     });
     return nonActiveCols.map((column, index) => {
       return (
