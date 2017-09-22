@@ -7,12 +7,10 @@ Slingshot.fileRestrictions("uploadToS3", {
 
 Slingshot.createDirective("uploadToS3", Slingshot.S3Storage, {
   bucket: "acad-admin",
+  contentDisposition: "attachment",
   authorize() {
     if (this.userId) return true;
     return false;
-    // let userFileCount = Files.find( { "userId": this.userId } ).count();
-    // return userFileCount < 3 ? true : false;
-    // return true
   },
   key(file) {
     const index = file.name.lastIndexOf('.');
