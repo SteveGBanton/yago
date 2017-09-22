@@ -16,6 +16,9 @@ import Public from '../layouts/Public/Public';
 import SuperAdmin from '../layouts/SuperAdmin/SuperAdmin';
 import UserAdmin from '../layouts/UserAdmin/UserAdmin';
 
+// Download page
+import Download from '../layouts/Download/Download';
+
 // SuperAdmin pages
 
 // ClientAdmin pages
@@ -78,6 +81,7 @@ class App extends React.Component {
               <div className="App">
                 <Navigation {...props} toggleMenu={toggleMenu} />
                 <Switch>
+                  <Route exact path="/files/:fileId" component={Download} {...props} />
                   <AllUserAccess exact path="/" component={Index} {...props} menuOpen={this.state.menuOpen}  />
                   <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} menuOpen={this.state.menuOpen} />
                   <ClientAdmin exact path="/:username/admin/students" component={Students} {...props} menuOpen={this.state.menuOpen} />

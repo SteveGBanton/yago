@@ -68,14 +68,19 @@ const changeCurrent = function changeCurrent(currentOrg, currentRole, history) {
 const Navigation = props => {
   const { authenticated, history, user, toggleMenu } = props;
   const current = ( authenticated ) ? user.current : '';
+
+  // Test if we are on a page where we'd like to disable the menu button
+  const re = /^\/files/g;
+  const filesPage = re.test(history.location.pathname)
+
   return (
     <Toolbar style={styles.toolbar}>
       <ToolbarGroup>
         <MenuIcon
-          color="rgba(255,255,255,0.7)"
-          hoverColor="rgba(255,255,255,0.9)"
-          className="pointer"
-          onClick={toggleMenu}
+          color={(!authenticated || filesPage) ? "rgba(255,255,255,0)" : "rgba(255,255,255,0.7)" }
+          hoverColor={(!authenticated || filesPage) ? "rgba(255,255,255,0)" : "rgba(255,255,255,0.9)" }
+          className={(!authenticated || filesPage) ? "" : "pointer"}
+          onClick={(!authenticated || filesPage) ? null : toggleMenu }
         />
         <ToolbarSeparator />
         <ToolbarTitle style={{color: 'white', paddingLeft: '20px'}} text={(user) ? user.profile.orgName : 'Academy App' } />
