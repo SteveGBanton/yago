@@ -11,12 +11,19 @@ import NotFound from '../../../../components/NotFound/NotFound';
 // In schema creator, must have options to customize all these fields to create this form correctly.
 // In Methods, uses testSchema to test against schema. Built in the form creator!
 const testAllFieldsForm = {
-  id: 'schemaidgeafeageahea3a3h',
+  _id: 'schemaidgeafeageahea3a3h',
   ownerId: 'owneridggeabeafeav4a3agah4a3t',
-  accountName: 'name-test',
-  readAllow: ["admin", "teacher", "readgroup"],
-  editAllow: ["admin"],
-  formType: 'student',
+  accountName: 'steve-school',
+  readAllow: {
+    admin: true,
+    teacher: true,
+    student: true,
+    readgroup: true,
+  },
+  editAllow: {
+    admin: true,
+  },
+  formCollection: 'students',
   dateUpdated: new Date().toISOString(),
   activityLogSchemaUpdates: [],
   testSchema: '', // Form must build a schema to use to test in Meteor Methods.
@@ -24,6 +31,76 @@ const testAllFieldsForm = {
   // Must add to React Table manually
   // non-editable schema values like
   // dateCreated/formType
+  rules: {
+    "testObj.subfield": {
+      minLength: 3,
+      maxLength: 20,
+      required: true,
+      string: true,
+    },
+    name: {
+      required: true,
+      minLength: 3,
+      maxLength: 20,
+    },
+    description: {
+      minLength: 3,
+      maxLength: 250,
+    },
+    emailAddress1: {
+      email: true,
+    },
+    password1: {
+      password: true,
+    },
+    coffeeType: {},
+    multipleChoice1: {},
+    toggle1: {},
+    slider1: {
+      minValue: 0,
+      maxValue: 8,
+    },
+    progress1: {},
+    datePicker: {},
+    timePicker: {},
+    imageURL: {},
+    videoURL: {},
+  },
+  messages: {
+    "testObj.subfield": {
+      minLength: "Must be at least 3 characters long",
+      maxLength: "Must be at most 20 characters.",
+      required: 'Required!',
+      string: 'should be a string',
+    },
+    name: {
+      required: 'required',
+      minLength: "Must be at least 3 characters long",
+      maxLength: "Must be at most 20 characters.",
+    },
+    description: {
+      minLength: "Must be at least 3 characters long",
+      maxLength: "Must be at most 250 characters.",
+    },
+    emailAddress1: {
+      email: "Is this email correct?",
+    },
+    password1: {
+      password: "Keep your password safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
+    },
+    coffeeType: {},
+    multipleChoice1: {},
+    toggle1: {},
+    slider1: {
+      minValue: "Must be at least 0",
+      maxValue: "Cannot be more than 8",
+    },
+    progress1: {},
+    datePicker: {},
+    timePicker: {},
+    imageURL: {},
+    videoURL: {},
+  },
   schema: [
     {
       fieldName: 'Text Field Name',
@@ -32,12 +109,10 @@ const testAllFieldsForm = {
       rules: {
         minLength: 3,
         maxLength: 20,
-        required: 'true',
       },
       messages: {
         minLength: 'Must be at least 3 characters long',
         maxLength: 'Must be at most 20 characters.',
-        required: 'This field is required',
       },
       public: true,
     },
@@ -46,14 +121,12 @@ const testAllFieldsForm = {
       fieldId: 'description',
       type: 'text-area',
       rules: {
-        minLength: 20,
+        minLength: 3,
         maxLength: 250,
-        required: true,
       },
       messages: {
         minLength: 'Must be at least 3 characters long',
-        maxLength: 'Must be at most 20 characters.',
-        required: 'This field is required',
+        maxLength: 'Must be at most 250 characters.',
       },
       public: true,
     },
@@ -63,11 +136,9 @@ const testAllFieldsForm = {
       type: 'text-field',
       rules: {
         email: true,
-        required: true,
       },
       messages: {
         email: 'Is this email correct?',
-        required: 'This field is required',
       },
       public: true,
     },
@@ -84,41 +155,28 @@ const testAllFieldsForm = {
       public: true,
     },
     {
-      fieldName: 'dropdown-single-select Relationship',
+      fieldName: 'Relationship singleselect',
       fieldId: 'relationshipStatus',
       type: 'dropdown-single-select',
       dropdownSingleSelectOptions: ['Rather Not Say', 'Married', 'Single', 'It\'s complicated'],
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
-      public: true,
+      rules: {},
+      messages: {},
     },
     {
-      fieldName: 'dropdown-multi-select Date Select',
+      fieldName: 'Date Select multiselect',
       fieldId: 'multiDateSelect',
       type: 'dropdown-multi-select',
       dropdownMultiSelectOptions: ['Feb 1', 'Feb 5', 'Feb 9', 'Feb 22'],
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Radio How Takes Coffee',
       fieldId: 'coffeeType',
       type: 'radio',
       radioOptions: ['Black', 'Double Double', 'Cream and Sugar', 'Milk and Sugar', 'Milk Only', 'Sugar Only'],
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     // {
     //   fieldName: 'Checkbox Likes Tea',
@@ -139,23 +197,15 @@ const testAllFieldsForm = {
       multipleChoiceWeight: 3,
       multipleChoiceOptions: ['Here is potential answer number 0', 'potential answer 1!', 'potential answer 2'],
       multipleChoiceAnswerKeyId: 'idofformageaben4w4hwsgsg',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Toggle On Off',
       fieldId: 'toggle1',
       type: 'toggle',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'You must set this to true',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Coffees Per Day Slider',
@@ -165,13 +215,11 @@ const testAllFieldsForm = {
       sliderMin: 1,
       sliderStep: 1,
       rules: {
-        required: true,
-        minValue: 4,
+        minValue: 0,
         maxValue: 8,
       },
       messages: {
-        required: 'This field is required',
-        minValue: 'Must be at least 4',
+        minValue: 'Must be at least 0',
         maxValue: 'Cannot be more than 8',
       },
     },
@@ -192,12 +240,8 @@ const testAllFieldsForm = {
       maxDate: (new Date().getDate + 5),
       minDate: (new Date().getDate - 5),
       locale: 'en-US',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Time Picker',
@@ -205,12 +249,8 @@ const testAllFieldsForm = {
       type: 'time-picker',
       format: 'ampm',
       locale: 'en-US',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Image Upload',
@@ -225,35 +265,25 @@ const testAllFieldsForm = {
         width: 100,
       },
       imageSize: 1000,
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Add Image URL',
       fieldId: 'imageURL',
       type: 'image-url',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'A valid image is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'File Upload',
       fieldId: 'fileUpload',
       type: 'file-upload',
       rules: {
-        required: true,
         fileSize: 1000,
         fileTypes: ['pdf', 'xls'],
       },
       messages: {
-        required: 'This field is required',
         fileSize: 'File is too large',
         fileTypes: 'File type is not accepted'
       },
@@ -262,46 +292,36 @@ const testAllFieldsForm = {
       fieldName: 'File URL',
       fieldId: 'fileURL',
       type: 'file-url',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Video URL',
       fieldId: 'videoURL',
       type: 'video-url',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'Valid video URL required',
-      },
+      rules: {},
+      messages: {},
     },
     {
       fieldName: 'Video Upload',
       fieldId: 'videoUpload',
       type: 'video-upload',
-      rules: {
-        required: true,
-      },
-      messages: {
-        required: 'This field is required',
-      },
+      rules: {},
+      messages: {},
     },
   ],
 };
 
-const allFieldsDoc = {
-  id: Random.id(),
+const allFieldsDoc = {};
+
+const allFieldsDocNotHere = {
+  _id: Random.id(),
   ownerId: 'gebaeaeage3a3ha3',
   formId: 'schemaidgeafeageahea3a3h',
   accountName: 'name-test',
   dateCreated: '2016-09-23',
   activityLog: [],
-  formType: 'student',
+  formCollection: 'students',
 
   name: 'Dave',
   description: 'Description of a \nstudent goes here in a \ntext area field.',
@@ -337,7 +357,12 @@ const getSchema = function getSchema(id) {
 const EditStudent = ({ doc, history, user, form }) => (doc && form ? (
   <div className="EditDocument">
     <h1 className="page-header">{`Editing Student "${doc.name}"`}</h1>
-    <EditForm doc={doc} history={history} user={user} form={form} />
+    <EditForm
+      doc={doc}
+      history={history}
+      user={user}
+      form={form}
+    />
   </div>
 ) : <NotFound />);
 
@@ -360,7 +385,7 @@ export default createContainer(({ match }) => {
 
   return {
     loading: !subscription.ready(),
-    doc: allFieldsDoc,
+    doc: (allFieldsDoc) ? allFieldsDoc : '',
     form: testAllFieldsForm,
   };
 }, EditStudent);

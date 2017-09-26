@@ -1,5 +1,6 @@
 import React from 'react';
 import Loading from '../Loading/Loading';
+import PropTypes from 'prop-types';
 
 import customFormValidator from '../../../modules/custom-form-validator';
 import ImageURL from './FormFields/ImageURL'
@@ -10,7 +11,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Toggle from 'material-ui/Toggle';
 import Slider from 'material-ui/Slider';
 import DatePicker from 'material-ui/DatePicker';
@@ -40,13 +41,9 @@ export default class EditForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.buildRulesMessages = this.buildRulesMessages.bind(this);
     this.buildForm = this.buildForm.bind(this);
     this.formValidate = this.formValidate.bind(this);
     this.setDynamicStateOnAction = this.setDynamicStateOnAction.bind(this);
-
-    // this.rules = this.buildRulesMessages('rules');
-    // this.messages = this.buildRulesMessages('messages');
 
     this.state = ({
       formErrors: {},
@@ -57,25 +54,60 @@ export default class EditForm extends React.Component {
     this.buildForm();
   }
 
-  handleSubmit() {
+  handleSubmit(input, uploads) {
     console.log('submitting')
+    console.log(input)
+    const { doc, form } = this.props;
+
+    // Use either edit or insert from formCollection
+    const methodToUse = (doc._id) ? `${form.formCollection}.edit` : `${form.formCollection}.insert`;
 
     // TODO Create submit / edit method.
+    Meteor.call(methodToUse, input, (err, docId) => {
+      if (err) {
+        console.error('error executing edit or insert');
+        console.error(err);
+      } else {
+        // updates attached uploads Collection with document Id and formCollection
+        uploads.forEach((upload) => {
+          const uploadWithId = { ...upload };
+          // Add new doc id
+          uploadWithId.docId = docId;
+          console.log(uploadWithId);
+
+          // Update collection with each upload to label uploads as attached to
+          // this form.
+          // Unlableled uploads are kept if they are not attached to a form -
+          // they can be deleted in the Upload browser.
+          Meteor.call('uploads.addFormId', {
+            _id: uploadWithId._id,
+            docId: uploadWithId.docId,
+            formCollection: form.formCollection,
+          }, (uploadUpdateErr, res) => {
+            if (uploadUpdateErr) console.error(uploadUpdateErr);
+          });
+        });
+      }
+
+
+    })
+
+    // TODO Attach this doc id to any uploaded files after addition to Doc collection.
+    // Find uploaded files with by taking the id from this.fieldId on fields that are uploads...
+
+    const uploadsToEditInCollection = [];
+
+
   }
 
   formValidate() {
-    const buildRules = {};
-    const buildMessages = {};
     const input = {};
-
-    console.log(this.imageURL)
+    const uploads = [];
 
     // get data for each field - requires different access for certain fields.
     this.props.form.schema.forEach((item) => {
       if (this[item.fieldId] && item.type === 'text-area') {
         input[item.fieldId] = this[item.fieldId].input.refs.input.value;
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
           (this[item.fieldId] && item.type === 'dropdown-single-select')
           || (this[item.fieldId] && item.type === 'dropdown-multi-select')
@@ -84,76 +116,49 @@ export default class EditForm extends React.Component {
           (this.state[item.fieldId])
           ? (this.state[item.fieldId])
           : this[item.fieldId];
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'radio')
         || (this[item.fieldId] && item.type === 'multiple-choice')
       ) {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.selected) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'toggle')
       ) {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.switched) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'slider')
       ) {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.value) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'date-picker')
       ) {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.date) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'time-picker')
       ) {
         input[item.fieldId] = (this[item.fieldId].state) ? (this[item.fieldId].state.time) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       } else if (
         (this[item.fieldId] && item.type === 'file-upload')
       ) {
         input[item.fieldId] = (this[item.fieldId]) ? (this[item.fieldId]) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
+        uploads.push(((this[item.fieldId]) ? (this[item.fieldId]) : ''));
       } else if (this[item.fieldId] || this[item.fieldId] === '') {
         input[item.fieldId] = (this[item.fieldId].input) ? (this[item.fieldId].input.value) : '';
-        buildRules[item.fieldId] = item.rules;
-        buildMessages[item.fieldId] = item.messages;
       }
 
     });
 
-    console.log(input)
+    input.formId = this.props.form._id;
 
-    let formErrors = customFormValidator(input, buildRules, buildMessages);
+    let formErrors = customFormValidator(input, this.props.form.rules, this.props.form.messages);
 
     if (!formErrors) {
-      this.handleSubmit()
+      this.handleSubmit(input, uploads)
       this.setState({ formErrors })
-
-      // TODO Edit any uploaded files in Uploads Collection on submit. Attach this doc id.
     } else {
       this.setState({ formErrors })
     }
     console.log(this.state.formErrors)
-
-  }
-
-  // Create form rules and messages based on schema
-  buildRulesMessages(rulesOrMessages) {
-    const build = {};
-    this.props.form.schema.forEach(item => {
-      build[item.fieldId] = item[rulesOrMessages]
-    })
-    return build
   }
 
   setDynamicStateOnAction(fieldId, value) {
@@ -508,3 +513,16 @@ export default class EditForm extends React.Component {
     );
   }
 }
+
+EditForm.defaultProps = {
+  doc: '',
+};
+
+EditForm.propTypes = {
+  doc: PropTypes.object,
+  history: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  form: PropTypes.object.isRequired,
+};
+
+// TODO set propstypes and default value for doc.
