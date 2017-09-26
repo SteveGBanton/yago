@@ -13,7 +13,7 @@ const range = len => {
 const newPerson = () => {
   const statusChance = Math.random();
   return {
-    id: Random.id(),
+    _id: Random.id(),
     avatar: faker.image.avatar(),
     firstName: namor.generate({ words: 1, numbers: 0 }),
     lastName: namor.generate({ words: 1, numbers: 0 }),

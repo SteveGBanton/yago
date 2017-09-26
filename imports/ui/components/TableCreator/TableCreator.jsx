@@ -206,7 +206,7 @@ export default class TableCreator extends React.Component {
         newField.Cell = (row =>
           (
             <div className="centerRow">
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}/edit`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original._id}/edit`}>
                 <Edit
                   onClick={() => history.push()}
                   color="rgba(0, 0, 0, 0.30)"
@@ -214,7 +214,7 @@ export default class TableCreator extends React.Component {
                   hoverColor="rgba(0, 0, 0, 0.60)"
                 />
               </Link>
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original._id}`}>
                 <Visibility
                   onClick={() => history.push()}
                   color="rgba(0, 0, 0, 0.30)"
@@ -222,7 +222,7 @@ export default class TableCreator extends React.Component {
                   hoverColor="rgba(0, 0, 0, 0.60)"
                 />
               </Link>
-              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original.id}/edit`}>
+              <Link to={`/${user.current.currentOrg}/${user.current.currentRole}/students/${row.original._id}/edit`}>
                 <Clear
                   color="rgba(255, 0, 0, 0.30)"
                   className="pointer"
@@ -394,7 +394,7 @@ export default class TableCreator extends React.Component {
     setTimeout((() => {
       const allSelectedIndexes = {};
       this.props.tableData.forEach((row, index) => {
-        allSelectedIndexes[index] = row.id;
+        allSelectedIndexes[index] = row._id;
       });
       this.setState({
         selected: this.props.tableData,
@@ -415,12 +415,12 @@ export default class TableCreator extends React.Component {
 
       currentRows.forEach((row) => {
         for (let i = 0; i < selected.length; i += 1) {
-          if (selected[i].id === row._original.id) {
+          if (selected[i]._id === row._original._id) {
             return;
           }
         }
         rowsToPush.push(row._original);
-        indexesToPush[row._index] = row._original.id;
+        indexesToPush[row._index] = row._original._id;
       });
       this.setState({
         selected: [...this.state.selected, ...rowsToPush],
@@ -446,7 +446,7 @@ export default class TableCreator extends React.Component {
         const keys = Object.keys(selectedIndexes);
 
         for (let i = 0; i < keys.length; i += 1) {
-          if (selectedIndexes[keys[i]] === row._original.id) {
+          if (selectedIndexes[keys[i]] === row._original._id) {
             delete selectedIndexes[keys[i]];
           }
         }
@@ -488,7 +488,7 @@ export default class TableCreator extends React.Component {
       const keys = Object.keys(selectedIndexes);
 
       for (let i = 0; i < keys.length; i += 1) {
-        if (selectedIndexes[keys[i]] === rowData.original.id) {
+        if (selectedIndexes[keys[i]] === rowData.original._id) {
           delete selectedIndexes[keys[i]];
           break;
         }
@@ -509,11 +509,11 @@ export default class TableCreator extends React.Component {
     return () => {
       const selected = [...this.state.selected];
       for (let i = 0; i < selected.length; i += 1) {
-        if (selected[i].id === rowData.id) {
+        if (selected[i]._id === rowData._id) {
           return;
         }
       }
-      const selectedIndex = { [index]: rowData.id };
+      const selectedIndex = { [index]: rowData._id };
       setTimeout(
         (() => this.setState({
           selected: [...this.state.selected, rowData],
@@ -533,6 +533,7 @@ export default class TableCreator extends React.Component {
   render() {
     // Sends current selected rows to parent on render.
     this.props.getSelected(this.state.selected);
+    console.log(this.state.selected)
 
     return (
       <div>
