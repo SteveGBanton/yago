@@ -148,9 +148,13 @@ export default class EditForm extends React.Component {
 
     });
 
+    // add form Id and doc id if one already exists
     input.formId = this.props.form._id;
+    if (this.props.doc._id) {
+      input._id = this.props.doc._id;
+    }
 
-    let formErrors = customFormValidator(input, this.props.form.rules, this.props.form.messages);
+    const formErrors = customFormValidator(input, this.props.form.rules, this.props.form.messages);
 
     if (!formErrors) {
       this.handleSubmit(input, uploads)
