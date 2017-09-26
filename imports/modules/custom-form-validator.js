@@ -2,23 +2,15 @@ import PropTypes from 'prop-types';
 
 export default function customFormValidator(input, rules, messages) {
   function valString(field) {
-    return (typeof field === 'string')
-  }
-
-  function valObject(field) {
-    return (typeof field === 'object')
+    return (typeof field === 'string');
   }
 
   function valNumber(field) {
-    return (typeof field === 'number')
-  }
-
-  function valArray(field) {
-    return (typeof field === 'array')
+    return (typeof Number(field) === 'number' && !(isNaN(Number(field))));
   }
 
   function valBool(field) {
-    return (typeof field === 'boolean')
+    return (typeof field === 'boolean');
   }
 
   function valMaxLength(string, length) {
@@ -55,7 +47,7 @@ export default function customFormValidator(input, rules, messages) {
 
   function getField(inputField) {
     const correctField = inputField.split('.');
-    // Only works to verfiy up to 2 levels deep
+    // Only works to verify up to 2 levels deep
     if (correctField.length === 2) {
       return input[correctField[0]][correctField[1]];
     }
