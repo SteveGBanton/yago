@@ -488,7 +488,7 @@ export default class TableCreator extends React.Component {
       const keys = Object.keys(selectedIndexes);
 
       for (let i = 0; i < keys.length; i += 1) {
-        if (selectedIndexes[keys[i]] === rowData.id) {
+        if (selectedIndexes[keys[i]] === rowData.original.id) {
           delete selectedIndexes[keys[i]];
           break;
         }
