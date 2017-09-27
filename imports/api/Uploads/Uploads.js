@@ -45,6 +45,17 @@ Uploads.schema = new SimpleSchema({
     type: String,
     label: 'The S3 path, including new filename with appended ID.',
   },
+  formCollection: {
+    optional: true,
+    type: String,
+    label: 'The S3 path, including new filename with appended ID.',
+  },
+  docId: {
+    optional: true,
+    type: String,
+    label: 'The S3 path, including new filename with appended ID.',
+  },
+
 });
 
 Uploads.attachSchema(Uploads.schema);

@@ -29,6 +29,7 @@ export default class ClientAdmin extends React.Component {
   render() {
     console.log(Meteor.user());
     console.log(this.props.students);
+    console.log(this.props.uploads);
     const { loggingIn, authenticated, component, user, menuOpen, ...rest } = this.props;
     return (
       <div className="dashboard">

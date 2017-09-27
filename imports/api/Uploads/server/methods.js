@@ -64,7 +64,6 @@ export const uploadsInsert = new ValidatedMethod({
   },
 });
 
-
 export const uploadsAddFormId = new ValidatedMethod({
   name: 'uploads.addFormId',
   validate: new SimpleSchema({
@@ -73,21 +72,19 @@ export const uploadsAddFormId = new ValidatedMethod({
     formCollection: { type: String },
   }).validator(),
   run({ _id, docId, formCollection }) {
-
-    //TODO finish this.
-
-    // try {
-    //   if (!this.userId) throw Meteor.Error('500', 'Must be logged in to upload');
-    //   const obj = {
-    //     ...file,
-    //     accountName: Meteor.user().current.currentOrg,
-    //     ownerId: this.userId,
-    //   };
-    //   return Uploads.insert(obj);
-    // } catch (e) {
-    //   throw new Meteor.Error('500', e);
-    // }
-    console.log('adding form id')
+    console.log('editing upload...')
+    const uploadDoc = Uploads.findOne(_id);
+    const isLoggedIn = (this.userId)
+    const isOwner = (this.userId === uploadDoc.ownerId)
+    if (isLoggedIn && isOwner) {
+      const newUpload = { ...uploadDoc, docId, formCollection };
+      console.log(newUpload)
+      const uploaded = Uploads.update(_id, { $set: newUpload });
+      console.log(uploaded)
+      return uploaded
+    } else {
+      throw Meteor.Error('500', 'Not authorized to edit');
+    }
   },
 });
 

@@ -3,7 +3,7 @@ import { check } from 'meteor/check';
 import Uploads from '../Uploads';
 
 Meteor.publish('uploads', function documents() {
-  return Uploads.find({ owner: this.userId });
+  return Uploads.find({});
 });
 
 // Note: uploads.view is also used when editing an existing document.

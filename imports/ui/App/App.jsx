@@ -10,6 +10,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import StudentsCollection from '../../api/Students/Students';
+import UploadsCollection from '../../api/Uploads/Uploads';
 
 // Dashboard layouts
 import AllUserAccess from '../layouts/AllUserAccess/AllUserAccess';
@@ -140,11 +141,13 @@ export default createContainer(() => {
   const name = user && user.profile && user.profile.name && getUserName(user.profile.name);
   const emailAddress = user && user.emails && user.emails[0].address;
 
-  // TODO Remove this sub.
+  // TODO Remove these subs
   const studentList = Meteor.subscribe('students');
+  const uploadList = Meteor.subscribe('uploads');
 
   return {
     students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
+    uploads: UploadsCollection.find({}).fetch(),
     loading,
     loggingIn,
     authenticated: !loggingIn && !!userId,
