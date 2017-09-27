@@ -60,24 +60,20 @@ export default class EditForm extends React.Component {
     const { doc, form } = this.props;
 
     // Use either edit or insert from formCollection
-    const methodToUse = (doc._id) ? `${form.formCollection}.edit` : `${form.formCollection}.insert`;
+    const methodToUse = (doc && doc._id) ? `${form.formCollection}.edit` : `${form.formCollection}.insert`;
+
+    console.log(methodToUse);
 
     // TODO Create submit / edit method.
     Meteor.call(methodToUse, input, (err, docId) => {
       if (err) {
-        console.error('error executing edit or insert');
-        console.error(err);
+        Bert.alert('Error adding or editing form', 'danger');
       } else {
-        console.log(uploads);
-        console.log(docId)
         // updates attached uploads Collection with document Id and formCollection
         uploads.forEach((upload) => {
           const uploadWithId = { ...upload };
           // Add new doc id
           uploadWithId.docId = docId;
-          console.log('upload ID:');
-          console.log(uploadWithId);
-
           // Update collection with each upload to label uploads as attached to
           // this form.
           // Unlableled uploads are kept if they are not attached to a form -
@@ -522,7 +518,7 @@ export default class EditForm extends React.Component {
 }
 
 EditForm.defaultProps = {
-  doc: '',
+  doc: {},
 };
 
 EditForm.propTypes = {

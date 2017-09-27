@@ -1,12 +1,15 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { createContainer } from 'meteor/react-meteor-data';
+import { Random } from 'meteor/random'
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import AWS from 'aws-sdk';
-import Students from '../Students';
-// import Forms from '../../Forms/Forms';
-import rateLimit from '../../../modules/rate-limit';
-import customFormValidator from '../../../modules/custom-form-validator';
 
+import EditForm from '../../../../components/EditForm/EditForm';
+import NotFound from '../../../../components/NotFound/NotFound';
+
+// Example schema to use for student.
+// In schema creator, must have options to customize all these fields to create this form correctly.
+// In Methods, uses testSchema to test against schema. Built in the form creator!
 const testAllFieldsForm = {
   _id: 'schemaidgeafeageahea3a3h',
   ownerId: 'owneridggeabeafeav4a3agah4a3t',
@@ -30,6 +33,7 @@ const testAllFieldsForm = {
   // dateCreated/formType
   rules: {
     name: {
+      string: true,
       minLength: 3,
       maxLength: 20,
     },
@@ -58,6 +62,7 @@ const testAllFieldsForm = {
   },
   messages: {
     name: {
+      string: 'Invalid character types detected.',
       minLength: "Must be at least 3 characters long",
       maxLength: "Must be at most 20 characters.",
     },
@@ -295,180 +300,32 @@ const testAllFieldsForm = {
   ],
 };
 
-export const studentsInsert = new ValidatedMethod({
-  name: 'students.insert',
-  validate: null,
-  run(input) {
-    try {
-      // Verify data against schema stored in DB
+const AddStudent = ({ history, user, form }) => (form ? (
+  <div className="EditDocument">
+    <h1 className="page-header">{`Add New Student`}</h1>
+    <EditForm
+      history={history}
+      user={user}
+      form={form}
+    />
+  </div>
+) : <NotFound />);
 
-      // const getForm = Forms.findOne(input.formId);
-      const getForm = { ...testAllFieldsForm };
+AddStudent.propTypes = {
+  history: PropTypes.object.isRequired,
+  form: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+};
 
-      // Check if form should be used to submit to this Collection.
-      if (getForm.formCollection !== 'students') throw Meteor.error('500', 'Form is not of correct type');
+export default createContainer(({ match }) => {
+  const documentId = match.params.id;
+  const subscription = Meteor.subscribe('documents.view', documentId);
+  // const doc = Documents.findOne(documentId),
+  // const formId = doc.formId; // Find schema to use from doc form.
+  // const form = Forms.findOne(formId);
 
-      // Revalidate data server side using form stored in DB
-      const formErrors = customFormValidator(input, getForm.rules, getForm.messages);
-
-      if (formErrors) {
-        throw Meteor.Error('500', 'Form data does not match form schema');
-      }
-
-      // Verify if user is allowed to edit according to form.
-      const isAdmin = Roles.userIsInRole(this.userId, 'admin', getForm.accountName);
-
-      // Roles in a Form may be a global Role or a userId.
-      const possibleUserRoles = [...Meteor.user().roles[getForm.accountName], this.userId];
-
-      // Test each user role by all roles in form. If included, then user is allowed.
-      const isAllowedEditByForm = possibleUserRoles.some((role) => {
-        if (getForm.editAllow[role]) return true;
-        return false;
-      });
-      // use for EDIT: const isOwner = (this.userId === input.owner);
-
-      if (isAdmin || isAllowedEditByForm) {
-
-        const obj = {
-          ...input,
-          accountName: Meteor.user().current.currentOrg,
-          owner: this.userId,
-          dateCreated: (new Date()).toISOString(),
-          activityLog: [],
-          formType: 'students',
-        };
-
-        const docId = Students.insert(obj);
-        console.log(docId);
-        return docId;
-      } else {
-        throw new Meteor.Error('500', 'Unauthorized');
-      }
-    } catch (e) {
-      console.log(e)
-      throw new Meteor.Error('500', e.reason);
-    }
-  },
-});
-
-export const studentsEdit = new ValidatedMethod({
-  name: 'students.edit',
-  validate: null,
-  run(input) {
-    try {
-      // Verify data against schema stored in DB
-
-      // Get current document
-      const getCurrentDocument = Students.findOne(input._id);
-
-      // Get the form the current document used when it was created -
-      // a document must always use the same form.
-      // const getForm = Forms.findOne(getCurrentDocument.formId);
-      const getForm = { ...testAllFieldsForm }
-
-      // Check if form should be used to submit to this Collection.
-      if (getForm.formCollection !== 'students') throw Meteor.error('500', 'Form is not of correct type');
-
-      // Revalidate data server-side using form rules stored in DB
-      const formErrors = customFormValidator(input, getForm.rules, getForm.messages);
-      if (formErrors) {
-        throw Meteor.Error('500', 'Form data does not match form schema');
-      }
-
-      // Verify if user is allowed to edit according to form.
-      // Is user admin?
-      const user = Meteor.user();
-      const isAdmin = Roles.userIsInRole(this.userId, 'admin', getForm.accountName);
-      // Is user included in the editAllowed field for the form?
-      // Roles in a Form may be a global Role or a userId.
-      const possibleUserRoles = [...user.roles[getForm.accountName], this.userId];
-      // Test each user role by all roles in form. If included, then user is allowed.
-      const isAllowedEditByForm = possibleUserRoles.some((role) => {
-        if (getForm.editAllow[role]) return true;
-        return false;
-      });
-      // Is the user the owner of the original document?
-      const isOwner = (this.userId === getCurrentDocument.owner);
-
-      if (isAdmin || isAllowedEditByForm || isOwner) {
-        console.log('allowed to edit, editing...')
-
-        const newActivity = `Edited by ${user.profile.name.first} ${user.profile.name.last} on ${(new Date()).toISOString()}`
-
-        const obj = {
-          ...input,
-          accountName: getCurrentDocument.accountName,
-          owner: getCurrentDocument.owner,
-          dateCreated: getCurrentDocument.dateCreated,
-          activityLog: [...getCurrentDocument.activityLog, newActivity],
-          lastEdited: (new Date()).toISOString(),
-          formType: getCurrentDocument.formType,
-        };
-
-        const docIdTest = Students.update(getCurrentDocument._id, { $set: obj });
-        return getCurrentDocument._id;
-      } else {
-        throw new Meteor.Error('500', 'Unauthorized');
-      }
-    } catch (e) {
-      throw new Meteor.Error('500', e);
-    }
-  },
-
-});
-
-export const studentsDelete = new ValidatedMethod({
-  name: 'students.delete',
-  validate: new SimpleSchema({
-    docId: { type: Date },
-  }).validator(),
-  run({ docId }) {
-    try {
-      // Get current doc.
-      const getCurrentDocument = Students.findOne(docId);
-
-      // Get the form the current document used when it was created -
-      // a document must always use the same form.
-      // const getForm = Forms.findOne(getCurrentDocument.formId);
-      const getForm = { ...testAllFieldsForm }
-
-      // Check if form can be used to edit this Collection.
-      if (getForm.formCollection !== 'students') throw Meteor.error('500', 'Form is not of correct type');
-
-      // Verify if user is allowed to edit according to form.
-      // Is user admin?
-      const user = Meteor.user();
-      const isAdmin = Roles.userIsInRole(this.userId, 'admin', getForm.accountName);
-      // Is user included in the editAllowed field for the form?
-      // Roles in a Form may be a global Role or a userId.
-      const possibleUserRoles = [...user.roles[getForm.accountName], this.userId];
-      // Test each user role by all roles in form. If included, then user is allowed.
-      const isAllowedEditByForm = possibleUserRoles.some((role) => {
-        if (getForm.editAllow[role]) return true;
-        return false;
-      });
-      // Is the user the owner of the original document?
-      const isOwner = (this.userId === getCurrentDocument.owner);
-
-      if (isAdmin || isAllowedEditByForm || isOwner) {
-        console.log('allowed to remove, removing...')
-
-        return Students.remove(getCurrentDocument._id);
-      } else {
-        throw new Meteor.Error('500', 'Unauthorized');
-      }
-    } catch (e) {
-      throw new Meteor.Error('500', e);
-    }
-
-
-
-  },
-});
-
-// rateLimit({
-//   methods: [],
-//   limit: 2,
-//   timeRange: 5000,
-// });
+  return {
+    loading: !subscription.ready(),
+    form: testAllFieldsForm,
+  };
+}, AddStudent);

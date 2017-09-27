@@ -13,7 +13,7 @@ import NotFound from '../../../../components/NotFound/NotFound';
 const testAllFieldsForm = {
   _id: 'schemaidgeafeageahea3a3h',
   ownerId: 'owneridggeabeafeav4a3agah4a3t',
-  accountName: 'steve-school',
+  accountName: 'steve-test',
   readAllow: {
     admin: true,
     teacher: true,

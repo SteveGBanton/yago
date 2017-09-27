@@ -1,5 +1,6 @@
 import React from "react";
 // import { makeData } from "./Utils";
+import { Link } from 'react-router-dom';
 import TableCreator from '../../../components/TableCreator/TableCreator';
 import { makeData } from '../../../components/TableCreator/Utils';
 import Loading from '../../../components/Loading/Loading';
@@ -110,7 +111,7 @@ const customSchema2 = [
   },
 ];
 
-export default class TableDisplay extends React.Component {
+export default class Students extends React.Component {
 
   constructor(props) {
     super(props);
@@ -146,6 +147,7 @@ export default class TableDisplay extends React.Component {
     return (
       <div>
         <h1>Manage Students</h1>
+        <Link to="students/add/">+ Add</Link>
         {(this.state.tableData !== undefined || this.state.length !== 0)
           ?
             <TableCreator

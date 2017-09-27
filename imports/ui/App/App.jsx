@@ -33,6 +33,11 @@ import ClientEditDocument from '../layouts/ClientAdmin/ClientDocuments/ClientEdi
 import ClientProfile from '../layouts/ClientAdmin/ClientProfile/ClientProfile';
 import Students from '../layouts/ClientAdmin/Students/Students';
 import EditStudent from '../layouts/ClientAdmin/Students/EditStudent/EditStudent';
+import ViewStudent from '../layouts/ClientAdmin/Students/ViewStudent/ViewStudent';
+import AddStudent from '../layouts/ClientAdmin/Students/AddStudent/AddStudent';
+import AddSchemaForm from '../layouts/ClientAdmin/SchemaForms/AddSchemaForm';
+import EditSchemaForm from '../layouts/ClientAdmin/SchemaForms/EditSchemaForm';
+import ViewSchemaForms from '../layouts/ClientAdmin/SchemaForms/ViewSchemaForms';
 
 // UserAdmin pages
 import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard';
@@ -59,7 +64,7 @@ import './App.scss';
 class App extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.state = {
       menuOpen: true,
@@ -69,7 +74,7 @@ class App extends React.Component {
   toggleMenu() {
     this.setState({
       menuOpen: !this.state.menuOpen,
-    })
+    });
   }
 
   render() {
@@ -84,27 +89,163 @@ class App extends React.Component {
               <div className="App">
                 <Navigation {...props} toggleMenu={toggleMenu} />
                 <Switch>
-                  <Route exact path="/files/:fileId" component={Download} {...props} />
-                  <AllUserAccess exact path="/" component={Index} {...props} menuOpen={this.state.menuOpen}  />
-                  <ClientAdmin exact path="/:username/admin/dashboard" component={ClientDashboard} {...props} menuOpen={this.state.menuOpen} />
-                  <ClientAdmin exact path="/:username/admin/students" component={Students} {...props} menuOpen={this.state.menuOpen} />
-                  <ClientAdmin exact path="/:username/admin/students/:id/edit" component={EditStudent} {...props} menuOpen={this.state.menuOpen} />
-                  {/* <ClientAdmin exact path="/:username/admin/calendar" component={ClientDashboard} {...props, toggleMenu} /> */}
-                  <ClientAdmin exact path="/:username/admin/documents" component={ClientDocuments} {...props} menuOpen={this.state.menuOpen} />
-                  <ClientAdmin exact path="/:username/admin/documents/new" component={ClientNewDocument} {...props} menuOpen={this.state.menuOpen} />
-                  <ClientAdmin exact path="/:username/admin/documents/:_id" component={ClientViewDocument} {...props} menuOpen={this.state.menuOpen} />
-                  <ClientAdmin exact path="/:username/admin/documents/:_id/edit" component={ClientEditDocument} {...props} menuOpen={this.state.menuOpen}/>
-                  <ClientAdmin exact path="/:username/admin/profile" component={ClientProfile} {...props} menuOpen={this.state.menuOpen} />
-                  <UserAdmin exact path="/:username/user/dashboard" component={UserDashboard} {...props} menuOpen={this.state.menuOpen} />
-                  <Public exact path="/signup" component={Signup} {...props} />
-                  <Public exact path="/login" component={Login} {...props} />
-                  <Public exact path="/logout" component={Logout} {...props} />
-                  <AllUserAccess name="verify-email" path="/verify-email/:token" component={VerifyEmail} />
-                  <AllUserAccess name="recover-password" path="/recover-password" component={RecoverPassword} />
-                  <AllUserAccess name="reset-password" path="/reset-password/:token" component={ResetPassword} />
-                  <AllUserAccess name="terms" path="/terms" component={Terms} />
-                  <AllUserAccess name="privacy" path="/privacy" component={Privacy} />
-                  <AllUserAccess component={NotFound} />
+                  <Route
+                    exact
+                    path="/files/:fileId"
+                    component={Download}
+                    {...props}
+                  />
+                  <AllUserAccess
+                    exact
+                    path="/"
+                    component={Index}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/dashboard"
+                    component={ClientDashboard}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/forms/add"
+                    component={AddSchemaForm}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/forms/:formId/"
+                    component={EditSchemaForm}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/forms"
+                    component={ViewSchemaForms}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/students"
+                    component={Students}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/students/add"
+                    component={AddStudent}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/students/:id/"
+                    component={ViewStudent}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/students/:id/edit"
+                    component={EditStudent}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/documents"
+                    component={ClientDocuments}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/documents/new"
+                    component={ClientNewDocument}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/documents/:_id"
+                    component={ClientViewDocument}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/documents/:_id/edit"
+                    component={ClientEditDocument}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <ClientAdmin
+                    exact
+                    path="/:username/admin/profile"
+                    component={ClientProfile}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <UserAdmin
+                    exact
+                    path="/:username/user/dashboard"
+                    component={UserDashboard}
+                    {...props}
+                    menuOpen={this.state.menuOpen}
+                  />
+                  <Public
+                    exact
+                    path="/signup"
+                    component={Signup}
+                    {...props}
+                  />
+                  <Public
+                    exact
+                    path="/login"
+                    component={Login}
+                    {...props}
+                  />
+                  <Public
+                    exact
+                    path="/logout"
+                    component={Logout}
+                    {...props}
+                  />
+                  <AllUserAccess
+                    name="verify-email"
+                    path="/verify-email/:token"
+                    component={VerifyEmail}
+                  />
+                  <AllUserAccess
+                    name="recover-password"
+                    path="/recover-password"
+                    component={RecoverPassword}
+                  />
+                  <AllUserAccess
+                    name="reset-password"
+                    path="/reset-password/:token"
+                    component={ResetPassword}
+                  />
+                  <AllUserAccess
+                    name="terms"
+                    path="/terms"
+                    component={Terms}
+                  />
+                  <AllUserAccess
+                    name="privacy"
+                    path="/privacy"
+                    component={Privacy}
+                  />
+                  <AllUserAccess
+                    component={NotFound}
+                  />
                 </Switch>
               </div>
             </MuiThemeProvider>
@@ -142,12 +283,12 @@ export default createContainer(() => {
   const emailAddress = user && user.emails && user.emails[0].address;
 
   // TODO Remove these subs
-  const studentList = Meteor.subscribe('students');
-  const uploadList = Meteor.subscribe('uploads');
+  // const studentList = Meteor.subscribe('students');
+  // const uploadList = Meteor.subscribe('uploads');
 
   return {
-    students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
-    uploads: UploadsCollection.find({}).fetch(),
+    // students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
+    // uploads: UploadsCollection.find({}).fetch(),
     loading,
     loggingIn,
     authenticated: !loggingIn && !!userId,

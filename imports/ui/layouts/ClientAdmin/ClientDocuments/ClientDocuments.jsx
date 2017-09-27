@@ -39,7 +39,7 @@ const handleRemove = (documentId) => {
   }
 };
 
-export class ClientDocuments extends React.Component {
+class ClientDocuments extends React.Component {
 
   constructor(props) {
     super(props);
