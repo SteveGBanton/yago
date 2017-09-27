@@ -22,7 +22,7 @@ Uploads.schema = new SimpleSchema({
     type: String,
     label: 'The account/username this upload belongs to.',
   },
-  owner: {
+  ownerId: {
     type: String,
     label: 'The ID of the user that uploaded this doc.',
   },
@@ -36,6 +36,10 @@ Uploads.schema = new SimpleSchema({
   name: {
     type: String,
     label: 'The original filename of the upload, without appended ID.',
+  },
+  url: {
+    type: String,
+    label: 'The url.',
   },
   key: {
     type: String,

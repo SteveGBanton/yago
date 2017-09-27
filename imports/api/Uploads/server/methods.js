@@ -5,20 +5,15 @@ import AWS from 'aws-sdk';
 import Uploads from '../Uploads';
 import rateLimit from '../../../modules/rate-limit';
 
-const userAllowed = function userAllowed(testAllowed) {
-  // const testAllowed = {
-  //   userId: '',
-  //   allowedGroups: '',
-  //   account: '',
-  // }
-  const userRolesForAccount = Roles.getRolesForUser(testAllowed.userId, testAllowed.account);
-  let rolesLength = userRolesForAccount.length;
-
-  while (rolesLength--) {
-    if (testAllowed.allowedGroups[userRolesForAccount[rolesLength]] === true) return true
-  }
-  return false;
-};
+// const userAllowed = function userAllowed(testAllowed) {
+//   const userRolesForAccount = Roles.getRolesForUser(testAllowed.userId, testAllowed.account);
+//   let rolesLength = userRolesForAccount.length;
+//
+//   while (rolesLength--) {
+//     if (testAllowed.allowedGroups[userRolesForAccount[rolesLength]] === true) return true
+//   }
+//   return false;
+// };
 
 export const uploadsDownload = new ValidatedMethod({
   name: 'uploads.download',
@@ -59,12 +54,40 @@ export const uploadsInsert = new ValidatedMethod({
       const obj = {
         ...file,
         accountName: Meteor.user().current.currentOrg,
-        owner: this.userId,
+        ownerId: this.userId,
       };
-      return Uploads.insert(obj);
+      const id = Uploads.insert(obj);
+      return id
     } catch (e) {
       throw new Meteor.Error('500', e);
     }
+  },
+});
+
+
+export const uploadsAddFormId = new ValidatedMethod({
+  name: 'uploads.addFormId',
+  validate: new SimpleSchema({
+    _id: { type: String },
+    docId: { type: String },
+    formCollection: { type: String },
+  }).validator(),
+  run({ _id, docId, formCollection }) {
+
+    //TODO finish this.
+
+    // try {
+    //   if (!this.userId) throw Meteor.Error('500', 'Must be logged in to upload');
+    //   const obj = {
+    //     ...file,
+    //     accountName: Meteor.user().current.currentOrg,
+    //     ownerId: this.userId,
+    //   };
+    //   return Uploads.insert(obj);
+    // } catch (e) {
+    //   throw new Meteor.Error('500', e);
+    // }
+    console.log('adding form id')
   },
 });
 
@@ -78,7 +101,7 @@ export const uploadsRemoveOne = new ValidatedMethod({
     try {
       const uploadDoc = Uploads.findOne(uploadId);
       const isAdmin = Roles.userIsInRole(this.userId, 'admin', uploadDoc.accountName);
-      const isOwner = (this.userId === uploadDoc.owner);
+      const isOwner = (this.userId === uploadDoc.ownerId);
 
       if (isAdmin || isOwner) {
         const params = {
