@@ -28,6 +28,7 @@ const testAllFieldsForm = {
   // Must add to React Table manually
   // non-editable schema values like
   // dateCreated/formType
+  // TODO - all form fields must have rules and messages. At least String or Number attr
   rules: {
     name: {
       minLength: 3,

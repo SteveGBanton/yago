@@ -4,6 +4,8 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Random } from 'meteor/random'
 import { Meteor } from 'meteor/meteor';
 
+import Loading from '../../../../components/Loading/Loading';
+import StudentsCollection from '../../../../../api/Students/Students';
 import EditForm from '../../../../components/EditForm/EditForm';
 import NotFound from '../../../../components/NotFound/NotFound';
 
@@ -340,20 +342,21 @@ const getSchema = function getSchema(id) {
   // get the form from db based on doc.formid
 }
 
-const EditStudent = ({ doc, history, user, form }) => (doc && form ? (
+const EditStudent = ({ doc, history, user, form, loading }) => (form ? (
   <div className="EditDocument">
     <h1 className="page-header">{`Editing Student "${doc.name}"`}</h1>
     <EditForm
+      loading={loading}
       doc={doc}
       history={history}
       user={user}
       form={form}
     />
   </div>
-) : <NotFound />);
+) : <Loading />);
 
 EditStudent.defaultProps = {
-  doc: null,
+  doc: {},
 };
 
 EditStudent.propTypes = {
@@ -363,15 +366,14 @@ EditStudent.propTypes = {
 };
 
 export default createContainer(({ match }) => {
-  const documentId = match.params.id;
-  const subscription = Meteor.subscribe('documents.view', documentId);
-  // const doc = Documents.findOne(documentId),
+  const documentId = match.params._id;
+  const subscription = Meteor.subscribe('students.view', documentId);
   // const formId = doc.formId; // Find schema to use from doc form.
   // const form = Forms.findOne(formId);
 
   return {
     loading: !subscription.ready(),
-    doc: (allFieldsDoc) ? allFieldsDoc : '',
+    doc: StudentsCollection.findOne({ _id: documentId }),
     form: testAllFieldsForm,
   };
 }, EditStudent);

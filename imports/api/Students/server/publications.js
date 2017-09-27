@@ -10,5 +10,7 @@ Meteor.publish('students', function documents() {
 // Note: students.view is also used when editing an existing document.
 Meteor.publish('students.view', function documentsView(documentId) {
   check(documentId, String);
+
+  // TODO Logic to check if Read access is allowed on doc.
   return Students.find({ _id: documentId, owner: this.userId });
 });

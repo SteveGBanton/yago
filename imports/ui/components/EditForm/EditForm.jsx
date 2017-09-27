@@ -51,23 +51,20 @@ export default class EditForm extends React.Component {
   }
 
   componentWillMount() {
-    this.buildForm();
+    // this.buildForm();
   }
 
   handleSubmit(input, uploads) {
-    console.log('submitting')
-    console.log(input)
     const { doc, form } = this.props;
 
     // Use either edit or insert from formCollection
     const methodToUse = (doc && doc._id) ? `${form.formCollection}.edit` : `${form.formCollection}.insert`;
 
-    console.log(methodToUse);
-
     // TODO Create submit / edit method.
     Meteor.call(methodToUse, input, (err, docId) => {
       if (err) {
         Bert.alert('Error adding or editing form', 'danger');
+        console.log(err)
       } else {
         // updates attached uploads Collection with document Id and formCollection
         uploads.forEach((upload) => {
@@ -368,8 +365,7 @@ export default class EditForm extends React.Component {
               {this.errorNote(item.fieldId)}
               <Slider
                 defaultValue={doc[item.fieldId]}
-                style={{ marginTop: '20px' }}
-                style={{ width: 400 }}
+                style={{ marginTop: '20px', width: 400 }}
                 min={item.sliderMin}
                 max={item.sliderMax}
                 step={item.sliderStep}
@@ -492,7 +488,9 @@ export default class EditForm extends React.Component {
   }
 
   render() {
-    return (
+    const { loading } = this.props;
+    return (!loading
+      ? (
       <div>
         <form style={styles.form} onSubmit={event => event.preventDefault()}>
           {this.buildForm().map(key => key)}
@@ -513,7 +511,8 @@ export default class EditForm extends React.Component {
 
         </form>
       </div>
-    );
+    )
+  : <Loading />);
   }
 }
 

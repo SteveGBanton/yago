@@ -146,14 +146,14 @@ class App extends React.Component {
                   />
                   <ClientAdmin
                     exact
-                    path="/:username/admin/students/:id/"
+                    path="/:username/admin/students/view/:id/"
                     component={ViewStudent}
                     {...props}
                     menuOpen={this.state.menuOpen}
                   />
                   <ClientAdmin
                     exact
-                    path="/:username/admin/students/:id/edit"
+                    path="/:username/admin/students/edit/:_id"
                     component={EditStudent}
                     {...props}
                     menuOpen={this.state.menuOpen}
@@ -174,14 +174,14 @@ class App extends React.Component {
                   />
                   <ClientAdmin
                     exact
-                    path="/:username/admin/documents/:_id"
+                    path="/:username/admin/documents/view/:_id"
                     component={ClientViewDocument}
                     {...props}
                     menuOpen={this.state.menuOpen}
                   />
                   <ClientAdmin
                     exact
-                    path="/:username/admin/documents/:_id/edit"
+                    path="/:username/admin/documents/edit/:_id/"
                     component={ClientEditDocument}
                     {...props}
                     menuOpen={this.state.menuOpen}
@@ -283,12 +283,12 @@ export default createContainer(() => {
   const emailAddress = user && user.emails && user.emails[0].address;
 
   // TODO Remove these subs
-  // const studentList = Meteor.subscribe('students');
-  // const uploadList = Meteor.subscribe('uploads');
+  const studentList = Meteor.subscribe('students');
+  const uploadList = Meteor.subscribe('uploads');
 
   return {
-    // students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
-    // uploads: UploadsCollection.find({}).fetch(),
+    students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
+    uploads: UploadsCollection.find({}).fetch(),
     loading,
     loggingIn,
     authenticated: !loggingIn && !!userId,

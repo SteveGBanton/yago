@@ -118,13 +118,13 @@ export default class Students extends React.Component {
     this.getData = this.getData.bind(this);
     this.getSelected = this.getSelected.bind(this);
     this.state = ({
-      tableData: [],
+      tableData: makeData(500),
       schema: customSchema,
     });
   }
 
   componentDidMount() {
-    setTimeout(this.getData, 1000);
+
   }
 
   getSelected(selected) {
@@ -132,9 +132,7 @@ export default class Students extends React.Component {
   }
 
   getData() {
-    this.setState({
-      tableData: makeData(500),
-    });
+
     // Meteor.call('utility.remoteGet', 'https://f001.backblazeb2.com/file/boldpoint-test/tableData2short.json', (err, res) => {
     //   this.setState({
     //     tableData: JSON.parse(res.content),
