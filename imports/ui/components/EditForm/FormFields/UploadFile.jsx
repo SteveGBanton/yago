@@ -128,23 +128,25 @@ export default class UploadFile extends React.Component {
         const uploadsCollectionDoc = {
           dateCreated: new Date(),
           name: this.newFile.name,
-          url: url,
+          url,
           key: getKey,
         };
 
         let fileToDelete = '';
-        if (this.currentFile && this.currentFile._id) fileToDelete = this.currentFile._id
+        if (this.currentFile && this.currentFile._id) fileToDelete = this.currentFile._id;
+
+        console.log(uploadsCollectionDoc)
 
         // Add to file collection
-        Meteor.call('uploads.insert', uploadsCollectionDoc, (error, res) => {
-          if (error) {
-            Bert.alert(error.reason, 'danger');
 
+        Meteor.call('uploads.insert', uploadsCollectionDoc, (err, res) => {
+          if (err) {
+            Bert.alert(err.reason, 'danger');
           } else {
-            // Success - replace currentFile with new file & append Id
-            const uploadsCollectionDocWithId = { ...uploadsCollectionDoc };
-            uploadsCollectionDocWithId._id = res;
-            console.log(res)
+            // Success - replace currentFile with new file & append _id of file in DB.
+            const uploadsCollectionDocWithId = { ...uploadsCollectionDoc, _id: res };
+            console.log('testing')
+            console.log(uploadsCollectionDocWithId)
 
             // add to new file upload doc with ID
             this.props.newFileSubmit(uploadsCollectionDocWithId);
@@ -160,11 +162,8 @@ export default class UploadFile extends React.Component {
               });
               this.resetNewFile()
             }, 1200)
-
-
           }
         });
-
       }
     });
   }
@@ -335,11 +334,11 @@ export default class UploadFile extends React.Component {
           : ''
         }
 
-        <RaisedButton
+        {/* <RaisedButton
           onClick={this.getFile}
         >
           Get Current File
-        </RaisedButton>
+        </RaisedButton> */}
 
       </div>
     )
