@@ -403,7 +403,8 @@ export const studentsEdit = new ValidatedMethod({
           formType: getCurrentDocument.formType,
         };
 
-        return Students.update(getCurrentDocument._id, { $set: obj });
+        const docIdTest = Students.update(getCurrentDocument._id, { $set: obj });
+        return getCurrentDocument._id;
       } else {
         throw new Meteor.Error('500', 'Unauthorized');
       }
@@ -463,13 +464,8 @@ export const studentsDelete = new ValidatedMethod({
   },
 });
 
-rateLimit({
-  methods: [
-    'uploads.insert',
-    'uploads.update',
-    'uploads.remove',
-    'uploads.download',
-  ],
-  limit: 2,
-  timeRange: 5000,
-});
+// rateLimit({
+//   methods: [],
+//   limit: 2,
+//   timeRange: 5000,
+// });
