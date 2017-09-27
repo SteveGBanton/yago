@@ -68,11 +68,14 @@ export default class EditForm extends React.Component {
         console.error('error executing edit or insert');
         console.error(err);
       } else {
+        console.log(uploads);
+        console.log(docId)
         // updates attached uploads Collection with document Id and formCollection
         uploads.forEach((upload) => {
           const uploadWithId = { ...upload };
           // Add new doc id
           uploadWithId.docId = docId;
+          console.log('upload ID:');
           console.log(uploadWithId);
 
           // Update collection with each upload to label uploads as attached to

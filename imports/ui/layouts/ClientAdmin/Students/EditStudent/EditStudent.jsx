@@ -32,14 +32,8 @@ const testAllFieldsForm = {
   // non-editable schema values like
   // dateCreated/formType
   rules: {
-    "testObj.subfield": {
-      minLength: 3,
-      maxLength: 20,
-      required: true,
-      string: true,
-    },
     name: {
-      required: true,
+      string: true,
       minLength: 3,
       maxLength: 20,
     },
@@ -67,14 +61,8 @@ const testAllFieldsForm = {
     videoURL: {},
   },
   messages: {
-    "testObj.subfield": {
-      minLength: "Must be at least 3 characters long",
-      maxLength: "Must be at most 20 characters.",
-      required: 'Required!',
-      string: 'should be a string',
-    },
     name: {
-      required: 'required',
+      string: 'Invalid character types detected.',
       minLength: "Must be at least 3 characters long",
       maxLength: "Must be at most 20 characters.",
     },
@@ -312,10 +300,8 @@ const testAllFieldsForm = {
   ],
 };
 
-const allFieldsDoc = {};
-
-const allFieldsDocNotHere = {
-  _id: Random.id(),
+const allFieldsDoc = {
+  _id: 'pDmirrbnre8xsDDCu',
   ownerId: 'gebaeaeage3a3ha3',
   formId: 'schemaidgeafeageahea3a3h',
   accountName: 'name-test',

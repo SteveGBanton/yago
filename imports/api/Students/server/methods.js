@@ -339,7 +339,9 @@ export const studentsInsert = new ValidatedMethod({
           formType: 'students',
         };
 
-        return Students.insert(obj);
+        const docId = Students.insert(obj);
+        console.log(docId);
+        return docId;
       } else {
         throw new Meteor.Error('500', 'Unauthorized');
       }
