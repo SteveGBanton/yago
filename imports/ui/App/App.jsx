@@ -9,6 +9,8 @@ import { Roles } from 'meteor/alanning:roles';
 import { Bert } from 'meteor/themeteorchef:bert';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
+import StudentsCollection from '../../api/Students/Students';
+
 // Dashboard layouts
 import AllUserAccess from '../layouts/AllUserAccess/AllUserAccess';
 import ClientAdmin from '../layouts/ClientAdmin/ClientAdmin';
@@ -138,7 +140,11 @@ export default createContainer(() => {
   const name = user && user.profile && user.profile.name && getUserName(user.profile.name);
   const emailAddress = user && user.emails && user.emails[0].address;
 
+  // TODO Remove this sub.
+  const studentList = Meteor.subscribe('students');
+
   return {
+    students: StudentsCollection.find({}).fetch(), // TODO Remove this sub
     loading,
     loggingIn,
     authenticated: !loggingIn && !!userId,
