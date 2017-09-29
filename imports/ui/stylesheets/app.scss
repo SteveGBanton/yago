@@ -136,6 +136,20 @@ label {
   }
 }
 
+.grab-cursor {
+  &:hover {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+  }
+}
+
+.grab-cursor:active {
+  cursor: -webkit-grabbing !important;
+  cursor: -moz-grabbing !important;
+  cursor: grabbing !important;
+}
+
 .text10px {
   font-size: 10px;
 }

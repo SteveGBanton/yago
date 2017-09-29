@@ -35,9 +35,9 @@ import Students from '../layouts/ClientAdmin/Students/Students';
 import EditStudent from '../layouts/ClientAdmin/Students/EditStudent/EditStudent';
 import ViewStudent from '../layouts/ClientAdmin/Students/ViewStudent/ViewStudent';
 import AddStudent from '../layouts/ClientAdmin/Students/AddStudent/AddStudent';
-import AddSchemaForm from '../layouts/ClientAdmin/SchemaForms/AddSchemaForm';
-import EditSchemaForm from '../layouts/ClientAdmin/SchemaForms/EditSchemaForm';
-import ViewSchemaForms from '../layouts/ClientAdmin/SchemaForms/ViewSchemaForms';
+import AddSchema from '../layouts/ClientAdmin/SchemaForms/AddSchema';
+import EditSchema from '../layouts/ClientAdmin/SchemaForms/EditSchema';
+import ViewSchema from '../layouts/ClientAdmin/SchemaForms/ViewSchema';
 
 // UserAdmin pages
 import UserDashboard from '../layouts/UserAdmin/UserDashboard/UserDashboard';
@@ -112,21 +112,21 @@ class App extends React.Component {
                   <ClientAdmin
                     exact
                     path="/:username/admin/forms/add"
-                    component={AddSchemaForm}
+                    component={AddSchema}
                     {...props}
                     menuOpen={this.state.menuOpen}
                   />
                   <ClientAdmin
                     exact
                     path="/:username/admin/forms/:formId/"
-                    component={EditSchemaForm}
+                    component={EditSchema}
                     {...props}
                     menuOpen={this.state.menuOpen}
                   />
                   <ClientAdmin
                     exact
                     path="/:username/admin/forms"
-                    component={ViewSchemaForms}
+                    component={ViewSchema}
                     {...props}
                     menuOpen={this.state.menuOpen}
                   />

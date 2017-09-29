@@ -1,8 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import Students from '../Students';
-// import Forms from '../../Forms/Forms';
+import SchemaForms from '../SchemaForms';
 import rateLimit from '../../../modules/rate-limit';
 import customFormValidator from '../../../modules/custom-form-validator';
 
@@ -15,18 +14,21 @@ const testAllFieldsForm = {
     teacher: true,
     student: true,
     readgroup: true,
+    public: true, // Should be readable by anybody who visits page! Will be used in publish functions.
   },
   editAllow: {
     admin: true,
   },
   formCollection: 'students',
   dateUpdated: new Date().toISOString(),
-  activityLogSchemaUpdates: [],
-  testSchema: '', // Form must build a schema to use to test in Meteor Methods.
-  // all public/editable by default.
-  // Must add to React Table manually
-  // non-editable schema values like
-  // dateCreated/formType
+  activityLogSchemaUpdates: [
+    {
+      date: '',
+      detail: '',
+      userId: '',
+      userName: '',
+    },
+  ],
   // TODO - all form fields must have rules and messages. At least String or Number attr
   rules: {
     name: {
@@ -295,40 +297,243 @@ const testAllFieldsForm = {
   ],
 };
 
-export const studentsInsert = new ValidatedMethod({
-  name: 'students.insert',
-  validate: null,
+/**
+  TODO Create standard schema for what will be recieved from this form that creates schema...
+  TODO Create new form validator methods:
+    objectOfBooleans
+    objectOfStrings
+    objectOfNumbers
+    arrayOfBooleans
+    arrayOfStrings
+    arrayOfNumbers
+  TODO
+*/
+
+
+const exampleFormBuild = {
+  readAllow: ['admin', 'teacher', 'student', 'ga3a4stbr5d5y3hsh'],
+  editAllow: ['admin'],
+  schema: [
+    {
+      fieldName: 'New Field Name',
+      type: 'text-field',
+      rules: {
+        required: true,
+        minLength: 3,
+        maxLength: 20,
+      },
+      messages: {
+        minLength: 'Must be at least 3 characters long',
+        maxLength: 'Must be at most 20 characters.',
+      },
+    },
+    {
+      fieldName: 'Text Area Description',
+      type: 'text-area',
+      rules: {
+        minLength: 3,
+        maxLength: 250,
+      },
+      messages: {
+        minLength: 'Must be at least 3 characters long',
+        maxLength: 'Must be at most 250 characters.',
+      },
+    },
+    {
+      fieldName: 'Email Address',
+      fieldId: 'emailAddress1',
+      type: 'text-field',
+      rules: {
+        email: true,
+      },
+      messages: {
+        email: 'Is this email correct?',
+      },
+      public: true,
+    },
+    {
+      fieldName: 'Password',
+      fieldId: 'password1',
+      type: 'text-field',
+      rules: {
+        password: true,
+      },
+      messages: {
+        password: "Keep your password safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
+      },
+      public: true,
+    },
+    {
+      fieldName: 'Relationship singleselect',
+      fieldId: 'relationshipStatus',
+      type: 'dropdown-single-select',
+      dropdownSingleSelectOptions: ['Rather Not Say', 'Married', 'Single', 'It\'s complicated'],
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Date Select multiselect',
+      fieldId: 'multiDateSelect',
+      type: 'dropdown-multi-select',
+      dropdownMultiSelectOptions: ['Feb 1', 'Feb 5', 'Feb 9', 'Feb 22'],
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Radio How Takes Coffee',
+      fieldId: 'coffeeType',
+      type: 'radio',
+      radioOptions: ['Black', 'Double Double', 'Cream and Sugar', 'Milk and Sugar', 'Milk Only', 'Sugar Only'],
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'multiple choice Is coffee better than tea?',
+      fieldId: 'multipleChoice1',
+      type: 'multiple-choice',
+      multipleChoiceWeight: 3,
+      multipleChoiceOptions: ['Here is potential answer number 0', 'potential answer 1!', 'potential answer 2'],
+      multipleChoiceAnswerKeyId: 'idofformageaben4w4hwsgsg',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Toggle On Off',
+      fieldId: 'toggle1',
+      type: 'toggle',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Coffees Per Day Slider',
+      fieldId: 'slider1',
+      type: 'slider',
+      sliderMax: 10,
+      sliderMin: 1,
+      sliderStep: 1,
+      rules: {
+        minValue: 0,
+        maxValue: 8,
+      },
+      messages: {
+        minValue: 'Must be at least 0',
+        maxValue: 'Cannot be more than 8',
+      },
+    },
+    {
+      fieldName: 'Progress Percentage',
+      fieldId: 'progress1',
+      type: 'progress',
+      sliderMax: 100,
+      sliderMin: 1,
+      sliderStep: 1,
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Date Picker Date of Appointment',
+      fieldId: 'datePicker',
+      type: 'date-picker',
+      maxDate: (new Date().getDate + 5),
+      minDate: (new Date().getDate - 5),
+      locale: 'en-US',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Time Picker',
+      fieldId: 'timePicker',
+      type: 'time-picker',
+      format: 'ampm',
+      locale: 'en-US',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Image Upload',
+      fieldId: 'imageUpload1',
+      type: 'image-upload',
+      imageMaxDimensions: {
+        height: 500,
+        width: 500,
+      },
+      imageMinDimensions: {
+        height: 100,
+        width: 100,
+      },
+      imageSize: 1000,
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Add Image URL',
+      fieldId: 'imageURL',
+      type: 'image-url',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'File Upload',
+      fieldId: 'fileUpload',
+      type: 'file-upload',
+      rules: {
+        fileSize: 1000,
+        fileTypes: ['pdf', 'xls'],
+      },
+      messages: {
+        fileSize: 'File is too large',
+        fileTypes: 'File type is not accepted'
+      },
+    },
+    {
+      fieldName: 'File URL',
+      fieldId: 'fileURL',
+      type: 'file-url',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Video URL',
+      fieldId: 'videoURL',
+      type: 'video-url',
+      rules: {},
+      messages: {},
+    },
+    {
+      fieldName: 'Video Upload',
+      fieldId: 'videoUpload',
+      type: 'video-upload',
+      rules: {},
+      messages: {},
+    },
+  ]
+}
+
+export const schemaFormsInsert = new ValidatedMethod({
+  name: 'schemaForms.insert',
+  validate: new SimpleSchema({
+    "readAllow": { type: [String] },
+    "editAllow": { type: [String] },
+    "schema": { type: [Object] },
+  }).validator(),
   run(input) {
     try {
-      // Verify data against schema stored in DB
-
-      // const getForm = Forms.findOne(input.formId);
-      const getForm = { ...testAllFieldsForm };
-
-      // Check if form should be used to submit to this Collection.
-      if (getForm.formCollection !== 'students') throw Meteor.error('500', 'Form is not of correct type');
-
-      // Revalidate data server side using form stored in DB
-      const formErrors = customFormValidator(input, getForm.rules, getForm.messages);
+      const user = Meteor.user();
+      // Verify that you are allowed to add a new SchemaForm
 
       if (formErrors) {
-        throw Meteor.Error('500', 'Form data does not match form schema');
+        throw Meteor.Error('500', 'SchemaForm data is not in standard format');
       }
 
       // Verify if user is allowed to edit according to form.
       const isAdmin = Roles.userIsInRole(this.userId, 'admin', getForm.accountName);
 
-      // Roles in a Form may be a global Role or a userId.
-      const possibleUserRoles = [...Meteor.user().roles[getForm.accountName], this.userId];
+      // In Form Creator Role, allowed by Admin.
+      const isAllowedToAddForms = Roles.userIsInRole(this.userId, 'formCreator', user.current.currentOrg);
 
-      // Test each user role by all roles in form. If included, then user is allowed.
-      const isAllowedEditByForm = possibleUserRoles.some((role) => {
-        if (getForm.editAllow[role]) return true;
-        return false;
-      });
-      // use for EDIT: const isOwner = (this.userId === input.owner);
+      //////
 
-      if (isAdmin || isAllowedEditByForm) {
+      if (isAdmin || isAllowedToAddForms) {
 
         const obj = {
           ...input,
@@ -352,8 +557,8 @@ export const studentsInsert = new ValidatedMethod({
   },
 });
 
-export const studentsEdit = new ValidatedMethod({
-  name: 'students.edit',
+export const schemaFormsEdit = new ValidatedMethod({
+  name: 'schemaForms.edit',
   validate: null,
   run(input) {
     try {
@@ -418,8 +623,8 @@ export const studentsEdit = new ValidatedMethod({
 
 });
 
-export const studentsDelete = new ValidatedMethod({
-  name: 'students.delete',
+export const schemaFormsDelete = new ValidatedMethod({
+  name: 'schemaForms.delete',
   validate: new SimpleSchema({
     docId: { type: Date },
   }).validator(),
@@ -469,9 +674,9 @@ export const studentsDelete = new ValidatedMethod({
 
 rateLimit({
   methods: [
-    'students.delete',
-    'students.insert',
-    'students.edit',
+    'schemaForms.insert',
+    'schemaForms.delete',
+    'schemaForms.edit',
   ],
   limit: 2,
   timeRange: 5000,
