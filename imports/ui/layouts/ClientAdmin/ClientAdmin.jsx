@@ -115,10 +115,14 @@ export default class ClientAdmin extends React.Component {
   }
 }
 
+ClientAdmin.defaultProps = {
+  user: {},
+};
+
 ClientAdmin.propTypes = {
   loggingIn: PropTypes.bool.isRequired,
   authenticated: PropTypes.bool.isRequired,
   component: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   menuOpen: PropTypes.bool.isRequired,
 };

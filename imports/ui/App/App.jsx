@@ -12,7 +12,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import StudentsCollection from '../../api/Students/Students';
 import UploadsCollection from '../../api/Uploads/Uploads';
 
-// Dashboard layouts
+// Dashboard layoutsd
 import AllUserAccess from '../layouts/AllUserAccess/AllUserAccess';
 import ClientAdmin from '../layouts/ClientAdmin/ClientAdmin';
 import Public from '../layouts/Public/Public';
@@ -66,9 +66,31 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleNavBar = this.toggleNavBar.bind(this);
+    this.onNavBar = this.onNavBar.bind(this);
+    this.offNavBar = this.offNavBar.bind(this);
     this.state = {
       menuOpen: true,
+      navBarOn: true,
     };
+  }
+
+  onNavBar() {
+    this.setState({
+      navBarOn: true,
+    });
+  }
+
+  offNavBar() {
+    this.setState({
+      navBarOn: false,
+    });
+  }
+
+  toggleNavBar() {
+    this.setState({
+      navBarOn: !this.state.menuOpen,
+    });
   }
 
   toggleMenu() {
@@ -83,11 +105,18 @@ class App extends React.Component {
     return (
       <Router>
         {
-          (!props.loading)
-          ?
+          (!props.loading) ?
             <MuiThemeProvider>
               <div className="App">
-                <Navigation {...props} toggleMenu={toggleMenu} />
+                {(this.state.navBarOn) ?
+                  <Navigation
+                    {...props}
+                    toggleMenu={toggleMenu}
+                  />
+                  :
+                  ''
+                }
+
                 <Switch>
                   <Route
                     exact
@@ -249,7 +278,7 @@ class App extends React.Component {
                 </Switch>
               </div>
             </MuiThemeProvider>
-          : ''
+            : ''
         }
       </Router>
     );

@@ -6,7 +6,7 @@
   margin: 5px;
   position: relative;
   padding: 8px;
-  min-width: 250px;
+  min-width: 270px;
 }
 
 .outerDroppableContainer {
@@ -14,7 +14,7 @@
 }
 
 .innerDroppableContainer {
-  width: calc(100% - 250px);
+  width: calc(100% - 270px);
 }
 
 .innerDroppable {

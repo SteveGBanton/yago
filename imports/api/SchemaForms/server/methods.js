@@ -91,52 +91,24 @@ const testAllFieldsForm = {
       fieldName: 'Text Field Name',
       fieldId: 'name',
       type: 'text-field',
-      rules: {
-        minLength: 3,
-        maxLength: 20,
-      },
-      messages: {
-        minLength: 'Must be at least 3 characters long',
-        maxLength: 'Must be at most 20 characters.',
-      },
       public: true,
     },
     {
       fieldName: 'Text Area Description',
       fieldId: 'description',
       type: 'text-area',
-      rules: {
-        minLength: 3,
-        maxLength: 250,
-      },
-      messages: {
-        minLength: 'Must be at least 3 characters long',
-        maxLength: 'Must be at most 250 characters.',
-      },
       public: true,
     },
     {
       fieldName: 'Email Address',
       fieldId: 'emailAddress1',
       type: 'text-field',
-      rules: {
-        email: true,
-      },
-      messages: {
-        email: 'Is this email correct?',
-      },
       public: true,
     },
     {
       fieldName: 'Password',
       fieldId: 'password1',
       type: 'text-field',
-      rules: {
-        password: true,
-      },
-      messages: {
-        password: "Keep your password safe: at least 9 characters required, at least one uppercase letter and one number. Special characters allowed: $%@#£€*?&",
-      },
       public: true,
     },
     {

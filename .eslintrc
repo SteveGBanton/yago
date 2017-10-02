@@ -2,7 +2,7 @@
   "extends": "airbnb",
   "rules": {
     "quotes": 0,
-    "no-undef": [2],
+    "import/no-extraneous-dependencies": "off",
   },
   "globals": {
     "Meteor": false,
