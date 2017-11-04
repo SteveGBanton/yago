@@ -30,7 +30,7 @@ export default function customFormValidator(input, rules, messages) {
 
   function valURL(url) {
     if (url !== '') {
-      const re = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g;
+      const re = /^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/g;
       return re.test(url);
     }
     return true;
