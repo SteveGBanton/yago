@@ -67,7 +67,7 @@ const Links = ({
 
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559', marginRight: 5 }}
+                        style={{ color: '#559' }}
                         onClick={() => window.open(row.original.url, '_blank')}
                       >
                         open_in_new
@@ -131,7 +131,6 @@ const Links = ({
                   Cell: row => (
                     <div
                       className="copy-btn pointer"
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', fontSize: 10, outline: 'none', height: '100%' }}
                       onClick={() => Bert.alert('Link Copied!', 'success')}
                       role="button"
                       tabIndex={0}
@@ -159,6 +158,7 @@ const Links = ({
             },
           ]}
         defaultPageSize={10}
+        noDataText="Please add links!"
         className="-striped -highlight"
       />
       <br />
