@@ -5,6 +5,12 @@ import App from '../../ui/App/App.jsx';
 
 import '../../ui/stylesheets/app.scss';
 
+Meteor.startup(function () {
+    if (location.host.indexOf('yago.site') !== 0) {
+        location = 'http://yago.site'
+    }
+})
+
 Bert.defaults = {
   hideDelay: 3500,
   style: 'growl-bottom-right',
