@@ -1,6 +1,5 @@
 import './accounts';
 import './api';
-import './fixtures';
 import './email';
 
 Meteor.users.deny({

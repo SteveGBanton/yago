@@ -2,8 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
-const AllUserAccess = ({ loggingIn, authenticated, component, ...rest }) => (
-  <div className="all-access" style={{marginTop: '55px'}}>
+import Navigation from '../../components/Navigation/Navigation';
+
+
+const AllUserAccess = ({
+  loggingIn,
+  authenticated,
+  component,
+  user,
+  ...rest
+}) => (
+  <div className="all-access" style={{ marginTop: '55px' }}>
+    <Navigation
+      authenticated={authenticated}
+      history={history}
+      user={user}
+      {...rest}
+    />
     <Route
       {...rest}
       render={props => (

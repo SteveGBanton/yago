@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
 import LinkAdder from '../../../components/LinkAdder/LinkAdder'
 
-import './Index.scss';
+import './Dashboard.scss'
 
-const Index = ({ history }) => (
-  <div className="index">
+const Dashboard = ({ history, user }) => (
+  <div className="dashboard">
     <LinkAdder history={history} />
   </div>
 );
 
-Index.propTypes = {
+Dashboard.propTypes = {
   history: PropTypes.shape({}).isRequired,
 };
 
-export default Index;
+export default Dashboard;
