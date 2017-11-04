@@ -12,23 +12,24 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import './ViewLinkStats.scss';
 
-const handleRemove = (documentId, history) => {
-  if (confirm('Are you sure? This is permanent!')) {
-    Meteor.call('documents.remove', { documentId }, (error) => {
-      if (error) {
-        Bert.alert(error.reason, 'danger');
-      } else {
-        Bert.alert('Document deleted!', 'success');
-        history.push('/documents');
-      }
-    });
-  }
+const handleRemove = (_id, history) => {
+  Meteor.call('link.remove', { _id }, (error) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    } else {
+      Bert.alert('Link deleted!', 'success');
+      history.push('/links');
+    }
+  });
 };
+
 
 const renderDocument = (doc, match, history, user) => (
   (doc)
     ? (
         <div className="view-shortlink">
+
+          <h3>{(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : '' }</h3>
 
           <h1>{ doc && doc.url }</h1>
 
