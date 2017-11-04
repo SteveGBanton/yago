@@ -46,7 +46,7 @@ export default class ClientAdmin extends React.Component {
         <div className={(this.state.menuOpen) ? "dashboard-menu" : "dashboard-menu-closed"}>
           <Drawer
             className="dashboard-drawer"
-            containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#03A9F4', paddingTop: "20px" }}
+            containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#F5F5F5', paddingTop: "30px" }}
             style={{ color: 'white' }}
             open={this.state.menuOpen}
           >
@@ -55,24 +55,25 @@ export default class ClientAdmin extends React.Component {
                 primaryText="Create New Yagolink"
                 leftIcon={
                   <RemoveRedEye
-                    color="rgba(255,255,255,0.5)"
+                    color="rgba(0,0,0,0.5)"
                     style={{ paddingLeft: "10px" }}
                   />}
               />
             </Link>
             <Link to="/links">
               <MenuItem
-                primaryText="View My Yagolink"
+                primaryText="View My Yagolinks"
+                style={{ color: '#616161' }}
                 leftIcon={
                   <PersonAdd
-                    color="rgba(255,255,255,0.5)"
+                    color="rgba(0,0,0,0.5)"
                     style={{ paddingLeft: "10px" }}
                   />}
               />
             </Link>
-            <Divider
-              style={{ backgroundColor: "#0288D1", marginTop: "16px", marginBottom: "16px" }}
-            />
+            {/* <Divider
+              style={{ backgroundColor: "#616161", marginTop: "16px", marginBottom: "16px" }}
+            /> */}
           </Drawer>
         </div>
         <div className={(this.state.menuOpen) ? "inner-route" : "inner-route-full"}>

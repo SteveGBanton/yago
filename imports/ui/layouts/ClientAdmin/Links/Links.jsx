@@ -51,7 +51,7 @@ const Links = ({
                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559', marginRight: 5 }}
+                        style={{ color: '#616161', marginRight: 5 }}
                         onClick={() => history.push(`/view-link/${row.original.shortLink}`)}
                       >
                         remove_red_eye
@@ -59,7 +59,7 @@ const Links = ({
 
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559', marginRight: 5 }}
+                        style={{ color: '#616161', marginRight: 5 }}
                         onClick={() => handleRemove(row.original._id)}
                       >
                         delete
@@ -67,7 +67,7 @@ const Links = ({
 
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559' }}
+                        style={{ color: '#616161' }}
                         onClick={() => window.open(row.original.url, '_blank')}
                       >
                         open_in_new
