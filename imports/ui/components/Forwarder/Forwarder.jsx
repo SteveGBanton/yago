@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 import Loading from '../Loading/Loading';
 
 import ShortLinks from '../../../api/ShortLinks/ShortLinks';
+import './Forwarder.scss';
 
 const redirect = (findLink) => {
   Meteor.call('link.addCount', { linkId: findLink._id }, (error, result) => {
@@ -18,20 +19,37 @@ const redirect = (findLink) => {
   window.location = findLink.url;
 };
 
-const Forwarder = ({ url, findLink }) => {
-  let timeOut = false;
-  Meteor.setTimeout(() => { timeOut = true; }, 2000);
-  const noValidURL = (timeOut && !url) ? 'Sorry, no valid URL found' : <Loading />;
-  return (
-    (!url) ?
-      <div className="forwarding">
-        {noValidURL}
-      </div>
-      :
-      <div className="forwarding">
-        {redirect(findLink)}
-      </div>
-  );
+class Forwarder extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      timeOut: false,
+    };
+  }
+
+  componentDidMount() {
+    Meteor.setTimeout(() => {
+      this.setState({
+        timeOut: true,
+      });
+    }, 2000);
+  }
+
+  render() {
+    const { url, findLink } = this.props;
+    const noValidURL = (this.state.timeOut && !url) ? 'Sorry, no valid URL found' : <Loading />;
+    return (
+      (!url) ?
+        <div className="forwarding">
+          {noValidURL}
+        </div>
+        :
+        <div className="forwarding">
+          {redirect(findLink)}
+        </div>
+    );
+  }
 };
 
 Forwarder.defaultProps = {
