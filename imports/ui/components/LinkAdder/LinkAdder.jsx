@@ -25,7 +25,7 @@ const rules = {
 const messages = {
   url: {
     required: 'Please enter a link.',
-    url: 'Please enter a valid URL',
+    url: 'Please enter a full URL with http(s)',
   },
 }
 
