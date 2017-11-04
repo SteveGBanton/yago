@@ -73,9 +73,9 @@ export default class LinkAdder extends React.Component {
       } else {
         console.log('success')
         this.form.reset();
-        Bert.alert('Shortlink created!', 'success');
+        Bert.alert('Yagolink created!', 'success');
         this.setState({
-          shortLink: `http://yago.site/${res}`,
+          shortLink: `https://yagosite.herokuapp.com/${res}`,
         })
       }
     });
@@ -100,13 +100,13 @@ export default class LinkAdder extends React.Component {
       <form className="link-adder" ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
 
         {(this.state.shortLink && Meteor.user() === null) ?
-          <div style={{ fontSize: 10, marginBottom: 15 }}><a href="/login">Log in</a> to save your shortlinks and view clicks!</div>
+          <div style={{ fontSize: 10, marginBottom: 15 }}><a href="/login">Log in</a> to save your yagolinks and view clicks!</div>
           :
           ''
         }
 
         {(this.state.shortLink && Meteor.user() !== null) ?
-          <div style={{ fontSize: 10, marginBottom: 15 }}>View all shortlinks you've created <Link to="/links">here</Link></div>
+          <div style={{ fontSize: 10, marginBottom: 15 }}>View all yagolinks you've created <Link to="/links">here</Link></div>
           :
           ''
         }
@@ -115,7 +115,7 @@ export default class LinkAdder extends React.Component {
           <TextField
             className="short-link-field"
             name="shortLink"
-            style={{ fontSize: 15, width: 200, marginBottom: 50 }}
+            style={{ fontSize: 12, width: 240, marginBottom: 50 }}
             inputStyle={{ paddingLeft: 5, marginTop: -5 }}
             value={this.state.shortLink}
           />
