@@ -6,6 +6,8 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
+import './Login.scss';
+
 function signUpFacebook() {
   Meteor.loginWithFacebook({
     requestPermissions: ['public_profile', 'email'],
@@ -34,8 +36,9 @@ function signUpGoogle() {
 }
 
 const Login = () => (
-  <Paper className="Login">
-    <h3>Sign In To Yago with Facebook or Google...</h3>
+  <div className="login">
+  <Paper className="login-box">
+    <h3 style={{ textAlign: 'center' }}>Sign In To Yago with Facebook or Google</h3>
 
     <form onSubmit={event => event.preventDefault()}>
 
@@ -65,6 +68,7 @@ const Login = () => (
 
 
   </Paper>
+</div>
 );
 
 

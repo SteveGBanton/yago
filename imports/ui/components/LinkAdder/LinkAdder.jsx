@@ -140,10 +140,11 @@ export default class LinkAdder extends React.Component {
 
         <RaisedButton
           type="submit"
+          backgroundColor="#03A9F4"
           onClick={this.formValidate}
           style={{ margin: 35 }}
         >
-          Submit
+          <span style={{ color: '#EEEEEE' }}>Submit</span>
         </RaisedButton>
       </form>
     );
