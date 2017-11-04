@@ -1,5 +1,3 @@
-### Boldpoint Meteor React Boilerplate
+### Yago.site URL Shortener
 
-A boilerplate for SaaS products using Meteor, React, and Material Design.
-
-Will support multiple administrator tenants, multiple categories of users, ownership of multiple accounts through a single email address, account switching, and payments through Stripe.
+A simple URL link shortener service using Meteor, React, Material Design and Facebook & Google OAuth for login.
