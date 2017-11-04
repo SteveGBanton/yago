@@ -10,6 +10,9 @@ export const linkInsert = new ValidatedMethod({
     url: { type: String },
   }).validator(),
   run({ url }) {
+
+    // TODO remove all links older than X days if not owned by a user every ~100-500 inserts.
+
     let shortLink = Random.id(7);
     let intersection = ShortLinks.findOne({ shortLink });
     while (intersection) {
