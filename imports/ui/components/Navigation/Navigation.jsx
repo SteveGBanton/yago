@@ -50,7 +50,7 @@ const Navigation = (props) => {
       </ToolbarGroup>
       <ToolbarGroup>
         {authenticated
-          ? <Link to="/add"><RaisedButton label="Add Link" backgroundColor="#616161" labelStyle={{ color: '#EEEEEE' }} /></Link>
+          ? <Link to="/add"><RaisedButton label="Add Link" backgroundColor="#03A9F4" labelStyle={{ color: '#EEEEEE' }} /></Link>
           : ''
         }
         <IconMenu
