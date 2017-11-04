@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { monthDayYearAtTime } from '@cleverbeagle/dates';
+
 
 import ShortLinks from '../../../../../api/ShortLinks/ShortLinks';
 import NotFound from '../../../../components/NotFound/NotFound.jsx';
@@ -29,9 +31,10 @@ const renderDocument = (doc, match, history, user) => (
     ? (
         <div className="view-shortlink">
 
-          <h3>{(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : '' }</h3>
+          <p style={{ fontSize: 10 }}>Created at {monthDayYearAtTime(doc.createdAt)}</p>
+          <h3 style={{ marginBottom: 40 }}>{(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : '' }</h3>
 
-          <h1>{ doc && doc.url }</h1>
+          <h1><a href={doc.url} target="_blank">{ doc && doc.url }</a></h1>
 
           <h1>{ doc && doc.clicks } Click(s)</h1>
 
