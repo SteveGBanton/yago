@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { monthDayYearAtTime } from '@cleverbeagle/dates';
+
 
 import ShortLinks from '../../../../../api/ShortLinks/ShortLinks';
 import NotFound from '../../../../components/NotFound/NotFound.jsx';
@@ -12,25 +14,27 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import './ViewLinkStats.scss';
 
-const handleRemove = (documentId, history) => {
-  if (confirm('Are you sure? This is permanent!')) {
-    Meteor.call('documents.remove', { documentId }, (error) => {
-      if (error) {
-        Bert.alert(error.reason, 'danger');
-      } else {
-        Bert.alert('Document deleted!', 'success');
-        history.push('/documents');
-      }
-    });
-  }
+const handleRemove = (_id, history) => {
+  Meteor.call('link.remove', { _id }, (error) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    } else {
+      Bert.alert('Link deleted!', 'success');
+      history.push('/links');
+    }
+  });
 };
+
 
 const renderDocument = (doc, match, history, user) => (
   (doc)
     ? (
         <div className="view-shortlink">
 
-          <h1>{ doc && doc.url }</h1>
+          <p style={{ fontSize: 10 }}>Created at {monthDayYearAtTime(doc.createdAt)}</p>
+          <h3 style={{ marginBottom: 40 }}>{(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : '' }</h3>
+
+          <h1><a href={doc.url} target="_blank">{ doc && doc.url }</a></h1>
 
           <h1>{ doc && doc.clicks } Click(s)</h1>
 

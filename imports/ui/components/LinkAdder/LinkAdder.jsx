@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { Link } from 'react-router-dom';
+import Clipboard from 'clipboard';
 
-import customFormValidator from '../../../modules/custom-form-validator';
-
+import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+
+import customFormValidator from '../../../modules/custom-form-validator';
 
 if (Meteor.isClient) {
   import './LinkAdder.scss';
@@ -81,24 +84,11 @@ export default class LinkAdder extends React.Component {
     });
   }
 
-  copyText() {
-    var copyTextarea = document.querySelector('.js-copytextarea');
-    copyTextarea.select();
-
-    try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'successful' : 'unsuccessful';
-      console.log('Copying text command was ' + msg);
-    } catch (err) {
-      console.log('Oops, unable to copy');
-    }
-  }
-
   render() {
     const { doc } = this.props;
     return (
       <form className="link-adder" ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-
+        {(() => { const clipboard = new Clipboard('.copy-btn1'); })()}
         {(this.state.shortLink && Meteor.user() === null) ?
           <div style={{ fontSize: 10, marginBottom: 15 }}><a href="/login">Log in</a> to save your yagolinks and view clicks!</div>
           :
@@ -112,13 +102,22 @@ export default class LinkAdder extends React.Component {
         }
 
         {(this.state.shortLink) ?
-          <TextField
-            className="short-link-field"
-            name="shortLink"
-            style={{ fontSize: 12, width: 240, marginBottom: 50 }}
-            inputStyle={{ paddingLeft: 5, marginTop: -5 }}
-            value={this.state.shortLink}
-          />
+          <div
+            className="copy-btn1 pointer"
+            onClick={() => Bert.alert('Link Copied!', 'success')}
+            role="button"
+            tabIndex={0}
+            onKeyPress={() => Bert.alert('Link Copied!', 'success')}
+            data-clipboard-text={this.state.shortLink}
+          >
+            {this.state.shortLink}
+            <FontIcon
+              className="material-icons"
+              style={{ color: '#559', marginLeft: 5, fontSize: 12 }}
+            >
+              content_copy
+            </FontIcon>
+          </div>
           :
           ''
         }

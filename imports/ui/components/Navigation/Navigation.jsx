@@ -17,7 +17,7 @@ import './Navigation.scss';
 
 const styles = {
   toolbar: {
-    backgroundColor: '#37474f',
+    backgroundColor: '#E0E0E0',
     width: '100%',
     position: 'fixed',
     top: '0',
@@ -41,16 +41,16 @@ const Navigation = (props) => {
     <Toolbar style={styles.toolbar}>
       <ToolbarGroup>
         <MenuIcon
-          color={(!toggleMenu) ? "rgba(255,255,255,0)" : "rgba(255,255,255,0.7)"}
-          hoverColor={(!toggleMenu) ? "rgba(255,255,255,0)" : "rgba(255,255,255,0.9)"}
+          color={(!toggleMenu) ? "rgba(255,255,255,0)" : "#9E9E9E"}
+          hoverColor={(!toggleMenu) ? "rgba(255,255,255,0)" : "#616161"}
           className={(!toggleMenu) ? "" : "pointer"}
           onClick={toggleMenu}
         />
-        <ToolbarTitle style={{ color: 'white', paddingLeft: '20px' }} text='Yago' />
+        <ToolbarTitle style={{ color: '#616161', paddingLeft: '20px' }} text='Yago' />
       </ToolbarGroup>
       <ToolbarGroup>
         {authenticated
-          ? <Link to="/add"><RaisedButton label="Add Link" backgroundColor="#03A9F4" labelStyle={{ color: 'white' }} /></Link>
+          ? <Link to="/add"><RaisedButton label="Add Link" backgroundColor="#616161" labelStyle={{ color: '#EEEEEE' }} /></Link>
           : ''
         }
         <IconMenu
@@ -58,24 +58,26 @@ const Navigation = (props) => {
           onItemTouchTap={() => this.open = null}
           iconButtonElement={
             <IconButton touch>
-              <NavigationExpandMoreIcon color="white" />
+              <NavigationExpandMoreIcon color="#616161" />
             </IconButton>
           }
         >
           {authenticated ?
             <MenuItem
               primaryText="Log out"
+              style={{ color: '#616161' }}
               onClick={() => Meteor.logout()}
               rightIcon={
-                <FontIcon className="material-icons" style={{ color: '#559' }}>settings</FontIcon>
+                <FontIcon className="material-icons" style={{ color: '#616161' }}>settings</FontIcon>
               }
             />
             :
             <MenuItem
               primaryText="Log in"
+              style={{ color: '#616161' }}
               onClick={() => { location.href = "/login"; }}
               rightIcon={
-                <FontIcon className="material-icons" style={{ color: '#559' }}>settings</FontIcon>
+                <FontIcon className="material-icons" style={{ color: '#616161' }}>settings</FontIcon>
               }
             />
           }
