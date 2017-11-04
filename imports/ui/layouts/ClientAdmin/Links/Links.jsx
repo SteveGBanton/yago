@@ -5,9 +5,10 @@ import { monthDayYearAtTime } from '@cleverbeagle/dates';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
-import "react-table/react-table.css";
-import ReactTable from "react-table";
-import Clipboard from 'clipboard'
+import 'react-table/react-table.css';
+import ReactTable from 'react-table';
+import Clipboard from 'clipboard';
+import matchSorter from 'match-sorter';
 
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -41,95 +42,106 @@ const Links = ({
             {
               columns: [
                 {
-                  accessor: "shortLink",
+                  id: 'edit-col',
+                  accessor: d => d,
                   sortable: false,
                   filterable: false,
-                  width: 50,
+                  width: 100,
                   Cell: row => (
                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559' }}
-                        onClick={() => history.push(`/view-link/${row.value}`)}
+                        style={{ color: '#559', marginRight: 5 }}
+                        onClick={() => history.push(`/view-link/${row.original.shortLink}`)}
                       >
-                        edit
+                        remove_red_eye
                       </FontIcon>
-                    </div>
-                  ),
-                },
-                {
-                  accessor: "_id",
-                  sortable: false,
-                  filterable: false,
-                  width: 50,
-                  Cell: row => (
-                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559' }}
-                        onClick={() => handleRemove(row.value)}
+                        style={{ color: '#559', marginRight: 5 }}
+                        onClick={() => handleRemove(row.original._id)}
                       >
                         delete
                       </FontIcon>
-                    </div>
-                  ),
-                },
-                {
-                  sortable: false,
-                  filterable: false,
-                  accessor: "url",
-                  width: 50,
-                  Cell: row => (
-                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+
                       <FontIcon
                         className="material-icons pointer"
-                        style={{ color: '#559' }}
-                        onClick={() => window.open(row.value, '_blank')}
+                        style={{ color: '#559', marginRight: 5 }}
+                        onClick={() => window.open(row.original.url, '_blank')}
                       >
                         open_in_new
                       </FontIcon>
+
                     </div>
                   ),
                 },
                 {
-                  Header: "URL",
-                  accessor: "url",
+                  Header: 'URL',
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, { keys: ["url"] }),
+                  accessor: 'url',
+                  filterAll: true,
+                  minWidth: 250,
                   Cell: row => (
-                    <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%', fontSize: 12 }}
+                    >
                       {row.value}
                     </div>
                   ),
                 },
                 {
-                  Header: "Created",
-                  accessor: "createdAt",
+                  Header: 'Created',
+                  id: 'createdAt',
+                  filterAll: true,
+                  minWidth: 200,
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, { keys: ["createdAt"] }),
+                  accessor: (d => (
+                    (d.createdAt)
+                    ? monthDayYearAtTime(d.createdAt)
+                    : '')),
                   Cell: row => (
-                    <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                      {monthDayYearAtTime(row.value)}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontSize: 10 }}
+                    >
+                      {row.value}
                     </div>
                   ),
                 },
                 {
-                  Header: "Clicks",
-                  accessor: "clicks",
+                  Header: 'Clicks',
+                  accessor: 'clicks',
                   maxWidth: 150,
+                  minWidth: 100,
                   Cell: row => (
-                    <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}
+                    >
                       {row.value}
                     </div>
                   ),
                 },
                 {
-                  Header: "Copy ShortLink",
-                  accessor: "shortLink",
+                  Header: 'Copy ShortLink',
+                  id: 'shortLink',
+                  filterAll: true,
+                  minWidth: 220,
+                  filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, { keys: ["shortLink"] }),
+                  accessor: d => (`https://yagosite.herokuapp.com/${d.shortLink}`),
                   Cell: row => (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                      {`http://yago.site/${row.value}  `}
+                    <div
+                      className="copy-btn pointer"
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', fontSize: 10, outline: 'none', height: '100%' }}
+                      onClick={() => Bert.alert('Link Copied!', 'success')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyPress={() => Bert.alert('Link Copied!', 'success')}
+                      data-clipboard-text={`${row.value}`}
+                    >
+                      {`${row.value}`}
                       <FontIcon
-                        data-clipboard-text={`http://yago.site/${row.value}`}
-                        className="material-icons pointer copy-btn"
-                        style={{ color: '#559', marginLeft: 5 }}
-                        onClick={() => Bert.alert('Link Copied!', 'success')}
+                        className="material-icons"
+                        style={{ color: '#559', marginLeft: 5, fontSize: 12 }}
                       >
                         content_copy
                       </FontIcon>
@@ -139,16 +151,22 @@ const Links = ({
               ],
             },
           ]}
+        filterable
         defaultSorted={[
             {
-              id: "createdAt",
+              id: 'createdAt',
               desc: true,
             },
           ]}
-        filterable
         defaultPageSize={10}
         className="-striped -highlight"
       />
+      <br />
+      {
+      (links.length)
+      ? `${links.length} yagolink(s) created.`
+      : ''
+      }
 
     </div>
   )
