@@ -121,7 +121,7 @@ const Links = ({
                   ),
                 },
                 {
-                  Header: 'Copy ShortLink',
+                  Header: 'Copy YagoLink',
                   id: 'shortLink',
                   filterAll: true,
                   minWidth: 220,

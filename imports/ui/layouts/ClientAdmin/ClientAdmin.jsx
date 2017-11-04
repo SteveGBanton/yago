@@ -52,7 +52,7 @@ export default class ClientAdmin extends React.Component {
           >
             <Link to="/add">
               <MenuItem
-                primaryText="Create New Shortlink"
+                primaryText="Create New Yagolink"
                 leftIcon={
                   <RemoveRedEye
                     color="rgba(255,255,255,0.5)"
@@ -62,7 +62,7 @@ export default class ClientAdmin extends React.Component {
             </Link>
             <Link to="/links">
               <MenuItem
-                primaryText="View My Shortlinks"
+                primaryText="View My Yagolink"
                 leftIcon={
                   <PersonAdd
                     color="rgba(255,255,255,0.5)"
