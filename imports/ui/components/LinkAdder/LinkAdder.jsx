@@ -37,6 +37,7 @@ export default class LinkAdder extends React.Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formValidate = this.formValidate.bind(this);
+    this.clearShortLink = this.clearShortLink.bind(this);
 
     this.state = ({
       formErrors: {
@@ -84,6 +85,12 @@ export default class LinkAdder extends React.Component {
     });
   }
 
+  clearShortLink() {
+    this.setState({
+      shortLink: '',
+    })
+  }
+
   render() {
     const { doc } = this.props;
     return (
@@ -91,12 +98,6 @@ export default class LinkAdder extends React.Component {
         {(() => { const clipboard = new Clipboard('.copy-btn1'); })()}
         {(this.state.shortLink && Meteor.user() === null) ?
           <div style={{ fontSize: 10, marginBottom: 15 }}><a href="/login">Log in</a> to save your yagolinks and view clicks!</div>
-          :
-          ''
-        }
-
-        {(this.state.shortLink && Meteor.user() !== null) ?
-          <div style={{ fontSize: 10, marginBottom: 15 }}>View all yagolinks you've created <Link to="/links">here</Link></div>
           :
           ''
         }
@@ -113,7 +114,7 @@ export default class LinkAdder extends React.Component {
             {this.state.shortLink}
             <FontIcon
               className="material-icons"
-              style={{ color: '#559', marginLeft: 5, fontSize: 12 }}
+              style={{ color: '#559', marginLeft: 5, fontSize: 16 }}
             >
               content_copy
             </FontIcon>
@@ -122,14 +123,26 @@ export default class LinkAdder extends React.Component {
           ''
         }
 
-        <TextField
-          name="title"
-          style={{ fontSize: 20, width: 350 }}
-          hintText="Add a new link"
-          hintStyle={{ padding: 10 }}
-          inputStyle={{ paddingLeft: 10, marginTop: -10 }}
-          ref={(input) => { this.url = input; }}
-        />
+
+        {(this.state.shortLink && Meteor.user() !== null) ?
+          <div style={{ fontSize: 10, marginBottom: -10 }}>View all yagolinks you've created <Link to="/links">here</Link></div>
+          :
+          ''
+        }
+
+        {(!this.state.shortLink) ?
+          <TextField
+            name="title"
+            style={{ fontSize: 20, width: 350 }}
+            hintText="Add a new link"
+            hintStyle={{ padding: 10 }}
+            inputStyle={{ paddingLeft: 10, marginTop: -10 }}
+            ref={(input) => { this.url = input; }}
+          />
+          :
+          ''
+        }
+
         <br />
 
         {(this.state.formErrors.url) ?
@@ -138,14 +151,26 @@ export default class LinkAdder extends React.Component {
           ''
         }
 
-        <RaisedButton
-          type="submit"
-          backgroundColor="#03A9F4"
-          onClick={this.formValidate}
-          style={{ margin: 35 }}
-        >
-          <span style={{ color: '#EEEEEE' }}>Submit</span>
-        </RaisedButton>
+        {(!this.state.shortLink) ?
+          <RaisedButton
+            type="submit"
+            backgroundColor="#03A9F4"
+            onClick={this.formValidate}
+            style={{ margin: 35 }}
+          >
+            <span style={{ color: '#EEEEEE' }}>Submit</span>
+          </RaisedButton>
+          :
+          <RaisedButton
+            type="submit"
+            backgroundColor="#03A9F4"
+            onClick={this.clearShortLink}
+            style={{ margin: 35 }}
+          >
+            <span style={{ color: '#EEEEEE' }}>Add New</span>
+          </RaisedButton>
+        }
+
       </form>
     );
   }
