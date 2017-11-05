@@ -96,11 +96,7 @@ export default class LinkAdder extends React.Component {
     return (
       <form className="link-adder" ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
         {(() => { const clipboard = new Clipboard('.copy-btn1'); })()}
-        {(this.state.shortLink && Meteor.user() === null) ?
-          <div style={{ fontSize: 10, marginBottom: 15 }}><a href="/login">Log in</a> to save your yagolinks and view clicks!</div>
-          :
-          ''
-        }
+
 
         {(this.state.shortLink) ?
           <div
@@ -123,9 +119,14 @@ export default class LinkAdder extends React.Component {
           ''
         }
 
-
         {(this.state.shortLink && Meteor.user() !== null) ?
           <div style={{ fontSize: 10, marginBottom: -10 }}>View all yagolinks you've created <Link to="/links">here</Link></div>
+          :
+          ''
+        }
+
+        {(this.state.shortLink && Meteor.user() === null) ?
+          <div style={{ fontSize: 10, marginBottom: -10 }}><a href="/login">Log in</a> to save your yagolinks and view clicks!</div>
           :
           ''
         }
