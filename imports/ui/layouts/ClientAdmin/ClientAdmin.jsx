@@ -2,15 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect, Link } from 'react-router-dom';
 
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import Person from 'material-ui/svg-icons/social/person';
-import Divider from 'material-ui/Divider';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import Download from 'material-ui/svg-icons/file/file-download';
-import Delete from 'material-ui/svg-icons/action/delete';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
 
 import Navigation from '../../components/Navigation/Navigation';
 
@@ -53,11 +47,15 @@ export default class ClientAdmin extends React.Component {
             <Link to="/add">
               <MenuItem
                 primaryText="Create New Yagolink"
+                style={{ color: '#616161' }}
                 leftIcon={
-                  <RemoveRedEye
-                    color="rgba(0,0,0,0.5)"
-                    style={{ paddingLeft: "10px" }}
-                  />}
+                  <FontIcon
+                    className="material-icons"
+                    style={{ color: 'rgba(0,0,0,0.5)', marginLeft: 20 }}
+                  >
+                    insert_link
+                  </FontIcon>
+                }
               />
             </Link>
             <Link to="/links">
@@ -65,10 +63,13 @@ export default class ClientAdmin extends React.Component {
                 primaryText="View My Yagolinks"
                 style={{ color: '#616161' }}
                 leftIcon={
-                  <PersonAdd
-                    color="rgba(0,0,0,0.5)"
-                    style={{ paddingLeft: "10px" }}
-                  />}
+                  <FontIcon
+                    className="material-icons"
+                    style={{ color: 'rgba(0,0,0,0.5)', marginLeft: 20 }}
+                  >
+                    view_list
+                  </FontIcon>
+                }
               />
             </Link>
             {/* <Divider

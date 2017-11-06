@@ -68,7 +68,7 @@ const Navigation = (props) => {
               style={{ color: '#616161' }}
               onClick={() => Meteor.logout()}
               rightIcon={
-                <FontIcon className="material-icons" style={{ color: '#616161' }}>settings</FontIcon>
+                <FontIcon className="material-icons" style={{ color: '#616161' }}>input</FontIcon>
               }
             />
             :
@@ -77,7 +77,7 @@ const Navigation = (props) => {
               style={{ color: '#616161' }}
               onClick={() => { location.href = "/login"; }}
               rightIcon={
-                <FontIcon className="material-icons" style={{ color: '#616161' }}>settings</FontIcon>
+                <FontIcon className="material-icons" style={{ color: '#616161' }}>account_circle</FontIcon>
               }
             />
           }
