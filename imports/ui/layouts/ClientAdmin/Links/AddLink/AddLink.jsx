@@ -6,7 +6,10 @@ import './AddLink.scss'
 
 const AddLink = ({ history, user }) => (
   <div className="add-link">
-    <LinkAdder history={history} />
+    <div className="add-link-linkadder">
+      <LinkAdder history={history} />
+    </div>
+    <div className="add-link-bg-color" />
   </div>
 );
 
