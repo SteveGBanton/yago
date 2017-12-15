@@ -19,43 +19,8 @@ if (Meteor.isClient) {
   import { Forwarder } from '../Forwarder';
 
   Enzyme.configure({ adapter: new Adapter() });
-
-  Meteor.methods({
-    'test.resetDatabase': () => ShortLinks.remove({}),
-  });
-
-  Meteor.methods({
-    'test.insertShortLink': (data) => {
-      check(data, Object);
-      return ShortLinks.insert({
-        clicks: 0,
-        url: 'http://example.com',
-        owner: data.userId,
-        shortLink: data.shortLink,
-      });
-    },
-  });
-
+  
   describe('Forwarder.jsx', function () {
-
-    const userId = Random.id();
-    const shortLink = Random.id(7);
-    let shortLinkId;
-
-    // Stub user.
-    const userStub = sinon.stub(Meteor, 'userId').callsFake(() => userId);
-
-    beforeEach(function (done) {
-      Meteor.call('test.resetDatabase');
-      Meteor.call('test.insertShortLink', { userId, shortLink }, (err, res) => {
-        if (err) {
-          console.log(err);
-        } else {
-          shortLinkId = res;
-        }
-        done();
-      });
-    });
 
     it('should render', function () {
       sinon.spy(Forwarder.prototype, 'componentDidMount');
