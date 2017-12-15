@@ -18,23 +18,3 @@
     padding: 20px;
   }
 }
-
-@include breakpoint(tablet) {
-  .index {
-    padding: 30px;
-
-    footer {
-      margin: 30px -30px -30px;
-    }
-  }
-}
-
-@include breakpoint(desktop) {
-  .index {
-    padding: 40px;
-
-    footer {
-      margin: 40px -40px -40px;
-    }
-  }
-}
