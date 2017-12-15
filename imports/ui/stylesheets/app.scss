@@ -48,7 +48,26 @@ body {
 }
 
 label {
+  font-family: Roboto;
   font-weight: 300;
+}
+
+.lg-label {
+  font-family: Roboto;
+  font-weight: 300;
+  font-size: 50px;
+}
+
+.md-label {
+  font-family: Roboto;
+  font-weight: 300;
+  font-size: 30px;
+}
+
+.sm-label {
+  font-family: Roboto;
+  font-weight: 300;
+  font-size: 13px;
 }
 
 .dashboard {
