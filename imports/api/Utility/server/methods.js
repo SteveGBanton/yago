@@ -18,6 +18,7 @@ export const remoteGet = new ValidatedMethod({
   validate: null,
   run(getThis) {
     try {
+      console.log('getting from ... ' + getThis)
       return HTTP.get(getThis);
     } catch (e) {
       throw new Meteor.Error('500', e);

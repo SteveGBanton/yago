@@ -10,6 +10,9 @@ export const linkInsert = new ValidatedMethod({
     url: { type: String },
   }).validator(),
   run({ url }) {
+
+    // TODO remove all links older than X days if not owned by a user every ~100-500 inserts.
+
     let shortLink = Random.id(7);
     let intersection = ShortLinks.findOne({ shortLink });
     while (intersection) {
@@ -25,8 +28,6 @@ export const linkInsert = new ValidatedMethod({
 
     if (this.userId) {
       toInsert.owner = this.userId;
-    } else {
-      toInsert.owner = 'anon';
     }
 
     ShortLinks.insert({ ...toInsert });
@@ -60,11 +61,13 @@ export const linkAddCount = new ValidatedMethod({
   }).validator(),
   run({ linkId }) {
     try {
+      console.log(linkId);
       const getLinkDoc = ShortLinks.findOne(linkId);
       if (getLinkDoc) {
         const setClicks = {
           clicks: getLinkDoc.clicks + 1,
         };
+        console.log(linkId)
         return ShortLinks.update(linkId, { $set: setClicks });
       }
       throw new Meteor.Error('500', 'no shortlink found');

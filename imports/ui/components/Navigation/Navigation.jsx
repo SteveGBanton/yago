@@ -46,15 +46,11 @@ const Navigation = (props) => {
           className={(!toggleMenu) ? "" : "pointer"}
           onClick={toggleMenu}
         />
-        <Link to="/">
-          <ToolbarTitle style={{ color: '#616161', paddingLeft: '20px' }} text="Yago" />
-        </Link>
+        <ToolbarTitle style={{ color: '#616161', paddingLeft: '20px' }} text='Yago' />
       </ToolbarGroup>
       <ToolbarGroup>
         {authenticated
-          ? <Link to="/add">
-              <RaisedButton label="Add Link" backgroundColor="#03A9F4" labelStyle={{ color: '#EEEEEE' }} />
-            </Link>
+          ? <Link to="/add"><RaisedButton label="Add Link" backgroundColor="#03A9F4" labelStyle={{ color: '#EEEEEE' }} /></Link>
           : ''
         }
         <IconMenu
