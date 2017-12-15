@@ -5,23 +5,27 @@
 import React from 'react';
 import { Random } from 'meteor/random';
 import { expect } from 'meteor/practicalmeteor:chai';
-import TestUtils from 'react-addons-test-utils';
 import sinon from 'sinon';
-import jsxChai from 'jsx-chai';
-import { Forwarder } from '../Forwarder';
+import { check } from 'meteor/check';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-chai.use(jsxChai);
+import ShortLinks from '../../../../api/ShortLinks/ShortLinks';
 
-describe('Forwarder.jsx', function () {
-  it('should render', function () {
-    const renderer = TestUtils.createRenderer();
-    const user = undefined;
+if (Meteor.isClient) {
+  import { Forwarder } from '../Forwarder';
 
-    renderer.render(<UserViewTest loading={false} history={{}} user={user} />);
-    const actual = renderer.getRenderOutput();
+  Enzyme.configure({ adapter: new Adapter() });
+  
+  describe('Forwarder.jsx', function () {
 
-    const expected = 'Sorry, cannot find user.';
+    it('should render', function () {
+      sinon.spy(Forwarder.prototype, 'componentDidMount');
+      const wrapper = mount(<Forwarder />);
+      expect(Forwarder.prototype.componentDidMount.calledOnce).to.equal(true);
+      Forwarder.prototype.componentDidMount.restore();
+    });
 
-    expect(actual).to.include(expected);
   });
-})
+
+}

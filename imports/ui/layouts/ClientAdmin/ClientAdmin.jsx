@@ -40,7 +40,13 @@ export default class ClientAdmin extends React.Component {
         <div className={(this.state.menuOpen) ? "dashboard-menu" : "dashboard-menu-closed"}>
           <Drawer
             className="dashboard-drawer"
-            containerStyle={{ width: '250px', zIndex: '1000', marginTop: '55px', backgroundColor: '#F5F5F5', paddingTop: "30px" }}
+            containerStyle={{
+              width: '250px',
+              zIndex: '1000',
+              marginTop: '55px',
+              backgroundColor: '#FFF',
+              paddingTop: "30px"
+            }}
             style={{ color: 'white' }}
             open={this.state.menuOpen}
           >

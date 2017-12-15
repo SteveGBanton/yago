@@ -5,26 +5,21 @@ import { Redirect } from 'react-router';
 import Loading from '../Loading/Loading';
 
 import ShortLinks from '../../../api/ShortLinks/ShortLinks';
+
 import './Forwarder.scss';
 
-const redirect = (findLink) => {
-  Meteor.call('link.addCount', { linkId: findLink._id }, (error, result) => {
-    if (error) {
-      // failure
-    }
-    if (result) {
-      // success
-    }
-  });
-  window.location = findLink.url;
+const redirect = function redirect(url) {
+  window.location = url;
 };
 
-class Forwarder extends React.Component {
+export class Forwarder extends React.Component {
 
   constructor(props) {
     super(props);
+    this.addCount = this.addCount.bind(this);
     this.state = {
       timeOut: false,
+      recorded: 0,
     };
   }
 
@@ -36,9 +31,34 @@ class Forwarder extends React.Component {
     }, 2000);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.findLink && nextProps.url) {
+      this.setState({
+        recorded: this.state.recorded + 1,
+      }, () => {
+        this.addCount(nextProps.findLink);
+      });
+    }
+  }
+
+  addCount(findLink) {
+    // check for this.state.recorded to equal less than 2 - ensures clicks.insert is only called once
+    if (this.state.recorded < 2) {
+      Meteor.call('clicks.insert', {
+        linkId: findLink._id,
+      }, (error) => {
+        if (error) {
+          // Not inserted into DB for some reason. Log to error file on server.
+        }
+      });
+    }
+    redirect(findLink.url);
+  }
+
   render() {
     const { url, findLink } = this.props;
     const noValidURL = (this.state.timeOut && !url) ? 'Sorry, no valid URL found' : <Loading />;
+
     return (
       (!url) ?
         <div className="forwarding">
@@ -46,7 +66,7 @@ class Forwarder extends React.Component {
         </div>
         :
         <div className="forwarding">
-          {redirect(findLink)}
+          <Loading />
         </div>
     );
   }
@@ -54,16 +74,16 @@ class Forwarder extends React.Component {
 
 Forwarder.defaultProps = {
   url: undefined,
+  findLink: undefined,
 };
 
 Forwarder.propTypes = {
   url: PropTypes.string,
-  loading: PropTypes.bool.isRequired,
-  findLink: PropTypes.object
+  findLink: PropTypes.shape({}),
 };
 
 export default createContainer(({ match }) => {
-  const { shortLink }  = match.params;
+  const { shortLink } = match.params;
   const subscription = Meteor.subscribe('shortLinks.view', shortLink);
   const loading = !subscription.ready();
   const findLink = ShortLinks.findOne({ shortLink });

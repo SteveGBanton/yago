@@ -13,10 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 
 import customFormValidator from '../../../modules/custom-form-validator';
-
-if (Meteor.isClient) {
-  import './LinkAdder.scss';
-}
+import './LinkAdder.scss';
 
 const rules = {
   url: {
@@ -67,19 +64,15 @@ export default class LinkAdder extends React.Component {
 
   handleSubmit(input) {
     const { history } = this.props;
-    console.log('submitting')
-    console.log(input)
 
     Meteor.call('link.insert', input, (error, res) => {
       if (error) {
-        console.log('error')
         Bert.alert(error.reason, 'danger');
       } else {
-        console.log('success')
         this.form.reset();
         Bert.alert('Yagolink created!', 'success');
         this.setState({
-          shortLink: `https://yagosite.herokuapp.com/${res}`,
+          shortLink: `${Meteor.absoluteUrl()}${res}`,
         })
       }
     });
@@ -96,7 +89,6 @@ export default class LinkAdder extends React.Component {
     return (
       <form className="link-adder" ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
         {(() => { const clipboard = new Clipboard('.copy-btn1'); })()}
-
 
         {(this.state.shortLink) ?
           <div
@@ -134,7 +126,7 @@ export default class LinkAdder extends React.Component {
         {(!this.state.shortLink) ?
           <TextField
             name="title"
-            style={{ fontSize: 20, width: 350 }}
+            style={{ fontSize: 20, width: 320 }}
             hintText="Add a new link"
             hintStyle={{ padding: 10 }}
             inputStyle={{ paddingLeft: 10, marginTop: -10 }}
@@ -157,7 +149,7 @@ export default class LinkAdder extends React.Component {
             type="submit"
             backgroundColor="#03A9F4"
             onClick={this.formValidate}
-            style={{ margin: 35 }}
+            style={{ marginTop: 35 }}
           >
             <span style={{ color: '#EEEEEE' }}>Submit</span>
           </RaisedButton>
@@ -166,7 +158,7 @@ export default class LinkAdder extends React.Component {
             type="submit"
             backgroundColor="#03A9F4"
             onClick={this.clearShortLink}
-            style={{ margin: 35 }}
+            style={{ marginTop: 35 }}
           >
             <span style={{ color: '#EEEEEE' }}>Add New</span>
           </RaisedButton>
