@@ -48,10 +48,12 @@ if (Meteor.isServer) {
     describe('clickInsert', function () {
       let insertStub;
       let findStub;
+      let updateStub;
 
       beforeEach(function () {
         insertStub = sandbox.stub(Clicks, 'insert');
         findStub = sandbox.stub(ShortLinks, 'findOne');
+        updateStub = sandbox.stub(ShortLinks, 'update');
       });
 
       it('should call Clicks.insert with click data', function () {
@@ -68,6 +70,28 @@ if (Meteor.isServer) {
         });
 
         expect(insertStub.getCall(0).args[0]).to.deep.equal(mockClickData);
+      });
+
+      it('should call ShortLinks.update and add 1 to clicks property', function () {
+        findStub.returns(mockShortLink); // assume code avoids intersection with another shortlink
+        clicksInsert._execute({
+          connection: {
+            clientAddress: mockClickData.ipAddress,
+            httpHeaders: {
+              'user-agent': mockClickData.deviceType,
+            },
+          },
+        }, {
+          linkId: mockClickData.linkId,
+        });
+
+        const expected = [
+          mockShortLink._id,
+          { $set: { clicks: 1 } },
+        ];
+
+        expect(updateStub.getCall(0).args[0]).to.equal(expected[0]);
+        expect(updateStub.getCall(0).args[1]).to.deep.equal(expected[1]);
       });
     });
 
