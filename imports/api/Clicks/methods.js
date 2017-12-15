@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { Random } from 'meteor/random';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Clicks from './Clicks';
 import ShortLinks from '../ShortLinks/ShortLinks';

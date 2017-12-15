@@ -53,27 +53,6 @@ export const linkRemove = new ValidatedMethod({
   },
 });
 
-export const linkAddCount = new ValidatedMethod({
-  name: 'link.addCount',
-  validate: new SimpleSchema({
-    linkId: { type: String },
-  }).validator(),
-  run({ linkId }) {
-    try {
-      const getLinkDoc = ShortLinks.findOne(linkId);
-      if (getLinkDoc) {
-        const setClicks = {
-          clicks: getLinkDoc.clicks + 1,
-        };
-        return ShortLinks.update(linkId, { $set: setClicks });
-      }
-      throw new Meteor.Error('500', 'no shortlink found');
-    } catch (exception) {
-      throw new Meteor.Error('500', exception);
-    }
-  },
-});
-
 rateLimit({
   methods: [
     'link.insert',

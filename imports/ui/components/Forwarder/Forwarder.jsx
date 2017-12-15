@@ -1,22 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Redirect } from 'react-router';
 import Loading from '../Loading/Loading';
 
 import ShortLinks from '../../../api/ShortLinks/ShortLinks';
 
 import './Forwarder.scss';
 
-const redirect = function redirect(url) {
-  window.location = url;
-};
-
 export class Forwarder extends React.Component {
-
   constructor(props) {
     super(props);
     this.addCount = this.addCount.bind(this);
+    this.redirect = this.redirect.bind(this);
     this.state = {
       timeOut: false,
       recorded: 0,
@@ -32,7 +27,15 @@ export class Forwarder extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.findLink && nextProps.url) {
+    // If findLink and url are truthy in this.props, call addCount
+    // Otherwise try nextProps
+    if (this.props && this.props.findLink && this.props.url) {
+      this.setState({
+        recorded: this.state.recorded + 1,
+      }, () => {
+        this.addCount(this.props.findLink);
+      });
+    } else if (nextProps && nextProps.findLink && nextProps.url) {
       this.setState({
         recorded: this.state.recorded + 1,
       }, () => {
@@ -42,7 +45,8 @@ export class Forwarder extends React.Component {
   }
 
   addCount(findLink) {
-    // check for this.state.recorded to equal less than 2 - ensures clicks.insert is only called once
+    // check for this.state.recorded to equal less than 2
+    // ensures clicks.insert is only called once before throttling
     if (this.state.recorded < 2) {
       Meteor.call('clicks.insert', {
         linkId: findLink._id,
@@ -52,12 +56,19 @@ export class Forwarder extends React.Component {
         }
       });
     }
-    redirect(findLink.url);
+    this.redirect(findLink.url);
+  }
+
+  redirect(url) {
+    window.location = url;
   }
 
   render() {
-    const { url, findLink } = this.props;
-    const noValidURL = (this.state.timeOut && !url) ? 'Sorry, no valid URL found' : <Loading />;
+    const { url } = this.props;
+    const noValidURL = (this.state.timeOut && !url) ?
+      <div className="no-valid-url">Sorry, no valid URL found</div>
+      :
+      <Loading />;
 
     return (
       (!url) ?
@@ -65,12 +76,12 @@ export class Forwarder extends React.Component {
           {noValidURL}
         </div>
         :
-        <div className="forwarding">
+        <div className="forwarding url-valid">
           <Loading />
         </div>
     );
   }
-};
+}
 
 Forwarder.defaultProps = {
   url: undefined,

@@ -14,7 +14,6 @@ import ShortLinks from '../ShortLinks';
 import {
   linkInsert,
   linkRemove,
-  linkAddCount,
 } from "../methods";
 
 if (Meteor.isServer) {
@@ -45,7 +44,6 @@ if (Meteor.isServer) {
     describe('linkInsert', function () {
       let findStub;
       let insertStub;
-
 
       beforeEach(function () {
         findStub = sandbox.stub(ShortLinks, 'findOne');
@@ -96,29 +94,6 @@ if (Meteor.isServer) {
         expect(() => {
           linkRemove._execute(mockUser, { _id: mockData._id });
         }).to.throw();
-      });
-    });
-
-    describe('linkAddCount', function () {
-      let findStub;
-      let updateStub;
-
-      beforeEach(function () {
-        findStub = sandbox.stub(ShortLinks, 'findOne');
-        updateStub = sandbox.stub(ShortLinks, 'update');
-      });
-
-      it('should call ShortLinks.update and add 1 to clicks property', function () {
-        findStub.returns(mockData); // assume code avoids intersection with another shortlink
-        linkAddCount._execute({}, { linkId: mockData._id });
-
-        const expected = [
-          mockData._id,
-          { $set: { clicks: 1 } },
-        ];
-
-        expect(updateStub.getCall(0).args[0]).to.equal(expected[0]);
-        expect(updateStub.getCall(0).args[1]).to.deep.equal(expected[1]);
       });
     });
   });
