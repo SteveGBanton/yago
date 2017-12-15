@@ -4,14 +4,19 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { monthDayYearAtTime } from '@cleverbeagle/dates';
+import Clipboard from 'clipboard';
+import matchSorter from 'match-sorter';
 
-
-import ShortLinks from '../../../../../api/ShortLinks/ShortLinks';
-import NotFound from '../../../../components/NotFound/NotFound.jsx';
-import Loading from '../../../../components/Loading/Loading';
-
+import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import 'react-table/react-table.css';
+import ReactTable from 'react-table';
+
+import ShortLinks from '../../../../../api/ShortLinks/ShortLinks';
+import Clicks from '../../../../../api/Clicks/Clicks';
+import NotFound from '../../../../components/NotFound/NotFound.jsx';
+import Loading from '../../../../components/Loading/Loading';
 import './ViewLinkStats.scss';
 
 const handleRemove = (_id, history) => {
@@ -25,50 +30,221 @@ const handleRemove = (_id, history) => {
   });
 };
 
-
-const renderDocument = (doc, match, history, user) => (
+const renderDocument = (doc, match, history, user, clicks) => (
   (doc)
     ? (
-        <div className="view-shortlink">
-
-          <p style={{ fontSize: 10 }}>Created at {monthDayYearAtTime(doc.createdAt)}</p>
-          <h3 style={{ marginBottom: 40 }}>{(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : '' }</h3>
-
-          <h1><a href={doc.url} target="_blank">{ doc && doc.url }</a></h1>
-
-          <h1>{ doc && doc.clicks } Click(s)</h1>
-
-          <RaisedButton
-            onClick={() => handleRemove(doc._id, history)}
-            className="text-danger"
-            style={{ margin: '60px 0 0 0' }}
-          >
-            Delete Link
-          </RaisedButton>
-
+      <div className="view-shortlink">
+        {(() => { const clipboard = new Clipboard('.copy-btn'); })()}
+        {console.log(clicks)}
+        <div
+          className="sm-label"
+          style={{
+            marginLeft: 20,
+            marginBottom: 15,
+          }}
+        >
+          Link Created {monthDayYearAtTime(doc.createdAt)}
         </div>
-      )
+        <div className="view-shortlink-box-container">
+          <div className="view-shortlink-boxes view-shortlink-box1">
+            <h3>ShortLink URL</h3>
+            <div className="center-box sm-label">
+              <div
+                className="copy-btn pointer"
+                onClick={() => Bert.alert('Link Copied!', 'success')}
+                role="button"
+                tabIndex={0}
+                onKeyPress={() => Bert.alert('Link Copied!', 'success')}
+                data-clipboard-text={(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+              >
+                <span style={{ fontSize: 13 }}>
+                  {(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+                </span>
+                <FontIcon
+                  className="material-icons"
+                  style={{ color: '#559', marginLeft: 5, fontSize: 12 }}
+                >
+                  content_copy
+                </FontIcon>
+              </div>
+            </div>
+          </div>
+          <div className="view-shortlink-boxes view-shortlink-box1">
+            <h3>Target URL</h3>
+            <div className="center-box sm-label">
+              <a href={doc.url} target="_blank">{doc && doc.url}</a>
+            </div>
+          </div>
+          <div className="view-shortlink-boxes view-shortlink-box1">
+            <h3>Total Clicks</h3>
+            <div className="lg-label center-box">{doc && doc.clicks}</div>
+          </div>
+          <div className="view-shortlink-boxes view-shortlink-box1">
+            <h3>Delete</h3>
+            <div className="center-box">
+              <RaisedButton
+                onClick={() => handleRemove(doc._id, history)}
+                backgroundColor="lightcoral"
+                labelColor="#FFF"
+                label="Delete Link"
+              />
+            </div>           
+          </div>
+        </div>
+        <h3
+          style={{
+            marginTop: 30,
+            marginLeft: 20,
+            marginBottom: -10,
+          }}
+        >
+          Click Log Last 30 Days
+        </h3>
+        <div className="view-shortlink-click-table">
+          <ReactTable
+            data={clicks}
+            columns={[
+              {
+                columns: [
+                  {
+                    Header: 'Date Clicked',
+                    id: 'createdAt',
+                    filterAll: true,
+                    maxWidth: 200,
+                    minWidth: 100,
+                    filterMethod: (filter, rows) =>
+                      matchSorter(rows, filter.value, { keys: ["dateClicked"] }),
+                    accessor: (d => (
+                      (d.dateClicked)
+                        ? monthDayYearAtTime(d.dateClicked)
+                        : '')),
+                    Cell: row => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                          fontSize: 10,
+                        }}
+                      >
+                        {row.value}
+                      </div>
+                    ),
+                  },
+                  {
+                    Header: 'IP Address',
+                    accessor: 'ipAddress',
+                    filterAll: true,
+                    maxWidth: 200,
+                    minWidth: 100,
+                    Cell: row => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%'
+                        }}
+                      >
+                        {row.value}
+                      </div>
+                    ),
+                  },
+                  {
+                    Header: 'Device Type',
+                    filterMethod: (filter, rows) =>
+                      matchSorter(rows, filter.value, { keys: ["deviceType"] }),
+                    accessor: 'deviceType',
+                    filterAll: true,
+                    minWidth: 200,
+                    Cell: row => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
+                          height: '100%',
+                          fontSize: 12,
+                        }}
+                      >
+                        {row.value}
+                      </div>
+                    ),
+                  },
+                  
+                ],
+              },
+            ]}
+            filterable
+            defaultSorted={[
+              {
+                id: 'createdAt',
+                desc: true,
+              },
+            ]}
+            defaultPageSize={10}
+            noDataText="No clicks recorded"
+            className="-highlight"
+          />
+        </div>
+
+      </div>
+    )
     : <NotFound />
 );
 
-const ViewLinkStats = ({ loading, doc, match, history, user }) => (
-  !loading ? renderDocument(doc, match, history, user) : <Loading />
+export const ViewLinkStats = ({
+  loading,
+  doc,
+  match,
+  history,
+  user,
+  loadingClicks,
+  clicks,
+}) => (
+  !loading ? renderDocument(doc, match, history, user, clicks) : <Loading />
 );
+
+ViewLinkStats.defaultProps = {
+  clicks: [],
+  doc: {},
+  user: null,
+}
 
 ViewLinkStats.propTypes = {
   loading: PropTypes.bool.isRequired,
-  doc: PropTypes.object,
-  match: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  doc: PropTypes.shape({}),
+  match: PropTypes.shape({}).isRequired,
+  history: PropTypes.shape({}).isRequired,
+  user: PropTypes.shape({}),
+  loadingClicks: PropTypes.bool.isRequired,
+  clicks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default createContainer(({ match }) => {
   const { shortLink } = match.params;
   const subscription = Meteor.subscribe('shortLinks.view', shortLink);
   const doc = ShortLinks.findOne({ shortLink });
+  const linkId = (doc) ? doc._id : 'noid';
+
+  /*
+   *  Arguments to publication are linkId, dateFrom, dateTo.
+   *  When not specified, dateFrom = 30 days ago, dateTo = Today.
+   */
+  const clicksSubscription = Meteor.subscribe('clicks.oneLinkList', linkId, null, null);
+
+  const clicks = Clicks.find({
+    linkId,
+    dateClicked: { $gte: (new Date("2017-12-14").toISOString()) },
+  }).fetch();
 
   return {
     loading: !subscription.ready(),
     doc,
+    loadingClicks: !clicksSubscription.ready(),
+    clicks,
   };
 }, ViewLinkStats);

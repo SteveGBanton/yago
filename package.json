@@ -4,7 +4,7 @@
   "scripts": {
     "start": "meteor --settings settings-development.json",
     "test": "meteor test --driver-package practicalmeteor:mocha --port 3030",
-    "test1" : "meteor test --settings settings.coverage.json --driver-package practicalmeteor:mocha"
+    "test1": "meteor test --settings settings.coverage.json --driver-package practicalmeteor:mocha"
   },
   "dependencies": {
     "@cleverbeagle/dates": "^0.5.1",
@@ -22,7 +22,7 @@
     "moment": "^2.18.1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react-dom": "^16.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-table": "^6.7.4",

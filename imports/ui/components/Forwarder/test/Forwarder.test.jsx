@@ -2,9 +2,6 @@
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
-// if (Meteor.isServer) {
-//   import 'jsdom-global/register';
-// }
 import React from 'react';
 import { Random } from 'meteor/random';
 import { expect } from 'meteor/practicalmeteor:chai';

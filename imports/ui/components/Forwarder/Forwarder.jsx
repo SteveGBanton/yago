@@ -8,7 +8,6 @@ import ShortLinks from '../../../api/ShortLinks/ShortLinks';
 
 import './Forwarder.scss';
 
-
 const redirect = function redirect(url) {
   window.location = url;
 };
@@ -55,7 +54,7 @@ export class Forwarder extends React.Component {
       });
     }
     console.log('redirect');
-    // redirect(findLink.url);
+    redirect(findLink.url);
   }
 
   render() {
