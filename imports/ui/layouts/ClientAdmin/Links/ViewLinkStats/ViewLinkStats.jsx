@@ -196,7 +196,7 @@ const renderDocument = (doc, match, history, user, clicks) => (
     : <NotFound />
 );
 
-const ViewLinkStats = ({
+export const ViewLinkStats = ({
   loading,
   doc,
   match,
@@ -205,17 +205,23 @@ const ViewLinkStats = ({
   loadingClicks,
   clicks,
 }) => (
-    !loading ? renderDocument(doc, match, history, user, clicks) : <Loading />
+  !loading ? renderDocument(doc, match, history, user, clicks) : <Loading />
 );
+
+ViewLinkStats.defaultProps = {
+  clicks: [],
+  doc: {},
+  user: null,
+}
 
 ViewLinkStats.propTypes = {
   loading: PropTypes.bool.isRequired,
   doc: PropTypes.shape({}),
   match: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
-  user: PropTypes.shape({}).isRequired,
+  user: PropTypes.shape({}),
   loadingClicks: PropTypes.bool.isRequired,
-  clicks: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  clicks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default createContainer(({ match }) => {
