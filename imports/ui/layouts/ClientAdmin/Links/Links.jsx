@@ -130,7 +130,7 @@ const Links = ({
                     minWidth: 220,
                     filterMethod: (filter, rows) =>
                       matchSorter(rows, filter.value, { keys: ["shortLink"] }),
-                    accessor: d => (`https://yagosite.herokuapp.com/${d.shortLink}`),
+                    accessor: d => (`${Meteor.absoluteUrl()}${d.shortLink}`),
                     Cell: row => (
                       <div
                         className="copy-btn pointer"

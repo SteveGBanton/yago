@@ -18,8 +18,6 @@ Meteor.publish('clicks.oneLinkList', (linkId, dateFrom, dateTo) => {
   // Set by default today's date if no input
   const dateToISO = (dateTo) ? (new Date(dateTo).toISOString()) : (new Date().toISOString());
 
-  console.log(dateFromISO + '  '  + dateToISO)
-
   const cursor = (linkId !== 'noid') ?
     Clicks.find({
       linkId,

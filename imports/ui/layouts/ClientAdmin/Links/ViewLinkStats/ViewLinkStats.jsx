@@ -35,12 +35,10 @@ const renderDocument = (doc, match, history, user, clicks) => (
     ? (
       <div className="view-shortlink">
         {(() => { const clipboard = new Clipboard('.copy-btn'); })()}
-        {console.log(clicks)}
         <div
           className="sm-label"
           style={{
-            marginLeft: 20,
-            marginBottom: 15,
+            margin: '20px 0 15px 20px',
           }}
         >
           Link Created {monthDayYearAtTime(doc.createdAt)}
@@ -55,10 +53,10 @@ const renderDocument = (doc, match, history, user, clicks) => (
                 role="button"
                 tabIndex={0}
                 onKeyPress={() => Bert.alert('Link Copied!', 'success')}
-                data-clipboard-text={(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+                data-clipboard-text={(doc && doc.shortLink) ? `${Meteor.absoluteUrl()}${doc.shortLink}` : ''}
               >
                 <span style={{ fontSize: 13 }}>
-                  {(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+                  {(doc && doc.shortLink) ? `${Meteor.absoluteUrl()}${doc.shortLink}` : ''}
                 </span>
                 <FontIcon
                   className="material-icons"

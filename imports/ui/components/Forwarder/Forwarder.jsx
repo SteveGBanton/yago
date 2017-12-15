@@ -49,11 +49,9 @@ export class Forwarder extends React.Component {
       }, (error) => {
         if (error) {
           // Not inserted into DB for some reason. Log to error file on server.
-          console.log(error.reason);
         }
       });
     }
-    console.log('redirect');
     redirect(findLink.url);
   }
 
@@ -68,7 +66,7 @@ export class Forwarder extends React.Component {
         </div>
         :
         <div className="forwarding">
-          Forwarding...
+          <Loading />
         </div>
     );
   }
