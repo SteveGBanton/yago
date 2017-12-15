@@ -68,7 +68,7 @@ export class Forwarder extends React.Component {
         </div>
         :
         <div className="forwarding">
-          Forwarding...
+          <Loading />
         </div>
     );
   }

@@ -55,10 +55,10 @@ const renderDocument = (doc, match, history, user, clicks) => (
                 role="button"
                 tabIndex={0}
                 onKeyPress={() => Bert.alert('Link Copied!', 'success')}
-                data-clipboard-text={(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+                data-clipboard-text={(doc && doc.shortLink) ? `${Meteor.absoluteUrl()}${doc.shortLink}` : ''}
               >
                 <span style={{ fontSize: 13 }}>
-                  {(doc && doc.shortLink) ? `https://yagosite.herokuapp.com/${doc.shortLink}` : ''}
+                  {(doc && doc.shortLink) ? `${Meteor.absoluteUrl()}${doc.shortLink}` : ''}
                 </span>
                 <FontIcon
                   className="material-icons"

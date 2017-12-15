@@ -13,10 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 
 import customFormValidator from '../../../modules/custom-form-validator';
-
-if (Meteor.isClient) {
-  import './LinkAdder.scss';
-}
+import './LinkAdder.scss';
 
 const rules = {
   url: {
@@ -79,7 +76,7 @@ export default class LinkAdder extends React.Component {
         this.form.reset();
         Bert.alert('Yagolink created!', 'success');
         this.setState({
-          shortLink: `https://yagosite.herokuapp.com/${res}`,
+          shortLink: `${Meteor.absoluteUrl()}${res}`,
         })
       }
     });
