@@ -35,12 +35,10 @@ const renderDocument = (doc, match, history, user, clicks) => (
     ? (
       <div className="view-shortlink">
         {(() => { const clipboard = new Clipboard('.copy-btn'); })()}
-        {console.log(clicks)}
         <div
           className="sm-label"
           style={{
-            marginLeft: 20,
-            marginBottom: 15,
+            margin: '20px 0 15px 20px',
           }}
         >
           Link Created {monthDayYearAtTime(doc.createdAt)}
