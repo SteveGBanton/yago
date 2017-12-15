@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
+import { Bert } from 'meteor/themeteorchef:bert';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Forwarder from '../components/Forwarder/Forwarder';
@@ -40,9 +41,31 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleNavBar = this.toggleNavBar.bind(this);
+    this.onNavBar = this.onNavBar.bind(this);
+    this.offNavBar = this.offNavBar.bind(this);
     this.state = {
       menuOpen: true,
+      navBarOn: true,
     };
+  }
+
+  onNavBar() {
+    this.setState({
+      navBarOn: true,
+    });
+  }
+
+  offNavBar() {
+    this.setState({
+      navBarOn: false,
+    });
+  }
+
+  toggleNavBar() {
+    this.setState({
+      navBarOn: !this.state.menuOpen,
+    });
   }
 
   toggleMenu() {
@@ -52,13 +75,22 @@ class App extends React.Component {
   }
 
   render() {
-    const { props } = this;
+    const props = this.props;
+    const toggleMenu = this.toggleMenu;
     return (
       <Router>
         {
           (!props.loading) ?
             <MuiThemeProvider>
               <div className="App">
+                {/* {(this.state.navBarOn) ?
+                  <Navigation
+                    {...props}
+                    toggleMenu={toggleMenu}
+                  />
+                  :
+                  ''
+                } */}
                 <Switch>
                   <AllUserAccess
                     exact

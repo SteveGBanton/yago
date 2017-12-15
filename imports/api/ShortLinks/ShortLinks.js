@@ -21,6 +21,7 @@ ShortLinks.schema = new SimpleSchema({
   owner: {
     type: String,
     label: 'The ID of the user this document belongs to.',
+    optional: true,
   },
   createdAt: {
     type: String,
