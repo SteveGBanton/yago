@@ -2,26 +2,68 @@
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
+// if (Meteor.isServer) {
+//   import 'jsdom-global/register';
+// }
 import React from 'react';
 import { Random } from 'meteor/random';
 import { expect } from 'meteor/practicalmeteor:chai';
-import TestUtils from 'react-addons-test-utils';
 import sinon from 'sinon';
-import jsxChai from 'jsx-chai';
-import { Forwarder } from '../Forwarder';
+import { check } from 'meteor/check';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-chai.use(jsxChai);
+import ShortLinks from '../../../../api/ShortLinks/ShortLinks';
 
-describe('Forwarder.jsx', function () {
-  it('should render', function () {
-    const renderer = TestUtils.createRenderer();
-    const user = undefined;
+if (Meteor.isClient) {
+  import { Forwarder } from '../Forwarder';
 
-    renderer.render(<UserViewTest loading={false} history={{}} user={user} />);
-    const actual = renderer.getRenderOutput();
+  Enzyme.configure({ adapter: new Adapter() });
 
-    const expected = 'Sorry, cannot find user.';
-
-    expect(actual).to.include(expected);
+  Meteor.methods({
+    'test.resetDatabase': () => ShortLinks.remove({}),
   });
-})
+
+  Meteor.methods({
+    'test.insertShortLink': (data) => {
+      check(data, Object);
+      return ShortLinks.insert({
+        clicks: 0,
+        url: 'http://example.com',
+        owner: data.userId,
+        shortLink: data.shortLink,
+      });
+    },
+  });
+
+  describe('Forwarder.jsx', function () {
+
+    const userId = Random.id();
+    const shortLink = Random.id(7);
+    let shortLinkId;
+
+    // Stub user.
+    const userStub = sinon.stub(Meteor, 'userId').callsFake(() => userId);
+
+    beforeEach(function (done) {
+      Meteor.call('test.resetDatabase');
+      Meteor.call('test.insertShortLink', { userId, shortLink }, (err, res) => {
+        if (err) {
+          console.log(err);
+        } else {
+          shortLinkId = res;
+        }
+        done();
+      });
+    });
+
+    it('should render', function () {
+      sinon.spy(Forwarder.prototype, 'componentDidMount');
+      const wrapper = mount(<Forwarder />);
+      expect(Forwarder.prototype.componentDidMount.calledOnce).to.equal(true);
+      Forwarder.prototype.componentDidMount.restore();
+    });
+
+  });
+
+}
