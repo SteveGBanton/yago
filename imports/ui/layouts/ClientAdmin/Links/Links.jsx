@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { monthDayYearAtTime } from '@cleverbeagle/dates';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -11,7 +10,6 @@ import Clipboard from 'clipboard';
 import matchSorter from 'match-sorter';
 
 import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
 
 import ShortLinks from '../../../../api/ShortLinks/ShortLinks';
 import Loading from '../../../components/Loading/Loading.jsx';
@@ -29,7 +27,7 @@ const handleRemove = (_id) => {
 };
 
 const Links = ({
-  loading, links, match, history,
+  loading, links, history,
 }) => (
   !loading ? (
     <div className="links">
@@ -47,12 +45,20 @@ const Links = ({
                     accessor: d => d,
                     sortable: false,
                     filterable: false,
-                    width: 100,
+                    width: 90,
                     Cell: row => (
-                      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          width: '100%',
+                          alignContent: 'space-between',
+                          marginTop: 2,
+                        }}
+                      >
                         <FontIcon
                           className="material-icons pointer"
-                          style={{ color: '#616161', marginRight: 5 }}
+                          style={{ color: '#616161', marginRight: 9, fontSize: 16 }}
                           onClick={() => history.push(`/view-link/${row.original.shortLink}`)}
                         >
                           remove_red_eye
@@ -60,15 +66,16 @@ const Links = ({
 
                         <FontIcon
                           className="material-icons pointer"
-                          style={{ color: '#616161', marginRight: 5 }}
+                          style={{ color: '#616161', marginRight: 9, fontSize: 16 }}
                           onClick={() => handleRemove(row.original._id)}
+                          hoverColor="#000000"
                         >
                           delete
                         </FontIcon>
 
                         <FontIcon
                           className="material-icons pointer"
-                          style={{ color: '#616161' }}
+                          style={{ color: '#616161', fontSize: 16 }}
                           onClick={() => window.open(row.original.url, '_blank')}
                         >
                           open_in_new
@@ -85,7 +92,14 @@ const Links = ({
                     filterAll: true,
                     minWidth: 250,
                     Cell: row => (
-                      <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%', fontSize: 12 }}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
+                          height: '100%',
+                          fontSize: 12,
+                        }}
                       >
                         {row.value}
                       </div>
@@ -103,9 +117,15 @@ const Links = ({
                       ? monthDayYearAtTime(d.createdAt)
                       : '')),
                     Cell: row => (
-                      <div 
+                      <div
                         style={{
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', fontSize: 10 }}
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                          fontSize: 10,
+                        }}
                       >
                         {row.value}
                       </div>
@@ -117,7 +137,14 @@ const Links = ({
                     maxWidth: 150,
                     minWidth: 100,
                     Cell: row => (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                        }}
                       >
                         {row.value}
                       </div>
@@ -184,6 +211,7 @@ const Links = ({
 Links.propTypes = {
   loading: PropTypes.bool.isRequired,
   history: PropTypes.shape({}).isRequired,
+  links: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default createContainer(() => {
