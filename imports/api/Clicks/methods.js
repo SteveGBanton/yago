@@ -14,11 +14,16 @@ const clicksInsert = new ValidatedMethod({
       const shortLinkDoc = ShortLinks.findOne(linkId);
       const connectionData = this.connection;
 
+      console.log(connectionData);
+      console.log(connectionData.httpHeaders);
+      console.log(connectionData.httpHeaders['x-forwarded-for']);
+      console.log(connectionData.httpHeaders['x-real-ip']);
+      
       // Add click record document to DB
       const clickData = {
         linkId,
         owner: shortLinkDoc.owner,
-        ipAddress: connectionData.clientAddress,
+        ipAddress: connectionData.httpHeaders['x-forwarded-for'],
         deviceType: connectionData.httpHeaders['user-agent'],
         shortLink: shortLinkDoc.shortLink,
         url: shortLinkDoc.url,
