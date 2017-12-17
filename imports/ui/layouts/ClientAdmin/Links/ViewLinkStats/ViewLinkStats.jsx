@@ -86,7 +86,7 @@ const renderDocument = (doc, match, history, user, clicks) => (
                 labelColor="#FFF"
                 label="Delete Link"
               />
-            </div>           
+            </div>
           </div>
         </div>
         <h3
@@ -106,7 +106,7 @@ const renderDocument = (doc, match, history, user, clicks) => (
                 columns: [
                   {
                     Header: 'Date Clicked',
-                    id: 'createdAt',
+                    id: 'dateClicked',
                     filterAll: true,
                     maxWidth: 200,
                     minWidth: 100,
@@ -133,8 +133,11 @@ const renderDocument = (doc, match, history, user, clicks) => (
                   },
                   {
                     Header: 'IP Address',
+                    id: 'ipAddress',
                     accessor: 'ipAddress',
                     filterAll: true,
+                    filterMethod: (filter, rows) =>
+                      matchSorter(rows, filter.value, { keys: ["ipAddress"] }),
                     maxWidth: 200,
                     minWidth: 100,
                     Cell: row => (
@@ -144,7 +147,7 @@ const renderDocument = (doc, match, history, user, clicks) => (
                           alignItems: 'center',
                           justifyContent: 'center',
                           width: '100%',
-                          height: '100%'
+                          height: '100%',
                         }}
                       >
                         {row.value}
@@ -172,7 +175,6 @@ const renderDocument = (doc, match, history, user, clicks) => (
                       </div>
                     ),
                   },
-                  
                 ],
               },
             ]}
@@ -200,7 +202,6 @@ export const ViewLinkStats = ({
   match,
   history,
   user,
-  loadingClicks,
   clicks,
 }) => (
   !loading ? renderDocument(doc, match, history, user, clicks) : <Loading />
@@ -210,7 +211,7 @@ ViewLinkStats.defaultProps = {
   clicks: [],
   doc: {},
   user: null,
-}
+};
 
 ViewLinkStats.propTypes = {
   loading: PropTypes.bool.isRequired,
@@ -218,7 +219,6 @@ ViewLinkStats.propTypes = {
   match: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
   user: PropTypes.shape({}),
-  loadingClicks: PropTypes.bool.isRequired,
   clicks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
@@ -232,7 +232,7 @@ export default createContainer(({ match }) => {
    *  Arguments to publication are linkId, dateFrom, dateTo.
    *  When not specified, dateFrom = 30 days ago, dateTo = Today.
    */
-  const clicksSubscription = Meteor.subscribe('clicks.oneLinkList', linkId, null, null);
+  Meteor.subscribe('clicks.oneLinkList', linkId, null, null);
 
   const clicks = Clicks.find({
     linkId,
@@ -242,7 +242,6 @@ export default createContainer(({ match }) => {
   return {
     loading: !subscription.ready(),
     doc,
-    loadingClicks: !clicksSubscription.ready(),
     clicks,
   };
 }, ViewLinkStats);

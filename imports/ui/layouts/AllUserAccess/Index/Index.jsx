@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
-import LinkAdder from '../../../components/LinkAdder/LinkAdder';
 import { Link } from 'react-router-dom';
+import LinkAdder from '../../../components/LinkAdder/LinkAdder';
 
 import './Index.scss';
 
